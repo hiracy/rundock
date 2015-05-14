@@ -8,6 +8,9 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+Gemfile.lock
+.vagrant
+Gemfile.local
 
 ## Specific to RubyMotion:
 .dat*
