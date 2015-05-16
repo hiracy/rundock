@@ -23,6 +23,29 @@ module Rundock
         end
       end
 
+      def indent
+        add_indent
+        yield
+      ensure
+        reduce_indent
+      end
+
+      def add_indent
+        @depth += 1
+      end
+
+      def reduce_indent
+        @depth -= 1 if @depth > 0
+      end
+
+      def color(code)
+        prev_color = @color
+        @color = code
+        yield
+      ensure
+        @color = prev_color
+      end
+
       private
       def msg2str(msg)
         case msg
