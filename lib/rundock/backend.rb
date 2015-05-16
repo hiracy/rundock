@@ -1,3 +1,4 @@
+require 'rundock'
 require 'singleton'
 require 'specinfra/core'
 require 'io/console'
@@ -7,6 +8,8 @@ Specinfra::Configuration.error_on_missing_backend_type = true
 
 module Rundock
   module Backend
+    CommandResultStatusError = Class.new(StandardError)
+
     class << self
       def create(type, options = {})
         self.const_get(type.capitalize).new(type, options)
@@ -17,6 +20,28 @@ module Rundock
       def initialize(type, options)
         @options = parse(options)
         @backend = create_specinfra_backend
+      end
+
+      def run_command(cmd , options = {})
+        command = "cd #{Shellwords.escape(cwd)} && #{cmd}" if options[:cwd]
+
+        Logger.debug(%Q{Start executing: "#{command}"})
+
+        result = @backend.run_command(command)
+        exit_status = result.exit_status
+
+        Logger.formatter.indent do
+
+          Logger.error("[ERROR]#{result.stderr}") if result.stderr
+          Logger.info("#{result.stdout}")
+          Logger.debug("exit status: #{exit_status}")
+        end
+
+        if options[:no_continue_if_error] && exit_status != 0
+          raise CommandResultStatucError
+        end
+
+        result
       end
 
       private
