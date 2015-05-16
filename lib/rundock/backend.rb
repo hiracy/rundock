@@ -1,0 +1,79 @@
+require 'singleton'
+require 'specinfra/core'
+require 'io/console'
+require 'net/ssh'
+
+Specinfra::Configuration.error_on_missing_backend_type = true
+
+module Rundock
+  module Backend
+    class << self
+      def create(type, options = {})
+        self.const_get(type.capitalize).new(type, options)
+      end
+    end
+
+    class Base
+      def initialize(type, options)
+        @options = parse(options)
+        @backend = create_specinfra_backend
+      end
+
+      private
+
+      def parse(options)
+        raise NotImplementedError
+      end
+
+      def create_specinfra_backend
+        raise NotImplementedError
+      end
+    end
+
+    class Local < Base
+      private
+
+      def parse(options)
+        options
+      end
+
+      def create_specinfra_backend
+        Specinfra::Backend::Exec.new()
+      end
+    end
+
+    class Ssh < Base
+      private
+
+      def parse(options)
+        if File.exists?('~/.ssh/config')
+          ssh_opts = Net::SSH::Config.for(options[:host], files=['~/.ssh/config'])
+        else
+          ssh_opts = Net::SSH::Config.for(options[:host])
+        end
+
+        ssh_opts.merge!(options)
+
+        ssh_opts[:user] = ssh_opts[:user] || Etc.getlogin
+        ssh_opts[:keys] = ssh_opts[:keys] || '~/.ssh/id_rsa'
+        ssh_opts[:port] = ssh_opts[:port] || 22
+
+        if ssh_options[:ask_password]
+          print "password: "
+          passwd = STDIN.noecho(&:gets).strip
+          print "\n"
+          ssh_opts[:password] = passwd
+        end
+      end
+
+      def create_specinfra_backend
+        Specinfra::Backend::Ssh.new(
+          request_pty: true,
+          host: @options[:host],
+          disable_sudo: !@options[:sudo],
+          ssh_options: @options,
+        )
+      end
+    end
+  end
+end
