@@ -6,16 +6,16 @@ module Rundock
   module Logger
     class Formatter
       attr_accessor :colored
-      attr_accessor :indent
+      attr_accessor :indent_depth
       attr_accessor :color
 
       def initialize(*args)
         super
-        @indent = 0
+        @indent_depth = 0
       end
 
       def call(severity, datetime, progname, msg)
-        out = "[%5s:] %s%s\n" % [severity, ' ' * 2 * indent, msg2str(msg)]
+        out = "[%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
         if colored
           colorize(out, severity)
         else
@@ -31,11 +31,11 @@ module Rundock
       end
 
       def add_indent
-        @depth += 1
+        @indent_depth += 1
       end
 
-      def reduce_indent
-        @depth -= 1 if @depth > 0
+      def reduce_dent
+        @indent_depth -= 1 if @indent_depth > 0
       end
 
       def color(code)

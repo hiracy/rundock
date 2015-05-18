@@ -4,7 +4,7 @@ require 'thor'
 module Rundock
   class CLI < Thor
     DEFAULT_SCENARIO_FILE_PATH = './scenario.yml'
-    DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH = './ssh_options_default.yml'
+    DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH = './default_ssh.yml'
 
     class_option :log_level, type: :string, aliases: ['-l'], default: 'info'
     class_option :color, type: :boolean, default: true
@@ -21,20 +21,20 @@ module Rundock
       puts "#{Rundock::VERSION}"
     end
 
-    desc "do [SCENARIO]", "Run rundock from scenario file"
+    desc "do [SCENARIO] [options]", "Run rundock from scenario file"
     option :sudo, type: :boolean, default: false
-    option :ssh_opts_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
       opts = {:scenario_yaml => scenario_file_path[0]}
 
-      run(opts.merge(options))
+      Runner.run(opts.merge(options))
     end
 
     desc "ssh [options]", "Run rundock ssh with various options"
     option :command, type: :string, aliases: ['-c']
-    option :scenario_yaml, type: :string, aliases: ['-y'], default: DEFAULT_SCENARIO_FILE_PATH
-    option :ssh_opts_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :scenario_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
+    option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     option :host, type: :string, aliases: ['-h']
     option :user, type: :string, aliases: ['-u']
     option :key, type: :string, aliases: ['-i']
@@ -43,13 +43,8 @@ module Rundock
     option :sudo, type: :boolean, default: false
     def ssh
       opts = {}
-      run(opts.merge(options))
-    end
 
-    private
-
-    def run(opts)
-      Runner.run(opts)
+      Runner.run(opts.merge(options))
     end
   end
 end
