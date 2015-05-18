@@ -28,7 +28,7 @@ module Rundock
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
       opts = {:scenario_yaml => scenario_file_path[0]}
 
-      Runner.run(options.merge(options))
+      run(opts.merge(options))
     end
 
     desc "ssh [options]", "Run rundock ssh with various options"
@@ -42,7 +42,14 @@ module Rundock
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
     def ssh
-      Runner.run(options)
+      opts = {}
+      run(opts.merge(options))
+    end
+
+    private
+
+    def run(opts)
+      Runner.run(opts)
     end
   end
 end
