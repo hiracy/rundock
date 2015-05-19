@@ -3,11 +3,11 @@
 #
 # -------------------------------------------------------------------
 # host: <hostname>
-#   task:
-#     - <taskname>
+#   <taskname>:
+#     - <task detail>
 #     - :
-#   task:
-#     - <taskname>
+#   <taskname>:
+#     - <task detail>
 #     - :
 # host: <hostname>
 #   :
@@ -17,16 +17,21 @@
 #   <other_attributes>:
 #     :
 # ---
-# <taskname>:
-#   - "<actual command>"
-#   - :
+# task:
+#   <taskname>:
+#     - "<actual command>"
+#     - :
+#   <taskname>:
+#     :
 # -------------------------------------------------------------------
 #
 
 host: anyhost-01
-  - echo_platform
-  - echo_users
+command:
+  - "hostname"
+  - "uname -a"
 host: anyhost-02
+task:
   - echo_platform
   - echo_users
 ---
