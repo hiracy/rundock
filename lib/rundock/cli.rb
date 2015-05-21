@@ -32,7 +32,7 @@ module Rundock
     end
 
     desc "ssh [options]", "Run rundock ssh with various options"
-    option :command, type: :string, aliases: ['-c']
+    option :command, type: :string, aliases: ['-c'], banner: "NOTICE: Scenario's task is ignored."
     option :scenario_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
     option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     option :host, type: :string, aliases: ['-h']
