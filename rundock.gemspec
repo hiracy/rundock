@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "specinfra", [">= 2.31.0", "< 3.0.0"]
   spec.add_runtime_dependency "ansi"
-  spec.add_runtime_dependency "schash"
   spec.add_runtime_dependency "thor"
   spec.add_runtime_dependency 'net-ssh'
 end
