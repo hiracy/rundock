@@ -1,6 +1,7 @@
 require "rundock/version"
 require "rundock/logger"
-require "rundock/task"
+require "rundock/operation/task"
+require "rundock/operation/command"
 require "rundock/node"
 require "rundock/scenario"
 require "rundock/backend"
