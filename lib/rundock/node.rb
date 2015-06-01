@@ -3,11 +3,13 @@ require 'rundock'
 module Rundock
   class Node < Array
 
-    attr_reader :host
+    attr_reader :name
+    attr_reader :operations
     attr_reader :backend
 
-    def initialize(host, backend)
-      @host = host
+    def initialize(name, operations, backend)
+      @name = name
+      @operations = operations
       @backend = backend
     end
 

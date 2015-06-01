@@ -2,20 +2,23 @@
 # This file is example of rundock scenario file based on yaml format.
 #
 # -------------------------------------------------------------------
-# host: <hostname>
+# node:
+#   name: anyhost-01
 #   <taskname>:
 #     - <task detail>
 #     - :
 #   <taskname>:
 #     - <task detail>
 #     - :
-# host: <hostname>
+# node:
 #   :
 # ---
 # <hostname>:
 #   host: xxx.xxx.xxx.xxx
 #   <other_attributes>:
 #     :
+# <hostname>:
+#   :
 # ---
 # task:
 #   <taskname>:
@@ -26,19 +29,19 @@
 # -------------------------------------------------------------------
 #
 
-host: anyhost-01
-command:
-  - "hostname"
-  - "uname -a"
-host: anyhost-02
-task:
-  - echo_platform
-  - echo_users
+node:
+  name: "127.0.0.1"
+  command:
+    - "hostname"
+    - "uname -a"
+node:
+  name: anyhost-01
+  task:
+    - echo_platform
+    - echo_users
 ---
 anyhost-01:
-  host:        127.0.0.1
-anyhost-01:
-  host:        localhost
+  host: "192.168.1.11"
 ---
 echo_platform:
   - "hostname"

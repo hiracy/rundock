@@ -71,8 +71,8 @@ module Rundock
       private
 
       def parse(options)
-        if File.exists?('~/.ssh/config')
-          ssh_opts = Net::SSH::Config.for(options[:host], files=['~/.ssh/config'])
+        if ssh_opts[:ssh_config] && File.exists?(ssh_opts[:ssh_config])
+          ssh_opts = Net::SSH::Config.for(options[:host], files=[ssh_opts[:ssh_config]])
         else
           ssh_opts = Net::SSH::Config.for(options[:host])
         end
