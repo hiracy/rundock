@@ -11,6 +11,7 @@
 Gemfile.lock
 .vagrant
 Gemfile.local
+authorized_keys
 
 ## Specific to RubyMotion:
 .dat*
