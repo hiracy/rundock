@@ -34,7 +34,7 @@ module Rundock
         @indent_depth += 1
       end
 
-      def reduce_dent
+      def reduce_indent
         @indent_depth -= 1 if @indent_depth > 0
       end
 

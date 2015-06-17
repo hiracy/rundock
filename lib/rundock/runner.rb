@@ -35,22 +35,8 @@ module Rundock
         raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
       end
 
-      unless options['default_ssh_opts_yaml'] && File.exist?(options['default_ssh_opts_yaml'])
-        options['default_ssh_opts_yaml'] = PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH
-      end
-
-      opt_ssh_user = options['user']
-      opt_ssh_key = options['key']
-      opt_ssh_port = options['port']
-
-      # parse default ssh options
-      ssh_opts_default = YAML.load_file(options['default_ssh_opts_yaml'])
-      options.merge!(ssh_opts_default)
-      
-      # fix ssh options if args specified
-      options['user'] = opt_ssh_user
-      options['key'] = opt_ssh_key
-      options['port'] = opt_ssh_port
+      opts = YAML.load_file(options['default_ssh_opts_yaml'])
+      opts.merge!(options)
 
       # parse scenario
       if options['scenario_yaml'] =~ /^(http|https):\/\//
@@ -60,7 +46,7 @@ module Rundock
         end
       else
         File.open(options['scenario_yaml']) do |f|
-          @scenario = parse_scenario_from_file(f, options)
+          @scenario = parse_scenario_from_file(f, opts)
         end
       end
     end
@@ -70,19 +56,11 @@ module Rundock
     def parse_scenario_from_file(file, options)
       scen = Scenario.new
 
-      main  = nil
-      node_info = nil
-      tasks = nil
+      type = [:main, :node_info, :tasks]
+      scenario_data = {}
 
       YAML.load_documents(file).each_with_index do |data, idx|
-        case idx
-        when 0
-          main  = data
-        when 1
-          node_info = data
-        when 2
-          tasks = data
-        end
+        scenario_data[type[idx]] = data
       end
 
       node = nil
@@ -90,20 +68,20 @@ module Rundock
       # use host option
       if options['host']
         raise CommandArgNotFoundError, %Q{"--command or -c" option is not specified.} unless options['command']
-        ope = Rundock::Operation::Command.new(:command,  options['command'])
+        ope = Array(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
         node = Node.new(options['host'], ope, build_backend(options['host'], nil, options))
         scen << node
         return scen
       end
 
       # use scenario file
-      main.each do |k,v|
+      scenario_data[:main].each do |k,v|
 
         if k == 'node'
           node = Node.new(
             v['name'],
-            build_operations(v, options),
-            build_backend(v, node_info, options))
+            build_operations(v, scenario_data[:tasks], options),
+            build_backend(v, scenario_data[:node_info], options))
         end
 
         scen << node
@@ -112,19 +90,18 @@ module Rundock
       scen
     end
 
-    def build_operations(content, options)
+    def build_operations(context, tasks, options)
 
       operations = []
 
       if options['command']
         Logger.debug(%Q{"--command or -c" option is specified and ignore scenario file.})
-        operations << Rundock::Operation::Command.new(:command,  options['command'])
-      else
+        operations << Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil)
+      end
 
-        content.each do |k,v|
-          if k != 'name'
-            operations << Rundock::Operation::Base.new(k.to_sym, v)
-          end
+      context.each do |k,v|
+        if k != 'name'
+          operations << Rundock::OperationFactory.instance(k.to_sym).create(Array(v), tasks)
         end
       end
 
@@ -136,13 +113,13 @@ module Rundock
       opts = {}
       opts.merge!(options)
 
-      backend_type = :exec
+      backend_type = :local
       backend_type = :ssh if host !~ /localhost|127\.0\.0\.1/
 
       # update ssh options for node
-      opts.merge!(node_info['ssh_opts']) if node_info['ssh_opts']
+      opts.merge!(node_info['ssh_opts']) if node_info && node_info['ssh_opts']
 
-      Backend.create(backend_type, options)
+      Backend.create(backend_type, opts)
     end
   end
 end

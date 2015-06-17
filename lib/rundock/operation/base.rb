@@ -1,12 +1,19 @@
 module Rundock
   module Operation
     class Base
-      attr_reader :type
-      attr_reader :instruction
+      OperationNotImplementedError = Class.new(NotImplementedError)  
 
-      def initialize(type, instruction)
-        @type = type
+      attr_reader :instruction
+      attr_reader :attributes
+
+      def initialize(instruction, attributes)
         @instruction = instruction
+        @attributes = attributes
+        @attributes = {} unless attributes
+      end
+  
+      def run(backend)
+        raise OperationNotImplementedError
       end
     end
   end

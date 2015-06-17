@@ -1,6 +1,6 @@
 module Rundock
   class Scenario < Array
-    def run(options)
+    def run
       self.each do |node|
         node.run
       end

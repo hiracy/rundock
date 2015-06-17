@@ -1,7 +1,7 @@
 require 'rundock'
 
 module Rundock
-  class Node < Array
+  class Node
 
     attr_reader :name
     attr_reader :operations
@@ -13,12 +13,10 @@ module Rundock
       @backend = backend
     end
 
-    def tasks
-      self.map do |t|
-        case t
-        when Task
-          t
-        end
+    def run
+      Logger.debug("run name: #{@name}")
+      @operations.each do |ope|
+        ope.run(@backend)
       end
     end
   end
