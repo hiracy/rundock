@@ -27,7 +27,7 @@ module Rundock
 
       def run_command(cmd , options = {})
 
-        command = Shellwords.escape(cmd)
+        command = cmd.strip
         command = "cd #{Shellwords.escape(options[:cwd])} && #{command}" if options[:cwd]
         command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if options[:user]
 
@@ -38,7 +38,7 @@ module Rundock
 
         Logger.formatter.indent do
           Logger.error("#{result.stderr}") unless result.stderr.blank?
-          Logger.info("#{result.stdout.strip}")
+          Logger.info("#{result.stdout.strip}") unless result.stdout.strip.blank?
           Logger.debug("exit status: #{exit_status}")
         end
 

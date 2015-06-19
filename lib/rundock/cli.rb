@@ -43,7 +43,6 @@ module Rundock
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
     def ssh
-p options['ssh_config']
       opts = {}
       Runner.run(opts.merge(options))
     end
