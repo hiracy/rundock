@@ -13,6 +13,8 @@ DOCKER_SSH_KEY_PUBLIC_LOCAL="${HOME}/.ssh/id_rsa_${PROJECT_NAME}_${PLATFORM_NAME
 DOCKER_SSH_KEY_PUBLIC_REMOTE="${DOCKER_DIR}/authorized_keys"
 DOCKER_SSH_CONFIG="${HOME}/.ssh/config_${PROJECT_NAME}_${PLATFORM_NAME}"
 
+sudo docker ps | grep "${DOCKER_IMAGE_NAME}" && { echo "docker image is already standing."; exit 0; }
+
 yes | ssh-keygen -N "" -t rsa -f ${DOCKER_SSH_KEY_PRIVATE}
 cp ${DOCKER_SSH_KEY_PUBLIC_LOCAL} ${DOCKER_SSH_KEY_PUBLIC_REMOTE}
 
