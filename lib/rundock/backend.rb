@@ -86,7 +86,7 @@ module Rundock
         ssh_opts[:host_name] = options['host']
         ssh_opts[:user] = options['user'] || Etc.getlogin
         ssh_opts[:keys] = Array(options['key']) if options['key']
-        ssh_opts[:keys] = options['keys'] || ["#{ENV['HOME']}/.ssh/id_rsa"]
+        ssh_opts[:keys] = ssh_opts['keys'] || ["#{ENV['HOME']}/.ssh/id_rsa"]
         ssh_opts[:port] = options['port'] || 22
 
         if options['ask_password']
