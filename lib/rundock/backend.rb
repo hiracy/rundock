@@ -81,13 +81,12 @@ module Rundock
           ssh_opts = Net::SSH::Config.for(options['host'], files=[options['ssh_config']])
         else
           ssh_opts = Net::SSH::Config.for(options['host'])
-          ssh_opts[:user] = options['user'] || Etc.getlogin
-          ssh_opts[:keys] = Array(options['key']) if options['key']
-          ssh_opts[:keys] = ssh_opts[:keys] || ["#{ENV['HOME']}/.ssh/id_rsa"]
-          ssh_opts[:port] = options['port'] || 22
         end
 
         ssh_opts[:host_name] = options['host']
+        ssh_opts[:user] = options['user']
+        ssh_opts[:keys] = Array(options['key']) if options['key']
+        ssh_opts[:port] = options['port']
 
         if options['ask_password']
           print "password: "
