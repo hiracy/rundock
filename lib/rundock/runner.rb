@@ -114,7 +114,7 @@ module Rundock
       opts.merge!(options)
 
       backend_type = :local
-      backend_type = :ssh if host !~ /localhost|127\.0\.0\.1/ || options['port'] || options['user']
+      backend_type = :ssh if host !~ /localhost|127\.0\.0\.1/ || options['port'] || options['user'] || options['ssh_config']
 
       # update ssh options for node
       opts.merge!(node_info['ssh_opts']) if node_info && node_info['ssh_opts']

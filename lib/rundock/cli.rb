@@ -39,7 +39,7 @@ module Rundock
     option :user, type: :string, aliases: ['-u']
     option :key, type: :string, aliases: ['-i']
     option :port, type: :numeric, aliases: ['-p']
-    option :ssh_config, type: :string, aliases: ['-F'], default: "#{ENV['HOME']}/.ssh/config"
+    option :ssh_config, type: :string, aliases: ['-F']
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
     def ssh

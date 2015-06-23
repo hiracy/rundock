@@ -35,7 +35,18 @@ namespace :spec do
           task :docker do
             Bundler.with_clean_env do
               system "./spec/integration/platformes/centos6/setup.sh &"
-              abort unless $?.exitstatus == 0
+
+              # wait 60 and interval 10 seconds
+              found = false
+              6.times do
+                system "sudo docker ps | grep rundock"
+                if $?.to_i == 0
+                  found = true
+                  break
+                end
+                sleep 10
+              end
+              raise "Docker Error." unless found
             end
           end
         end
