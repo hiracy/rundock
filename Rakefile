@@ -1,6 +1,41 @@
 require "bundler/gem_tasks"
 require 'rspec/core/rake_task'
 
+integration_platforms = ['centos6']
+run_commands = [
+  "rm -f /var/tmp/hello_rundock; echo \'Hello Rundock.\' > /var/tmp/hello_rundock"
+]
+
+def setup_docker(platform, timeout, interval)
+  Bundler.with_clean_env do
+    system "./spec/integration/platformes/#{platform}/setup.sh &"
+    found = false
+    (timeout / interval).times do
+      system "sudo docker ps | grep rundock"
+      if $?.to_i == 0
+        found = true
+        break
+      end
+      sleep interval
+    end
+    raise "Docker Error." unless found
+  end
+end
+
+def do_rundock(commands, platforms, remote)
+  unless remote
+    commands.each do |cmd|
+      system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
+    end
+  else
+    commands.each do |cmd|
+      platforms.each do |platform|
+        system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
+      end
+    end
+  end
+end
+
 desc 'Run all tests.'
 task :spec  => 'spec:integration:all'
 
@@ -33,21 +68,8 @@ namespace :spec do
         unless target == 'localhost'
           desc "Setup Docker for #{target}"
           task :docker do
-            Bundler.with_clean_env do
-              system "./spec/integration/platformes/centos6/setup.sh &"
-
-              # wait 60 and interval 10 seconds
-              found = false
-              6.times do
-                system "sudo docker ps | grep rundock"
-                if $?.to_i == 0
-                  found = true
-                  break
-                end
-                sleep 10
-              end
-              raise "Docker Error." unless found
-            end
+            # timeout 3 minutes and wait interval 10 seconds
+            integration_platforms.each {|platform| setup_docker(platform, 180, 10) }
           end
         end
   
@@ -55,11 +77,7 @@ namespace :spec do
 
         task :rundock do
           Bundler.with_clean_env do
-            if target == 'localhost'
-              system 'rm -f /var/tmp/hello_rundock; bundle exec ./exe/rundock ssh -c "echo \'Hello Rundock.\' > /var/tmp/hello_rundock" -h localhost -l debug'
-            else
-              system "bundle exec ./exe/rundock ssh -c \"rm -f /var/tmp/hello_rundock;echo \'Hello Rundock.\' > /var/tmp/hello_rundock\" -h 127.0.0.1 -p 22222 -u tester -i /#{ENV['HOME']}/.ssh/id_rsa_rundock_spec_centos6_tmp -l debug"
-            end
+            do_rundock(run_commands, integration_platforms, target != 'localhost')
           end
         end
   
