@@ -85,7 +85,8 @@ module Rundock
 
         ssh_opts[:host_name] = options['host']
         ssh_opts[:user] = options['user']
-        ssh_opts[:keys] = Array(options['key']) if options['key']
+        ssh_opts[:keys] = options['keys']
+        ssh_opts[:keys] = Array(options['key']) if (!ssh_opts[:keys] && options['key'])
         ssh_opts[:port] = options['port']
 
         if options['ask_password']
