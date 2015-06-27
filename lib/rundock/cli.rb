@@ -23,6 +23,7 @@ module Rundock
 
     desc "do [SCENARIO] [options]", "Run rundock from scenario file"
     option :sudo, type: :boolean, default: false
+    option :scenario_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
     option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
