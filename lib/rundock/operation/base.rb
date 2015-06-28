@@ -12,7 +12,7 @@ module Rundock
         @attributes = {} unless attributes
       end
   
-      def run(backend)
+      def run(backend, attributes = {})
         raise OperationNotImplementedError
       end
     end

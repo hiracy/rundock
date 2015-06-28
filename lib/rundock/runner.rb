@@ -75,37 +75,34 @@ module Rundock
       end
 
       # use scenario file
-      scenario_data[:main].each do |k,v|
+      scenario_data[:main].each do |n|
 
-        if k == 'node'
-          node = Node.new(
-            v['name'],
-            build_operations(v, scenario_data[:tasks], options),
-            build_backend(v, scenario_data[:node_info], options))
+        scen << node if node
+
+        n.each do |k,v|
+          if k == 'node'
+            node = Node.new(
+              v,
+              build_backend(v, scenario_data[:node_info], options))
+          else
+            ope = build_operations(k, v, scenario_data[:tasks], options)
+            node.add_operation(ope) if node
+          end
         end
-
-        scen << node
       end
 
+      scen << node if node
       scen
     end
 
-    def build_operations(context, tasks, options)
-
-      operations = []
+    def build_operations(ope_type, ope_content, tasks, options)
 
       if options['command']
         Logger.debug(%Q{"--command or -c" option is specified and ignore scenario file.})
-        operations << Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil)
+        return Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil)
       end
 
-      context.each do |k,v|
-        if k != 'name'
-          operations << Rundock::OperationFactory.instance(k.to_sym).create(Array(v), tasks)
-        end
-      end
-
-      operations
+      Rundock::OperationFactory.instance(ope_type.to_sym).create(Array(ope_content), tasks)
     end
 
     def build_backend(host, node_info, options)
@@ -114,11 +111,16 @@ module Rundock
       opts.merge!(options)
 
       backend_type = :local
-      backend_type = :ssh if host !~ /localhost|127\.0\.0\.1/ || options['port'] || options['user'] || options['ssh_config']
+      backend_type = :ssh if host !~ /localhost|127\.0\.0\.1/ || opts['port'] || opts['user'] || opts['ssh_config']
 
-      # update ssh options for node
-      opts.merge!(node_info['ssh_opts']) if node_info && node_info['ssh_opts']
+      # update ssh options for node from node_info
+      if node_info && node_info[host] && node_info[host]['ssh_opts']
+        opts.merge!(node_info[host]['ssh_opts'])
+        node_info[host].delete('ssh_opts')
+      end
 
+      # add any attributes for host from node_info
+      opts.merge!(node_info[host].deep_symbolize_keys) if node_info && node_info[host]
       Backend.create(backend_type, opts)
     end
   end

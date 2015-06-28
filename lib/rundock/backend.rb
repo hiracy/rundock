@@ -25,8 +25,15 @@ module Rundock
         @backend = create_specinfra_backend
       end
 
-      def run_command(cmd , options = {})
+      def run_commands(cmd, options = {})
+        Array(cmd).each do |c|
+          run_command(c)
+        end
+      end
 
+      private
+
+      def run_command(cmd , options = {})
         command = cmd.strip
         command = "cd #{Shellwords.escape(options[:cwd])} && #{command}" if options[:cwd]
         command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if options[:user]
@@ -48,8 +55,6 @@ module Rundock
 
         result
       end
-
-      private
 
       def parse(options)
         raise NotImplementedError

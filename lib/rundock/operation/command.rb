@@ -3,7 +3,7 @@ module Rundock
     class Command < Base
       def run(backend, attributes = {})
         @instruction.each do |i|
-          backend.run_command(i, attributes)
+          backend.run_commands(i, attributes)
         end
       end
     end

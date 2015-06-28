@@ -7,16 +7,21 @@ module Rundock
     attr_reader :operations
     attr_reader :backend
 
-    def initialize(name, operations, backend)
+    def initialize(name, backend)
       @name = name
-      @operations = operations
       @backend = backend
+    end
+
+    def add_operation(ope)
+      @operations = [] unless @operations
+      @operations << ope
     end
 
     def run
       Logger.debug("run name: #{@name}")
       @operations.each do |ope|
-        ope.run(@backend)
+        Logger.debug("operation type: #{ope.class}")
+        ope.run(@backend, ope.attributes)
       end
     end
   end

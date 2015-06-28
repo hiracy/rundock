@@ -3,12 +3,12 @@ module Rundock
     class Task < Base
       def run(backend, attributes = {})
         @instruction.each do |i|
-          if attributes.key?(i)
+          unless attributes.key?(i)
             Logger.warn("[WARN]task not found and ignored: #{i}")
             next
           end
 
-          backend.run_command(attributes[i])
+          backend.run_commands(attributes[i])
         end
       end
     end
