@@ -1,9 +1,13 @@
 require "bundler/gem_tasks"
 require 'rspec/core/rake_task'
 
-integration_platforms = ['centos6']
 run_commands = [
   "rm -f /var/tmp/hello_rundock; echo \'Hello Rundock.\' > /var/tmp/hello_rundock"
+]
+
+run_scenarios = [
+  'use_default_ssh_scenario',
+  'simple_echo_scenario'
 ]
 
 def setup_docker(platform, timeout, interval)
@@ -22,18 +26,31 @@ def setup_docker(platform, timeout, interval)
   end
 end
 
-def do_rundock(commands, platforms, remote)
+def do_rundock_ssh(commands, platform, remote)
   unless remote
     commands.each do |cmd|
       system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
     end
   else
     commands.each do |cmd|
-      platforms.each do |platform|
-        system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
-      end
+      system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
     end
   end
+end
+
+def do_rundock_scenarios(scenarios, platform)
+  scenarios.each do |scenario|
+    default_ssh_opt = ''
+    if scenario =~ /use_default_ssh/
+      default_ssh_opt = " -d #{ENV['HOME']}/.rundock/#{platform}/integration_default_ssh.yml"
+    end
+
+    system "bundle exec exe/rundock do -s \"#{ENV['HOME']}/.rundock/#{platform}/scenarios/#{scenario}.yml#{default_ssh_opt}\""
+  end
+end
+
+def cleean(platform)
+  system "./spec/integration/platformes/#{platform}/setup.sh --clean"
 end
 
 desc 'Run all tests.'
@@ -69,7 +86,7 @@ namespace :spec do
           desc "Setup Docker for #{target}"
           task :docker do
             # timeout 3 minutes and wait interval 10 seconds
-            integration_platforms.each {|platform| setup_docker(platform, 180, 10) }
+            setup_docker(platform, 180, 10)
           end
         end
   
@@ -77,15 +94,25 @@ namespace :spec do
 
         task :rundock do
           Bundler.with_clean_env do
-            do_rundock(run_commands, integration_platforms, target != 'localhost')
+            do_rundock_ssh(run_commands, target, target != 'localhost')
+            do_rundock_scenarios(run_scenarios, target)
           end
         end
   
         desc "Run serverspec tests for #{target}"
+
         RSpec::Core::RakeTask.new(:serverspec) do |t|
           ENV['TARGET_HOST'] = target
           t.ruby_opts = '-I ./spec/integration'
           t.pattern = "./spec/integration/recipes/*_spec.rb"
+        end
+
+        desc "cleanging environments for #{target}"
+
+        task :clean do
+          Bundler.with_clean_env do
+            clean(target)
+          end
         end
       end
     end
