@@ -1,5 +1,6 @@
 require "rundock/version"
 require "rundock/ext/object/blank"
+require "rundock/ext/hash"
 require "rundock/logger"
 require "rundock/operation/base"
 require "rundock/operation/task"
