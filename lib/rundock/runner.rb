@@ -32,6 +32,7 @@ module Rundock
     def build(options)
 
       unless options['scenario_yaml'] && File.exist?(options['scenario_yaml'])
+p options['scenario_yaml']
         raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
       end
 
@@ -68,8 +69,8 @@ module Rundock
       # use host option
       if options['host']
         raise CommandArgNotFoundError, %Q{"--command or -c" option is not specified.} unless options['command']
-        ope = Array(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
-        node = Node.new(options['host'], ope, build_backend(options['host'], nil, options))
+        node = Node.new(options['host'], build_backend(options['host'], nil, options))
+        node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
         scen << node
         return scen
       end
