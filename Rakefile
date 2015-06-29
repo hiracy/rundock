@@ -45,12 +45,18 @@ def do_rundock_scenarios(scenarios, platform)
       default_ssh_opt = " -d #{ENV['HOME']}/.rundock/#{platform}/integration_default_ssh.yml"
     end
 
-    system "bundle exec exe/rundock do -s \"#{ENV['HOME']}/.rundock/#{platform}/scenarios/#{scenario}.yml#{default_ssh_opt}\""
+    system "bundle exec exe/rundock do -s #{ENV['HOME']}/.rundock/#{platform}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug"
   end
 end
 
-def cleean(platform)
-  system "./spec/integration/platformes/#{platform}/setup.sh --clean"
+desc "Cleaning environments"
+
+task :clean do
+  Bundler.with_clean_env do
+    Dir.glob('./spec/integration/platformes/*').each do |platform|
+      system "#{platform}/setup.sh --clean"
+    end
+  end
 end
 
 desc 'Run all tests.'
@@ -95,7 +101,7 @@ namespace :spec do
         task :rundock do
           Bundler.with_clean_env do
             do_rundock_ssh(run_commands, target, target != 'localhost')
-            do_rundock_scenarios(run_scenarios, target)
+            do_rundock_scenarios(run_scenarios, target) if target != 'localhost'
           end
         end
   
@@ -105,14 +111,6 @@ namespace :spec do
           ENV['TARGET_HOST'] = target
           t.ruby_opts = '-I ./spec/integration'
           t.pattern = "./spec/integration/recipes/*_spec.rb"
-        end
-
-        desc "cleanging environments for #{target}"
-
-        task :clean do
-          Bundler.with_clean_env do
-            clean(target)
-          end
         end
       end
     end
