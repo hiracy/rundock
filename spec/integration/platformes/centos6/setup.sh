@@ -20,11 +20,14 @@ RUNDOCK_DEFAULT_SSH_YML="${RUNDOCK_CACHE_DIR}/integration_default_ssh.yml"
 RUNDOCK_SCENARIO_CACHE_DIR="${RUNDOCK_CACHE_DIR}/scenarios"
 
 if [ "${1}x" == "--cleanx" ];then
-  sudo docker ps -q | xargs sudo docker rm -f > /dev/null
-  sudo rm -f "${DOCKER_CACHE_IMAGE_PATH}"
-  sudo rm -f "${DOCKER_SSH_KEY_PRIVATE}"
-  sudo rm -f "${DOCKER_SSH_KEY_PUBLIC_LOCAL}"
-  sudo rm -f "${DOCKER_SSH_CONFIG}"
+  if sudo docker ps -q | xargs sudo docker rm -f > /dev/null; then
+    sudo rm -f "${DOCKER_CACHE_IMAGE_PATH}"
+    sudo rm -f "${DOCKER_SSH_KEY_PRIVATE}"
+    sudo rm -f "${DOCKER_SSH_KEY_PUBLIC_LOCAL}"
+    sudo rm -f "${DOCKER_SSH_CONFIG}"
+  fi
+
+  exit 0
 fi
 
 mkdir -p "${RUNDOCK_SCENARIO_CACHE_DIR}"
