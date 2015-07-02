@@ -12,7 +12,7 @@ run_scenarios = [
 
 def setup_docker(platform, timeout, interval)
   Bundler.with_clean_env do
-    system "./spec/integration/platformes/#{platform}/setup.sh &"
+    system "./spec/integration/platforms/#{platform}/setup.sh &"
     found = false
     (timeout / interval).times do
       system "sudo docker ps | grep rundock"
@@ -26,8 +26,8 @@ def setup_docker(platform, timeout, interval)
   end
 end
 
-def do_rundock_ssh(commands, platform, remote)
-  unless remote
+def do_rundock_ssh(commands, platform)
+  if platform == 'localhost'
     commands.each do |cmd|
       system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
     end
@@ -39,13 +39,20 @@ def do_rundock_ssh(commands, platform, remote)
 end
 
 def do_rundock_scenarios(scenarios, platform)
+
+  if platform == 'localhost'
+    base_dir = "./spec/integration/platforms/localhost"
+  else
+    base_dir = "#{ENV['HOME']}/.rundock/#{platform}"
+  end
+
   scenarios.each do |scenario|
     default_ssh_opt = ''
-    if scenario =~ /use_default_ssh/
-      default_ssh_opt = " -d #{ENV['HOME']}/.rundock/#{platform}/integration_default_ssh.yml"
+    if scenario =~ /use_default_ssh/ && platform != 'localhost'
+      default_ssh_opt = " -d #{base_dir}/integration_default_ssh.yml"
     end
 
-    system "bundle exec exe/rundock do -s #{ENV['HOME']}/.rundock/#{platform}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug"
+    system "bundle exec exe/rundock do -s #{base_dir}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug"
   end
 end
 
@@ -53,7 +60,7 @@ desc "Cleaning environments"
 
 task :clean do
   Bundler.with_clean_env do
-    Dir.glob('./spec/integration/platformes/*').each do |platform|
+    Dir.glob('./spec/integration/platforms/*').each do |platform|
       system "#{platform}/setup.sh --clean"
     end
   end
@@ -70,7 +77,7 @@ namespace :spec do
   namespace :integration do
 
     targets = ['localhost']
-    Dir.glob('./spec/integration/platformes/*').each do |result|
+    Dir.glob('./spec/integration/platforms/*').each do |result|
       targets << File.basename(result)
     end
 
@@ -100,8 +107,8 @@ namespace :spec do
 
         task :rundock do
           Bundler.with_clean_env do
-            do_rundock_ssh(run_commands, target, target != 'localhost')
-            do_rundock_scenarios(run_scenarios, target) if target != 'localhost'
+            do_rundock_ssh(run_commands, target)
+            do_rundock_scenarios(run_scenarios, target)
           end
         end
   

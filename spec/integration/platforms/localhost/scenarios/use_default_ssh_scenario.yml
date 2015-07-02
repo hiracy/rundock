@@ -1,0 +1,4 @@
+- node: localhost
+  command:
+    - "hostname"
+    - "uname -a"
