@@ -1,0 +1,33 @@
+- node: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_scenario"
+    - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"
+- node: anyhost-01
+  task:
+    - echo_platform
+  command:
+    - "hostname"
+- node: anyhost-02
+  command:
+    - "uname -a"
+  task:
+    - write_echo
+---
+anyhost-01:
+  host: 127.0.0.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+anyhost-02:
+  host: "127.0.0.1"
+  ssh_opts:
+    port: 22222
+    user: tester
+    keys: ["<replaced_by_platforms>"]
+---
+echo_platform:
+  - "hostname"
+  - "uname -a"
+write_echo:
+  - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"
