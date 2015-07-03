@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'rundock/cli'
+Rundock::CLI.start

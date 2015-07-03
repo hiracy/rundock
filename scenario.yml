@@ -1,0 +1,51 @@
+#
+# This file is example of rundock scenario file based on yaml format.
+#
+# -------------------------------------------------------------------
+# - node: <nodename>
+#   <taskname>:
+#     - <task detail>
+#     - :
+#   <taskname>:
+#     - <task detail>
+#     - :
+# - node: <nodename>
+#   :
+# ---
+# <hostname>:
+#   host: xxx.xxx.xxx.xxx
+#   <other_attributes>:
+#     :
+# <hostname>:
+#   :
+# ---
+# task:
+#   <taskname>:
+#     - "<actual command>"
+#     - :
+#   <taskname>:
+#     :
+# -------------------------------------------------------------------
+#
+
+- node: 127.0.0.1
+  command:
+    - "hostname"
+    - "uname -a"
+- node: anyhost-01
+  task:
+    - echo_platform
+    - echo_users
+---
+anyhost-01:
+  host: 192.168.1.11
+  ssh_opts:
+    port: 22
+    user: anyuser
+---
+echo_platform:
+  - "hostname"
+  - "uname -a"
+echo_users:
+  - "whoami"
+  - "w"

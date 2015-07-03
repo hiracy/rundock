@@ -1,0 +1,9 @@
+- node: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_scenario"
+  task:
+    - write_echo
+---
+---
+write_echo:
+  - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"

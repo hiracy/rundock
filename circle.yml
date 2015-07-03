@@ -1,0 +1,11 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+test:
+  override:
+    - bundle exec rake spec
