@@ -1,6 +1,6 @@
 class Object
   def blank?
-    respond_to?(:empty?) ? !!empty? : !self
+    respond_to?(:empty?) ? empty? : !self
   end
 end
 
@@ -34,7 +34,7 @@ class String
   BLANK_RE = /\A[[:space:]]*\z/
 
   def blank?
-    BLANK_RE === self
+    self =~ BLANK_RE
   end
 end
 

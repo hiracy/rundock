@@ -12,7 +12,7 @@ module Rundock
 
     class << self
       def create(type, options = {})
-        self.const_get(type.capitalize).new(type, options)
+        self.const_get(type.capitalize).new(options)
       end
     end
 
@@ -20,7 +20,7 @@ module Rundock
       attr_reader :options
       attr_reader :backend
 
-      def initialize(type, options)
+      def initialize(options)
         @options = parse(options)
         @backend = create_specinfra_backend
       end
@@ -33,12 +33,12 @@ module Rundock
 
       private
 
-      def run_command(cmd , options = {})
+      def run_command(cmd, options = {})
         command = cmd.strip
         command = "cd #{Shellwords.escape(options[:cwd])} && #{command}" if options[:cwd]
         command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if options[:user]
 
-        Logger.debug(%Q{Start executing: "#{command}"})
+        Logger.debug(%(Start executing: "#{command}"))
 
         result = @backend.run_command(command)
         exit_status = result.exit_status
@@ -73,7 +73,7 @@ module Rundock
       end
 
       def create_specinfra_backend
-        Specinfra::Backend::Exec.new()
+        Specinfra::Backend::Exec.new
       end
     end
 
@@ -81,9 +81,8 @@ module Rundock
       private
 
       def parse(options)
-
-        if options['ssh_config'] && File.exists?(options['ssh_config'])
-          ssh_opts = Net::SSH::Config.for(options['host'], files=[options['ssh_config']])
+        if options['ssh_config'] && FileTest.exists?(options['ssh_config'])
+          ssh_opts = Net::SSH::Config.for(options['host'], [options['ssh_config']])
         else
           ssh_opts = Net::SSH::Config.for(options['host'])
         end
@@ -91,30 +90,28 @@ module Rundock
         ssh_opts[:host_name] = options['host']
         ssh_opts[:user] = options['user']
         ssh_opts[:keys] = options['keys']
-        ssh_opts[:keys] = Array(options['key']) if (!ssh_opts[:keys] && options['key'])
+        ssh_opts[:keys] = Array(options['key']) if !ssh_opts[:keys] && options['key']
         ssh_opts[:port] = options['port']
-
-        if options['ask_password']
-          print "password: "
-          passwd = STDIN.noecho(&:gets).strip
-          print "\n"
-          ssh_opts[:password] = passwd
-        end
+        ssh_opts[:password] = parse_password_from_stdin if options['ask_password']
 
         ssh_opts.merge!(filter_net_ssh_options(options))
 
-        Logger.debug(%Q{Net::SSH Options: "#{ssh_opts}"})
+        Logger.debug(%(Net::SSH Options: "#{ssh_opts}"))
 
         ssh_opts
       end
 
-      def filter_net_ssh_options(options)
+      def parse_password_from_stdin
+        print 'password: '
+        passwd = STDIN.noecho(&:gets).strip
+        print "\n"
+        passwd
+      end
 
+      def filter_net_ssh_options(options)
         opts = {}
-        options.each do |k,v|
-          if Net::SSH::VALID_OPTIONS.include?(k.to_sym)
-            opts[k.to_sym] = v
-          end
+        options.each do |k, v|
+          opts[k.to_sym] = v if Net::SSH::VALID_OPTIONS.include?(k.to_sym)
         end
 
         opts
@@ -125,7 +122,7 @@ module Rundock
           request_pty: true,
           host: @options[:host_name],
           disable_sudo: !@options[:sudo],
-          ssh_options: @options,
+          ssh_options: @options
         )
       end
     end
