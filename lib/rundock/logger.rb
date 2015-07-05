@@ -47,36 +47,35 @@ module Rundock
       end
 
       private
+
       def msg2str(msg)
         case msg
         when ::String
           msg
         when ::Exception
-          "#{ msg.message } (#{ msg.class })\n" <<
-          (msg.backtrace || []).join("\n")
+          "#{msg.message} (#{msg.class})\n" << (msg.backtrace || []).join("\n")
         else
           msg.inspect
         end
       end
 
       def colorize(msg, severity)
-
         if @color
           col = @color
         else
           col = case severity
-                       when "INFO"
-                         :clear
-                       when "WARN"
-                         :yellow
-                       when "ERROR"
-                         :red
-                       else
-                         :clear
-                       end
+                when 'INFO'
+                  :clear
+                when 'WARN'
+                  :yellow
+                when 'ERROR'
+                  :red
+                else
+                  :clear
+                end
         end
 
-        ANSI.public_send(col) {msg}
+        ANSI.public_send(col) { msg }
       end
     end
 

@@ -1,0 +1,45 @@
+# see https://github.com/bbatsov/ruby-style-guide#percent-q-shorthand
+
+AllCops:
+  Exclude:
+    - "vendor/**/*" # rubocop config/default.yml
+    - "db/schema.rb"
+  DisplayCopNames: true
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 30
+
+Metrics/AbcSize:
+  Enabled: true
+  Max: 30
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Style/Documentation:
+  Enabled: false
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+Style/RedundantSelf:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Lint/UnusedMethodArgument:
+  Enabled: false

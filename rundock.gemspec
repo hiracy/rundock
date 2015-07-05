@@ -4,26 +4,26 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rundock/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "rundock"
+  spec.name          = 'rundock'
   spec.version       = Rundock::VERSION
-  spec.authors       = ["hiracy"]
-  spec.email         = ["leizhen@mbr.nifty.com"]
+  spec.authors       = ['hiracy']
+  spec.email         = ['leizhen@mbr.nifty.com']
 
-  spec.summary       = %q{Simple Execution framework for various servers}
-  spec.homepage      = "https://github.com/hiracy/rundock"
-  spec.license       = "MIT"
+  spec.summary       = 'Simple Execution framework for various servers'
+  spec.homepage      = 'https://github.com/hiracy/rundock'
+  spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
+  spec.files         = `git ls-files -z`.split('\x0').reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.add_development_dependency "bundler", "~> 1.9"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "serverspec", "~> 2.1"
+  spec.add_development_dependency 'bundler', '~> 1.9'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'serverspec', '~> 2.1'
 
-  spec.add_runtime_dependency "specinfra", [">= 2.31.0", "< 3.0.0"]
-  spec.add_runtime_dependency "ansi"
-  spec.add_runtime_dependency "thor"
+  spec.add_runtime_dependency 'specinfra', ['>= 2.31.0', '< 3.0.0']
+  spec.add_runtime_dependency 'ansi'
+  spec.add_runtime_dependency 'thor'
   spec.add_runtime_dependency 'net-ssh'
 end

@@ -2,7 +2,6 @@ require 'rundock'
 
 module Rundock
   class Node
-
     attr_reader :name
     attr_reader :operations
     attr_reader :backend
