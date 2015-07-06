@@ -4,7 +4,7 @@ require 'tempfile'
 
 module Rundock
   class Runner
-    PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH = "#{File.dirname(__FILE__)}/default_ssh.yml"
+    PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH = "#{Gem::Specification.find_by_path('rundock').full_gem_path}/default_ssh.yml"
     ScenarioNotFoundError = Class.new(StandardError)
     CommandArgNotFoundError = Class.new(StandardError)
 
@@ -30,45 +30,56 @@ module Rundock
     end
 
     def build(options)
-      unless options['scenario_yaml'] && File.exist?(options['scenario_yaml'])
-        raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
+      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
+        opts = YAML.load_file(options['default_ssh_opts_yaml'])
+      else
+        opts = YAML.load_file(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
       end
 
-      opts = YAML.load_file(options['default_ssh_opts_yaml'])
       opts.merge!(options)
 
-      # parse scenario
-      if options['scenario_yaml'] =~ %r{^(http|https)://}
-        # read from http/https
-        open(options['scenario_yaml']) do |f|
-          @scenario = parse_scenario_from_file(f)
+      if options['scenario_yaml']
+        unless FileTest.exist?(options['scenario_yaml'])
+          raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
+        end
+
+        # parse scenario
+        if options['scenario_yaml'] =~ %r{^(http|https)://}
+          # read from http/https
+          open(options['scenario_yaml']) do |f|
+            @scenario = parse_scenario(f)
+          end
+        else
+          File.open(options['scenario_yaml']) do |f|
+            @scenario = parse_scenario(f, opts)
+          end
         end
       else
-        File.open(options['scenario_yaml']) do |f|
-          @scenario = parse_scenario_from_file(f, opts)
-        end
+        @scenario = parse_scenario(nil, opts)
       end
     end
 
     private
 
-    def parse_scenario_from_file(file, options)
+    def parse_scenario(scen_file, options)
       scen = Scenario.new
-
-      type = [:main, :node_info, :tasks]
-      scenario_data = {}
-
-      YAML.load_documents(file).each_with_index do |data, idx|
-        scenario_data[type[idx]] = data
-      end
-
-      node = nil
 
       # use host option
       if options['host']
         scen << build_single_node_operation(options)
         return scen
       end
+
+      type = [:main, :node_info, :tasks]
+      scenario_data = {}
+
+      if scen_file
+        YAML.load_documents(scen_file).each_with_index do |data, idx|
+          scenario_data[type[idx]] = data
+        end
+      end
+
+      node = nil
 
       # use scenario file
       scenario_data[:main].each do |n|

@@ -7,11 +7,15 @@ AllCops:
   DisplayCopNames: true
 
 Metrics/LineLength:
-  Max: 120
+  Max: 500
+
+Metrics/ClassLength:
+  CountComments: false  # count full line comments?
+  Max: 320
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
-  Max: 30
+  Max: 50
 
 Metrics/AbcSize:
   Enabled: true
