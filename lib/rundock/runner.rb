@@ -4,7 +4,7 @@ require 'tempfile'
 
 module Rundock
   class Runner
-    PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH = "#{File.dirname(__FILE__)}/default_ssh.yml"
+    PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH = "#{Gem::Specification.find_by_path('rundock').full_gem_path}/default_ssh.yml"
     ScenarioNotFoundError = Class.new(StandardError)
     CommandArgNotFoundError = Class.new(StandardError)
 
@@ -30,7 +30,12 @@ module Rundock
     end
 
     def build(options)
-      opts = YAML.load_file(options['default_ssh_opts_yaml'])
+      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
+        opts = YAML.load_file(options['default_ssh_opts_yaml'])
+      else
+        opts = YAML.load_file(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
+      end
+
       opts.merge!(options)
 
       if options['scenario_yaml']
