@@ -34,7 +34,7 @@ module Rundock
       opts.merge!(options)
 
       if options['scenario_yaml']
-        unless File.exist?(options['scenario_yaml'])
+        unless FileTest.exist?(options['scenario_yaml'])
           raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
         end
 
