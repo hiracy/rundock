@@ -30,45 +30,51 @@ module Rundock
     end
 
     def build(options)
-      unless options['scenario_yaml'] && File.exist?(options['scenario_yaml'])
-        raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
-      end
-
       opts = YAML.load_file(options['default_ssh_opts_yaml'])
       opts.merge!(options)
 
-      # parse scenario
-      if options['scenario_yaml'] =~ %r{^(http|https)://}
-        # read from http/https
-        open(options['scenario_yaml']) do |f|
-          @scenario = parse_scenario_from_file(f)
+      if options['scenario_yaml']
+        unless File.exist?(options['scenario_yaml'])
+          raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
+        end
+
+        # parse scenario
+        if options['scenario_yaml'] =~ %r{^(http|https)://}
+          # read from http/https
+          open(options['scenario_yaml']) do |f|
+            @scenario = parse_scenario(f)
+          end
+        else
+          File.open(options['scenario_yaml']) do |f|
+            @scenario = parse_scenario(f, opts)
+          end
         end
       else
-        File.open(options['scenario_yaml']) do |f|
-          @scenario = parse_scenario_from_file(f, opts)
-        end
+        @scenario = parse_scenario(nil, opts)
       end
     end
 
     private
 
-    def parse_scenario_from_file(file, options)
+    def parse_scenario(scen_file, options)
       scen = Scenario.new
-
-      type = [:main, :node_info, :tasks]
-      scenario_data = {}
-
-      YAML.load_documents(file).each_with_index do |data, idx|
-        scenario_data[type[idx]] = data
-      end
-
-      node = nil
 
       # use host option
       if options['host']
         scen << build_single_node_operation(options)
         return scen
       end
+
+      type = [:main, :node_info, :tasks]
+      scenario_data = {}
+
+      if scen_file
+        YAML.load_documents(scen_file).each_with_index do |data, idx|
+          scenario_data[type[idx]] = data
+        end
+      end
+
+      node = nil
 
       # use scenario file
       scenario_data[:main].each do |n|
