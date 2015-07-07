@@ -1,34 +1,31 @@
-# Rundock
+# Rundock [![Gem Version](https://badge.fury.io/rb/rundock.svg)](http://badge.fury.io/rb/rundock) [![Circle CI](https://circleci.com/gh/hiracy/rundock.png?style=shield&circle-token=0d8a3836c5e285b7ecb6d076f2d51c5deca52d8b)](https://circleci.com/gh/hiracy/rundock)
+===
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rundock`. To experiment with that code, run `bin/console` for an interactive prompt.
+Simple and extensible server operation framework based on [specinfra](https://github.com/serverspec/specinfra).
 
-TODO: Delete this and the text above, and describe your gem
+- [CHANGELOG](https://github.com/hiracy/rundock/blob/master/CHANGELOG.md)
 
 ## Installation
 
-Add this line to your application's Gemfile
-
-```ruby
-gem 'rundock'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rundock
+$ gem install rundock
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Edit your operation scenario to "scenario.yml".
 
-## Development
+## Documentations
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+Now on editing...
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Run tests
+
+Requirements: Docker environments
+
+```
+$ bundle exec rake spec
+```
 
 ## Contributing
 
