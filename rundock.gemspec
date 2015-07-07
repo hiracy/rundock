@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.9'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'serverspec', '~> 2.1'
+  spec.add_development_dependency 'rubocop'
 
   spec.add_runtime_dependency 'specinfra', ['>= 2.31.0', '< 3.0.0']
   spec.add_runtime_dependency 'ansi'
