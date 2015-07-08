@@ -48,7 +48,7 @@ module Rundock
         if options['scenario_yaml'] =~ %r{^(http|https)://}
           # read from http/https
           open(options['scenario_yaml']) do |f|
-            @scenario = parse_scenario(f)
+            @scenario = parse_scenario(f, opts)
           end
         else
           File.open(options['scenario_yaml']) do |f|
