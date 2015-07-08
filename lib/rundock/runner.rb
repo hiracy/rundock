@@ -31,9 +31,9 @@ module Rundock
 
     def build(options)
       if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
-        opts = YAML.load_file(options['default_ssh_opts_yaml'])
+        opts = parse_default_ssh(options['default_ssh_opts_yaml'])
       else
-        opts = YAML.load_file(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
+        opts = parse_default_ssh(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
       end
 
       opts.merge!(options)
@@ -60,6 +60,19 @@ module Rundock
     end
 
     private
+
+    def parse_default_ssh(def_ssh_file)
+      opts = {}
+      File.open(def_ssh_file) do |f|
+        YAML.load_documents(f) do |y|
+          y.each do |k, v|
+            opts[k.to_s] = v
+          end
+        end
+      end
+
+      opts
+    end
 
     def parse_scenario(scen_file, options)
       scen = Scenario.new
