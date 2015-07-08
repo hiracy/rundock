@@ -18,11 +18,11 @@ Edit your operation scenario to "[scenario.yml](https://github.com/hiracy/rundoc
 # scenario section
 - node: 192.168.1.11
   command:
-    - "hostname new-host-01"
-    - "sed -i -e 's/HOSTNAME=old-host-01/HOSTNAME=new-host-01/g' /etc/sysconfig/network"
+    - "sudo hostname new-host-01"
+    - "sudo sed -i -e 's/HOSTNAME=old-host-01/HOSTNAME=new-host-01/g' /etc/sysconfig/network"
 - node: host-alias-01
   command:
-    - "yum -y install ruby"
+    - "sudo yum -y install ruby"
   task:
     - update_gem
     - install_bundler
@@ -37,10 +37,10 @@ host-alias-01:
 ---
 # task information section
 update_gem:
-  - "gem update --system"
-  - "gem update"
+  - "sudo gem update --system"
+  - "sudo gem update"
 install_bundler
-  - "gem install bundler --no-ri --no-rdoc"
+  - "sudo gem install bundler --no-ri --no-rdoc"
 ```
 
 and do rundock.
