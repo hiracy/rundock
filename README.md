@@ -39,7 +39,7 @@ host-alias-01:
 update_gem:
   - "sudo gem update --system"
   - "sudo gem update"
-install_bundler
+install_bundler:
   - "sudo gem install bundler --no-ri --no-rdoc"
 ```
 
