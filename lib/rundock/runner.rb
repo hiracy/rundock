@@ -141,6 +141,7 @@ module Rundock
         backend_type = :local
       else
         backend_type = :ssh
+        opts['host'] = host
       end
 
       # update ssh options for node from node_info
@@ -150,7 +151,7 @@ module Rundock
       end
 
       # add any attributes for host from node_info
-      opts.merge!(node_info[host].deep_symbolize_keys) if exist_node_attributes
+      opts.merge!(node_info[host]) if exist_node_attributes
       Backend.create(backend_type, opts)
     end
   end
