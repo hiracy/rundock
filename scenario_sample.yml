@@ -2,6 +2,7 @@
 # This file is example of rundock scenario file based on yaml format.
 #
 # -------------------------------------------------------------------
+# ###  scenario section  ###
 # - node: <nodename>
 #   <taskname>:
 #     - <task detail>
@@ -12,6 +13,7 @@
 # - node: <nodename>
 #   :
 # ---
+# ###  host information section  ###
 # <hostname>:
 #   host: xxx.xxx.xxx.xxx
 #   <other_attributes>:
@@ -19,6 +21,7 @@
 # <hostname>:
 #   :
 # ---
+# ###  task information section  ###
 # task:
 #   <taskname>:
 #     - "<actual command>"
