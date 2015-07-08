@@ -13,7 +13,46 @@ $ gem install rundock
 
 ## Usage
 
-Edit your operation scenario to "scenario.yml".
+Edit your operation scenario to "[scenario.yml](https://github.com/hiracy/rundock/blob/master/scenario_sample.yml)" like this sample.
+
+```
+# scenario section
+- node: 192.168.1.11
+  command:
+    - "hostname new-host-01"
+    - "sed -i -e 's/HOSTNAME=old-host-01/HOSTNAME=new-host-01/g' /etc/sysconfig/network"
+- node: host-alias-01
+  command:
+    - "yum -y install ruby"
+  task:
+    - update_gem
+    - install_bundler
+---
+# host information section
+host-alias-01:
+  host: 192.168.1.12
+  ssh_opts:
+    port: 2222
+    user: anyuser
+    keys: ["~/.ssh/id_rsa_anyuser"]
+---
+# task information section
+update_gem:
+  - "gem update --system"
+  - "gem update"
+install_bundler
+  - "gem install bundler --no-ri --no-rdoc"
+```
+
+and do rundock.
+
+    $ rundock do -s /path/to/your-dir/scenario.yml
+
+You can also specify [ssh_options.yml](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html)(Net::SSH options) file contents that you specified "-d" option to the default ssh options.
+
+    $ rundock do -s /path/to/your-dir/scenario.yml -d /path/to/your-dir/ssh_options.yml
+
+For more detail. You can see from `rundock -h` command.
 
 ## Documentations
 
