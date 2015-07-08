@@ -22,12 +22,11 @@
 #   :
 # ---
 # ###  task information section  ###
-# task:
-#   <taskname>:
-#     - "<actual command>"
-#     - :
-#   <taskname>:
-#     :
+# <taskname>:
+#   - "<actual command>"
+#   - :
+# <taskname>:
+#   :
 # -------------------------------------------------------------------
 #
 
