@@ -1,6 +1,7 @@
 require 'rundock'
 require 'yaml'
 require 'tempfile'
+require 'open-uri'
 
 module Rundock
   class Runner
