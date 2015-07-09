@@ -19,13 +19,13 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Enabled: true
-  Max: 30
+  Max: 50
 
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 20
 
 Metrics/PerceivedComplexity:
-  Max: 10
+  Max: 20
 
 Style/Documentation:
   Enabled: false
