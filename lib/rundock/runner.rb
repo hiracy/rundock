@@ -31,14 +31,6 @@ module Rundock
     end
 
     def build(options)
-      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
-        opts = parse_default_ssh(options['default_ssh_opts_yaml'])
-      else
-        opts = parse_default_ssh(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
-      end
-
-      opts.merge!(options)
-
       if options['scenario_yaml']
         unless FileTest.exist?(options['scenario_yaml'])
           raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
@@ -48,15 +40,15 @@ module Rundock
         if options['scenario_yaml'] =~ %r{^(http|https)://}
           # read from http/https
           open(options['scenario_yaml']) do |f|
-            @scenario = parse_scenario(f, opts)
+            @scenario = parse_scenario(f, options)
           end
         else
           File.open(options['scenario_yaml']) do |f|
-            @scenario = parse_scenario(f, opts)
+            @scenario = parse_scenario(f, options)
           end
         end
       else
-        @scenario = parse_scenario(nil, opts)
+        @scenario = parse_scenario(nil, options)
       end
     end
 
@@ -78,9 +70,9 @@ module Rundock
     def parse_scenario(scen_file, options)
       scen = Scenario.new
 
-      # use host option
+      # no use scenario file
       if options['host']
-        scen << build_single_node_operation(options)
+        scen << build_no_scenario_node_operation(options)
         return scen
       end
 
@@ -92,6 +84,15 @@ module Rundock
           scenario_data[type[idx]] = data
         end
       end
+
+      # parse default_ssh.yml before node parsing
+      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
+        opts = parse_default_ssh(options['default_ssh_opts_yaml'])
+      else
+        opts = parse_default_ssh(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
+      end
+
+      opts.merge!(options)
 
       node = nil
 
@@ -115,9 +116,13 @@ module Rundock
       scen
     end
 
-    def build_single_node_operation(options)
+    def build_no_scenario_node_operation(options)
       raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless options['command']
-      node = Node.new(options['host'], build_backend(options['host'], nil, options))
+
+      node_info = { options['host'] => { 'ssh_opts' => {} } }
+      %w(user key port ssh_config ask_password sudo).each { |o| node_info[options['host']]['ssh_opts'][o] = options[o] if options[o]  }
+
+      node = Node.new(options['host'], build_backend(options['host'], node_info, options))
       node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
       node
     end
@@ -133,21 +138,25 @@ module Rundock
 
     def build_backend(host, node_info, options)
       opts = {}
-      opts.merge!(options)
 
       exist_node_attributes = node_info && node_info[host]
       exist_node_ssh_opts_attributes = exist_node_attributes && node_info[host]['ssh_opts']
+      exist_node_ssh_opts_remote_attribues = exist_node_ssh_opts_attributes &&
+                                             (node_info[host]['ssh_opts']['port'] || node_info[host]['ssh_opts']['user'] || node_info[host]['ssh_opts']['ssh_config'])
 
-      if host =~ /localhost|127\.0\.0\.1/ && !opts['port'] && !opts['user'] && !opts['ssh_config']
+      if host =~ /localhost|127\.0\.0\.1/ && !exist_node_ssh_opts_remote_attribues
         backend_type = :local
       else
         backend_type = :ssh
         opts['host'] = host
       end
 
+      opts.merge!(options)
+
       # update ssh options for node from node_info
       if exist_node_ssh_opts_attributes
         opts.merge!(node_info[host]['ssh_opts'])
+        # delete trash ssh_options(node[host::ssh_options])
         node_info[host].delete('ssh_opts')
       end
 
