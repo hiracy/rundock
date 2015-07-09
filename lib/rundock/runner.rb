@@ -1,6 +1,7 @@
 require 'rundock'
 require 'yaml'
 require 'tempfile'
+require 'open-uri'
 
 module Rundock
   class Runner
@@ -30,14 +31,6 @@ module Rundock
     end
 
     def build(options)
-      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
-        opts = YAML.load_file(options['default_ssh_opts_yaml'])
-      else
-        opts = YAML.load_file(PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH)
-      end
-
-      opts.merge!(options)
-
       if options['scenario_yaml']
         unless FileTest.exist?(options['scenario_yaml'])
           raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
@@ -47,26 +40,50 @@ module Rundock
         if options['scenario_yaml'] =~ %r{^(http|https)://}
           # read from http/https
           open(options['scenario_yaml']) do |f|
-            @scenario = parse_scenario(f)
+            @scenario = parse_scenario(f, options)
           end
         else
           File.open(options['scenario_yaml']) do |f|
-            @scenario = parse_scenario(f, opts)
+            @scenario = parse_scenario(f, options)
           end
         end
       else
-        @scenario = parse_scenario(nil, opts)
+        @scenario = parse_scenario(nil, options)
       end
     end
 
     private
 
+    def parse_default_ssh(options)
+      opts = {}
+
+      if options['default_ssh_opts_yaml'] && FileTest.exist?(options['default_ssh_opts_yaml'])
+        def_ssh_file = options['default_ssh_opts_yaml']
+      else
+        def_ssh_file = PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH
+      end
+
+      File.open(def_ssh_file) do |f|
+        YAML.load_documents(f) do |y|
+          y.each do |k, v|
+            opts["#{k}_ssh_default"] = v
+          end
+        end
+      end
+
+      opts
+    end
+
     def parse_scenario(scen_file, options)
+      # parse default ssh file
+      opts = parse_default_ssh(options)
+      opts.merge!(options)
+
       scen = Scenario.new
 
-      # use host option
-      if options['host']
-        scen << build_single_node_operation(options)
+      # no use scenario file
+      if opts['host']
+        scen << build_no_scenario_node_operation(opts)
         return scen
       end
 
@@ -89,9 +106,9 @@ module Rundock
           if k == 'node'
             node = Node.new(
               v,
-              build_backend(v, scenario_data[:node_info], options))
+              build_backend(v, scenario_data[:node_info], opts))
           else
-            ope = build_operations(k, v, scenario_data[:tasks], options)
+            ope = build_operations(k, v, scenario_data[:tasks], opts)
             node.add_operation(ope) if node
           end
         end
@@ -101,9 +118,14 @@ module Rundock
       scen
     end
 
-    def build_single_node_operation(options)
+    def build_no_scenario_node_operation(options)
       raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless options['command']
-      node = Node.new(options['host'], build_backend(options['host'], nil, options))
+
+      node_info = { options['host'] => { 'ssh_opts' => {} } }
+
+      %w(user key port ssh_config ask_password sudo).each { |o| node_info[options['host']]['ssh_opts'][o] = options[o] if options[o]  }
+
+      node = Node.new(options['host'], build_backend(options['host'], node_info, options))
       node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
       node
     end
@@ -119,25 +141,41 @@ module Rundock
 
     def build_backend(host, node_info, options)
       opts = {}
-      opts.merge!(options)
 
-      exist_node_attributes = node_info && node_info[host]
-      exist_node_ssh_opts_attributes = exist_node_attributes && node_info[host]['ssh_opts']
+      if !node_info ||
+         !node_info[host]
+        node_info = { host => {} }
+      end
+      node_info[host]['ssh_opts'] = {} unless node_info[host]['ssh_opts']
+      is_local = host =~ /localhost|127\.0\.0\.1/
 
-      if host =~ /localhost|127\.0\.0\.1/ && !opts['port'] && !opts['user'] && !opts['ssh_config']
+      # replace default ssh options if exists
+      options.keys.select { |o| o =~ /(\w+)_ssh_default$/ }.each do |oo|
+        opt = oo.gsub(/_ssh_default/, '')
+        # no use default ssh options if local
+        # (like docker or localhost with port access host should not use default ssh options)
+        node_info[host]['ssh_opts'][opt] = options[oo] if !is_local && !node_info[host]['ssh_opts'][opt]
+      end
+
+      if is_local &&
+         !node_info[host]['ssh_opts']['port'] &&
+         !node_info[host]['ssh_opts']['user'] &&
+         !node_info[host]['ssh_opts']['ssh_config']
         backend_type = :local
       else
         backend_type = :ssh
+        opts['host'] = host
       end
+
+      opts.merge!(options)
 
       # update ssh options for node from node_info
-      if exist_node_ssh_opts_attributes
-        opts.merge!(node_info[host]['ssh_opts'])
-        node_info[host].delete('ssh_opts')
-      end
+      opts.merge!(node_info[host]['ssh_opts'])
+      # delete trash ssh_options(node[host::ssh_options])
+      node_info[host].delete('ssh_opts')
 
       # add any attributes for host from node_info
-      opts.merge!(node_info[host].deep_symbolize_keys) if exist_node_attributes
+      opts.merge!(node_info[host])
       Backend.create(backend_type, opts)
     end
   end
