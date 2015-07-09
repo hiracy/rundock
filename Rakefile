@@ -11,12 +11,17 @@ run_scenarios = %w(
   simple_echo_scenario
 )
 
+def execute(command)
+  puts "[EXECUTE:] #{command}"
+  system command
+end
+
 def setup_docker(platform, timeout, interval)
   Bundler.with_clean_env do
-    system "./spec/integration/platforms/#{platform}/setup.sh &"
+    execute "./spec/integration/platforms/#{platform}/setup.sh &"
     found = false
     (timeout / interval).times do
-      system 'sudo docker ps | grep rundock'
+      execute 'sudo docker ps | grep rundock'
       if $?.to_i == 0
         found = true
         break
@@ -30,11 +35,11 @@ end
 def do_rundock_ssh(commands, platform)
   if platform == 'localhost'
     commands.each do |cmd|
-      system "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
+      execute "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
     end
   else
     commands.each do |cmd|
-      system 'bundle exec exe/rundock' \
+      execute 'bundle exec exe/rundock' \
         " ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester" \
         " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
     end
@@ -54,8 +59,8 @@ def do_rundock_scenarios(scenarios, platform)
       default_ssh_opt = " -d #{base_dir}/integration_default_ssh.yml"
     end
 
-    system 'bundle exec exe/rundock' \
-      " do -s #{base_dir}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug"
+    execute 'bundle exec exe/rundock' \
+       " do -s #{base_dir}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug"
   end
 end
 
@@ -64,7 +69,7 @@ desc 'Cleaning environments'
 task :clean do
   Bundler.with_clean_env do
     Dir.glob('./spec/integration/platforms/*').each do |platform|
-      system "#{platform}/setup.sh --clean"
+      execute "#{platform}/setup.sh --clean"
     end
   end
 end
@@ -72,7 +77,7 @@ end
 desc 'execute rubocop'
 task :rubocop do
   Bundler.with_clean_env do
-    system 'rubocop'
+    execute 'rubocop'
   end
 end
 
