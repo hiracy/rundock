@@ -11,6 +11,10 @@ run_scenarios = %w(
   simple_echo_scenario
 )
 
+run_groups = %w(
+  simple_host_group
+)
+
 def execute(command)
   puts "[EXECUTE:] #{command}"
   system command
@@ -32,7 +36,9 @@ def setup_docker(platform, timeout, interval)
   end
 end
 
-def do_rundock_ssh(commands, platform)
+def do_rundock_ssh(commands, platform, groups)
+  base_dir = "#{ENV['HOME']}/.rundock/#{platform}"
+
   if platform == 'localhost'
     commands.each do |cmd|
       execute "bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug"
@@ -42,6 +48,11 @@ def do_rundock_ssh(commands, platform)
       execute 'bundle exec exe/rundock' \
         " ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester" \
         " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
+      groups.each do |g|
+        execute 'bundle exec exe/rundock' \
+          " ssh -c \"#{cmd}\" -g #{base_dir}/scenarios/#{g}.yml -p 22222 -u tester" \
+          " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug"
+      end
     end
   end
 end
@@ -119,7 +130,7 @@ namespace :spec do
 
         task :rundock do
           Bundler.with_clean_env do
-            do_rundock_ssh(run_commands, target)
+            do_rundock_ssh(run_commands, target, run_groups)
             do_rundock_scenarios(run_scenarios, target)
           end
         end

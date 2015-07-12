@@ -1,0 +1,11 @@
+- node: localhost
+  command:
+    - "echo 'Should this message does not appear';cat /notexist"
+- node: anyhost-01
+---
+anyhost-01:
+  host: 127.0.0.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"

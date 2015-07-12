@@ -48,7 +48,7 @@ fi
 
 cp ${RUNDOCK_SCENARIO_DIR}/* ${RUNDOCK_SCENARIO_CACHE_DIR}
 
-find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" | \
+find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" -or -name "*_group.yml" | \
   xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
 
 sudo docker ps | grep "${DOCKER_IMAGE_NAME}" && { echo "docker image is already standing."; exit 0; }

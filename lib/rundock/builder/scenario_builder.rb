@@ -17,9 +17,7 @@ module Rundock
         opts.merge!(@options)
 
         # use host specified
-        if opts['host']
-          return build_scenario_with_host(opts)
-        end
+        return build_scenario_with_host(opts) if opts['host']
 
         # use scenario file
         build_scenario(opts)
@@ -33,11 +31,7 @@ module Rundock
         scen = Scenario.new
 
         options['host'].split(',').each do |host|
-          node_info = { host => { 'ssh_opts' => {} } }
-  
-          %w(user key port ssh_config ask_password sudo).each { |o| node_info[host]['ssh_opts'][o] = options[o] if options[o]  }
-  
-          backend = BackendBuilder.new(options, host, node_info).build
+          backend = BackendBuilder.new(options, host, nil).build
           node = Node.new(host, backend)
           node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
           scen << node
@@ -47,43 +41,53 @@ module Rundock
       end
 
       def build_scenario(options)
+        if options['hostgroup_yaml'] && !options['command']
+          raise CommandArgNotFoundError, %("--command or -c" option is required if hostgroup specified.)
+        end
+
         type = [:main, :node_info, :tasks]
         scenario_data = {}
-  
+
         if @scenario_file
           YAML.load_documents(@scenario_file).each_with_index do |data, idx|
             scenario_data[type[idx]] = data
           end
         end
-  
+
         node = nil
         scen = Scenario.new
-  
+
         # use scenario file
         scenario_data[:main].each do |n|
           scen << node if node
-  
+
           n.each do |k, v|
             if k == 'node'
               backend = BackendBuilder.new(options, v, scenario_data[:node_info]).build
               node = Node.new(v, backend)
+
+              if options['command']
+                node.add_operation(
+                  Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
+              end
             else
+
+              if options['command'] && (k == 'command' || k == 'task')
+                Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
+                next
+              end
+
               ope = build_operations(k, v, scenario_data[:tasks], options)
               node.add_operation(ope) if node
             end
           end
         end
-  
+
         scen << node if node
         scen
       end
 
       def build_operations(ope_type, ope_content, tasks, options)
-        if options['command']
-          Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
-          return Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil)
-        end
-
         Rundock::OperationFactory.instance(ope_type.to_sym).create(Array(ope_content), tasks)
       end
     end

@@ -26,10 +26,14 @@ module Rundock
     end
 
     def build(options)
-      if options['scenario_yaml']
-        unless FileTest.exist?(options['scenario_yaml'])
+      if options['scenario_yaml'] || options['hostgroup_yaml']
+        if options['scenario_yaml'] && !FileTest.exist?(options['scenario_yaml'])
           raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
+        elsif options['hostgroup_yaml'] && !FileTest.exist?(options['hostgroup_yaml'])
+          raise ScenarioNotFoundError, "'#{options['hostgroup_yaml']}' hostgroup file is not found."
         end
+
+        options['scenario_yaml'] = options['hostgroup_yaml'] if options['hostgroup_yaml']
 
         # parse scenario
         if options['scenario_yaml'] =~ %r{^(http|https)://}

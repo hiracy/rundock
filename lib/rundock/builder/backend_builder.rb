@@ -8,6 +8,25 @@ module Rundock
       end
 
       def build
+        opts = build_options
+
+        backend_type = parse_backend_type
+
+        opts.merge!(@options)
+
+        # update ssh options for node from node_info
+        opts.merge!(@node_info[@nodename]['ssh_opts'])
+        # delete trash ssh_options(node[host::ssh_options])
+        @node_info[@nodename].delete('ssh_opts')
+
+        # add any attributes for host from node_info
+        opts.merge!(@node_info[@nodename])
+        Backend.create(backend_type, opts)
+      end
+
+      private
+
+      def build_options
         opts = {}
 
         if !@node_info ||
@@ -25,6 +44,17 @@ module Rundock
           @node_info[@nodename]['ssh_opts'][opt] = @options[oo] if !is_local && !@node_info[@nodename]['ssh_opts'][opt]
         end
 
+        # replace cli ssh options if exists
+        %w(user key port ssh_config ask_password sudo).each { |o| @node_info[@nodename]['ssh_opts'][o] = @options[o] if @options[o] }
+
+        opts['host'] = @nodename
+
+        opts
+      end
+
+      def parse_backend_type
+        is_local = @nodename =~ /localhost|127\.0\.0\.1/
+
         if is_local &&
            !@node_info[@nodename]['ssh_opts']['port'] &&
            !@node_info[@nodename]['ssh_opts']['user'] &&
@@ -32,19 +62,9 @@ module Rundock
           backend_type = :local
         else
           backend_type = :ssh
-          opts['host'] = @nodename
         end
 
-        opts.merge!(@options)
-
-        # update ssh options for node from node_info
-        opts.merge!(@node_info[@nodename]['ssh_opts'])
-        # delete trash ssh_options(node[host::ssh_options])
-        @node_info[@nodename].delete('ssh_opts')
-
-        # add any attributes for host from node_info
-        opts.merge!(@node_info[@nodename])
-        Backend.create(backend_type, opts)
+        backend_type
       end
     end
   end
