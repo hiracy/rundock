@@ -16,12 +16,9 @@ module Rundock
         opts = @default_ssh_builder.build
         opts.merge!(@options)
 
-        scen = Scenario.new
-
         # no use scenario file
         if opts['host']
-          scen << build_no_scenario_node_operation(opts)
-          return scen
+          return build_no_scenario_node_operation(opts)
         end
 
         type = [:main, :node_info, :tasks]
@@ -34,6 +31,7 @@ module Rundock
         end
 
         node = nil
+        scen = Scenario.new
 
         # use scenario file
         scenario_data[:main].each do |n|
@@ -59,14 +57,20 @@ module Rundock
       def build_no_scenario_node_operation(options)
         raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless options['command']
 
-        node_info = { options['host'] => { 'ssh_opts' => {} } }
+        scen = Scenario.new
 
-        %w(user key port ssh_config ask_password sudo).each { |o| node_info[options['host']]['ssh_opts'][o] = options[o] if options[o]  }
+        options['host'].split(',').each do |host|
+          node_info = { host => { 'ssh_opts' => {} } }
+  
+          %w(user key port ssh_config ask_password sudo).each { |o| node_info[host]['ssh_opts'][o] = options[o] if options[o]  }
+  
+          backend = BackendBuilder.new(options, host, node_info).build
+          node = Node.new(host, backend)
+          node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
+          scen << node
+        end
 
-        backend = BackendBuilder.new(options, options['host'], node_info).build
-        node = Node.new(options['host'], backend)
-        node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
-        node
+        scen
       end
 
       def build_operations(ope_type, ope_content, tasks, options)

@@ -33,9 +33,9 @@ module Rundock
     end
 
     desc 'ssh [options]', 'Run rundock ssh with various options'
-    option :command, type: :string, aliases: ['-c'], banner: "NOTICE: Scenario's task is ignored."
+    option :command, type: :string, aliases: ['-c']
     option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
-    option :host, type: :string, aliases: ['-h']
+    option :host, type: :string, aliases: ['-h'], banner: 'You can specify comma separated hosts.[ex: host1,host2,..]'
     option :user, type: :string, aliases: ['-u']
     option :key, type: :string, aliases: ['-i']
     option :port, type: :numeric, aliases: ['-p']
