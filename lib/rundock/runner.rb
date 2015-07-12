@@ -43,6 +43,7 @@ module Rundock
           end
         end
       else
+        # do rundock ssh
         @scenario = Rundock::Builder::ScenarioBuilder.new(options, nil).build
       end
     end
