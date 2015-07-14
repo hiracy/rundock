@@ -5,6 +5,7 @@ module Rundock
   class CLI < Thor
     DEFAULT_SCENARIO_FILE_PATH = './scenario.yml'
     DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH = './default_ssh.yml'
+    DEFAULT_HOSTGROUP_FILE_PATH = './hostgroup.yml'
 
     class_option :log_level, type: :string, aliases: ['-l'], default: 'info'
     class_option :color, type: :boolean, default: true
@@ -33,9 +34,10 @@ module Rundock
     end
 
     desc 'ssh [options]', 'Run rundock ssh with various options'
-    option :command, type: :string, aliases: ['-c'], banner: "NOTICE: Scenario's task is ignored."
+    option :command, type: :string, aliases: ['-c']
     option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
-    option :host, type: :string, aliases: ['-h']
+    option :host, type: :string, aliases: ['-h'], banner: 'You can specify comma separated hosts.[ex: host1,host2,..]'
+    option :hostgroup_yaml, type: :string, aliases: ['-g']
     option :user, type: :string, aliases: ['-u']
     option :key, type: :string, aliases: ['-i']
     option :port, type: :numeric, aliases: ['-p']
@@ -44,6 +46,7 @@ module Rundock
     option :sudo, type: :boolean, default: false
     def ssh
       opts = {}
+
       Runner.run(opts.merge(options))
     end
   end
