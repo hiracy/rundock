@@ -17,24 +17,24 @@ run_groups = %w(
 
 def execute(command)
   puts "[EXECUTE:] #{command}"
-  system command
+  Bundler.with_clean_env do
+    system command
+  end
   raise 'Execute Error.' unless $?.to_i == 0
 end
 
 def setup_docker(platform, timeout, interval)
-  Bundler.with_clean_env do
-    execute "./spec/integration/platforms/#{platform}/setup.sh &"
-    found = false
-    (timeout / interval).times do
-      execute 'sudo docker ps | grep rundock'
-      if $?.to_i == 0
-        found = true
-        break
-      end
-      sleep interval
+  execute "./spec/integration/platforms/#{platform}/setup.sh &"
+  found = false
+  (timeout / interval).times do
+    execute 'sudo docker ps | grep rundock'
+    if $?.to_i == 0
+      found = true
+      break
     end
-    raise 'Docker Error.' unless found
+    sleep interval
   end
+  raise 'Docker Error.' unless found
 end
 
 def do_rundock_ssh(commands, platform, groups)
@@ -79,18 +79,14 @@ end
 desc 'Cleaning environments'
 
 task :clean do
-  Bundler.with_clean_env do
-    Dir.glob('./spec/integration/platforms/*').each do |platform|
-      execute "#{platform}/setup.sh --clean"
-    end
+  Dir.glob('./spec/integration/platforms/*').each do |platform|
+    execute "#{platform}/setup.sh --clean"
   end
 end
 
 desc 'execute rubocop'
 task :rubocop do
-  Bundler.with_clean_env do
-    execute 'rubocop'
-  end
+  execute 'rubocop'
 end
 
 desc 'Run all tests.'
@@ -130,10 +126,8 @@ namespace :spec do
         desc "Run rundock for #{target}"
 
         task :rundock do
-          Bundler.with_clean_env do
-            do_rundock_ssh(run_commands, target, run_groups)
-            do_rundock_scenarios(run_scenarios, target)
-          end
+          do_rundock_ssh(run_commands, target, run_groups)
+          do_rundock_scenarios(run_scenarios, target)
         end
 
         desc "Run serverspec tests for #{target}"
