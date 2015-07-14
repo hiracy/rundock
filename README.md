@@ -15,7 +15,7 @@ $ gem install rundock
 Edit your hostgroup to "hostgroup.yml" like this sample.
 
 ```
-# node section
+# host section
 - node: 192.168.1.11
 - node: host-alias-01
 ---
