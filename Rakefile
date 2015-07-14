@@ -18,6 +18,7 @@ run_groups = %w(
 def execute(command)
   puts "[EXECUTE:] #{command}"
   system command
+  raise 'Execute Error.' unless $?.to_i == 0
 end
 
 def setup_docker(platform, timeout, interval)
