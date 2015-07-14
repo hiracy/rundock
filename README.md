@@ -69,7 +69,7 @@ and execute rundock.
 
     $ rundock do -s /path/to/your-dir/scenario.yml
 
-You can also specify [default_ssh_options.yml](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html)(Net::SSH options) file contents that you specified "-d" option to the default ssh options.
+You can also specify [default_ssh_options.yml](https://github.com/hiracy/rundock/blob/master/default_ssh.yml) [(Net::SSH options)](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html) file contents that you specified "-d" option to the default ssh options.
 
 ```
 $ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
