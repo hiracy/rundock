@@ -8,6 +8,7 @@ module Rundock
       attr_accessor :colored
       attr_accessor :indent_depth
       attr_accessor :color
+      attr_accessor :show_header
 
       def initialize(*args)
         super
@@ -15,7 +16,13 @@ module Rundock
       end
 
       def call(severity, datetime, progname, msg)
-        out = "[%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
+
+        if @show_header
+          out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
+        else
+          out = "%s\n" % [msg2str(msg)]
+        end
+
         if colored
           colorize(out, severity)
         else
