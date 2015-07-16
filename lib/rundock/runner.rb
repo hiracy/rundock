@@ -7,7 +7,7 @@ module Rundock
 
     class << self
       def run(options)
-        Logger.info 'Starting Rundoc:'
+        Logger.debug 'Starting Rundoc:'
 
         runner = self.new(options)
         runner.build(options)
