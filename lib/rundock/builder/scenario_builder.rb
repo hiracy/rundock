@@ -41,7 +41,7 @@ module Rundock
       end
 
       def build_scenario(options)
-        if options['hostgroup_yaml'] && !options['command']
+        if options['hostgroup'] && !options['command']
           raise CommandArgNotFoundError, %("--command or -c" option is required if hostgroup specified.)
         end
 

@@ -26,20 +26,20 @@ module Rundock
 
     desc 'do [SCENARIO] [options]', 'Run rundock from scenario file'
     option :sudo, type: :boolean, default: false
-    option :scenario_yaml, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
-    option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :scenario, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
+    option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
-      opts = { :scenario_yaml => scenario_file_path[0] }
+      opts = { :scenario => scenario_file_path[0] }
 
       Runner.run(opts.merge(options))
     end
 
     desc 'ssh [options]', 'Run rundock ssh with various options'
     option :command, type: :string, aliases: ['-c']
-    option :default_ssh_opts_yaml, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     option :host, type: :string, aliases: ['-h'], banner: 'You can specify comma separated hosts.[ex: host1,host2,..]'
-    option :hostgroup_yaml, type: :string, aliases: ['-g']
+    option :hostgroup, type: :string, aliases: ['-g']
     option :user, type: :string, aliases: ['-u']
     option :key, type: :string, aliases: ['-i']
     option :port, type: :numeric, aliases: ['-p']

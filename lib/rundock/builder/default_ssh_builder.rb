@@ -12,8 +12,8 @@ module Rundock
       def build
         opts = {}
 
-        if @options['default_ssh_opts_yaml'] && FileTest.exist?(@options['default_ssh_opts_yaml'])
-          def_ssh_file = @options['default_ssh_opts_yaml']
+        if @options['default_ssh_opts'] && FileTest.exist?(@options['default_ssh_opts'])
+          def_ssh_file = @options['default_ssh_opts']
         else
           def_ssh_file = PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH
         end
