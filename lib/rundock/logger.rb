@@ -16,7 +16,6 @@ module Rundock
       end
 
       def call(severity, datetime, progname, msg)
-
         if @show_header
           out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
         else

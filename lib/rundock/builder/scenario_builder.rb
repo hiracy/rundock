@@ -56,6 +56,8 @@ module Rundock
 
         node = nil
         scen = Scenario.new
+        node_attributes = { :task => {} }
+        scenario_data[:tasks].each { |k, v| node_attributes[:task][k] = v } if scenario_data[:tasks]
 
         # use scenario file
         scenario_data[:main].each do |n|
@@ -70,15 +72,18 @@ module Rundock
                 node.add_operation(
                   Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
               end
+            elsif k == 'errexit'
+              node_attributes[k.to_sym] = true
             else
-
               if options['command'] && (k == 'command' || k == 'task')
                 Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
                 next
               end
 
-              ope = build_operations(k, v, scenario_data[:tasks], options)
-              node.add_operation(ope) if node
+              next unless node
+
+              ope = build_operations(k, v, node_attributes, options)
+              node.add_operation(ope)
             end
           end
         end
@@ -87,8 +92,9 @@ module Rundock
         scen
       end
 
-      def build_operations(ope_type, ope_content, tasks, options)
-        Rundock::OperationFactory.instance(ope_type.to_sym).create(Array(ope_content), tasks)
+      def build_operations(ope_type, ope_content, node_attributes, cli_options)
+        node_attributes[:errexit] = !cli_options['run_anyway'] unless cli_options['run_anyway'].nil?
+        Rundock::OperationFactory.instance(ope_type.to_sym).create(Array(ope_content), node_attributes)
       end
     end
   end

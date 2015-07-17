@@ -25,18 +25,18 @@ module Rundock
         @backend = create_specinfra_backend
       end
 
-      def run_commands(cmd, options = {})
+      def run_commands(cmd, exec_options = {})
         Array(cmd).each do |c|
-          run_command(c)
+          run_command(c, exec_options)
         end
       end
 
       private
 
-      def run_command(cmd, options = {})
+      def run_command(cmd, exec_options = {})
         command = cmd.strip
-        command = "cd #{Shellwords.escape(options[:cwd])} && #{command}" if options[:cwd]
-        command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if options[:user]
+        command = "cd #{Shellwords.escape(exec_options[:cwd])} && #{command}" if exec_options[:cwd]
+        command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if exec_options[:user]
 
         Logger.debug(%(Start executing: "#{command}"))
 
@@ -49,7 +49,7 @@ module Rundock
           Logger.debug("exit status: #{exit_status}")
         end
 
-        if options[:no_continue_if_error] && exit_status != 0
+        if exec_options[:errexit] && exit_status != 0
           raise CommandResultStatucError
         end
 

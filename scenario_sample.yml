@@ -38,6 +38,12 @@
   task:
     - echo_platform
     - echo_users
+  errexit: true
+  command:
+    - "rm -f /tmp/riskyfile"
+  errexit: false
+  command:
+    - "ls -1 /tmp/riskyfile"
 ---
 anyhost-01:
   host: 192.168.1.11
