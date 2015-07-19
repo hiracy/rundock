@@ -50,7 +50,7 @@ module Rundock
         end
 
         if exec_options[:errexit] && exit_status != 0
-          raise CommandResultStatucError
+          raise CommandResultStatusError
         end
 
         result
