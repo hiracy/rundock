@@ -4,7 +4,7 @@ module Rundock
       def run(backend, attributes = {})
         @instruction.each do |i|
           unless attributes[:task].key?(i)
-            Logger.warn("[WARN]task not found and ignored: #{i}")
+            Logger.warn("task not found and ignored: #{i}")
             next
           end
 
