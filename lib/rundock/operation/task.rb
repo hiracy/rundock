@@ -3,12 +3,15 @@ module Rundock
     class Task < Base
       def run(backend, attributes = {})
         @instruction.each do |i|
-          unless attributes.key?(i)
-            Logger.warn("[WARN]task not found and ignored: #{i}")
+          unless attributes[:task].key?(i.to_sym)
+            Logger.warn("task not found and ignored: #{i}")
             next
           end
 
-          backend.run_commands(attributes[i])
+          scenario = Rundock::Builder::ScenarioBuilder.new(nil, nil).build_task(
+            attributes[:task][i.to_sym], backend, attributes)
+
+          scenario.run
         end
       end
     end

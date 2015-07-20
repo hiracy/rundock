@@ -27,7 +27,9 @@ anyhost-02:
     keys: ["<replaced_by_platforms>"]
 ---
 echo_platform:
-  - "hostname"
-  - "uname -a"
+  command:
+    - "hostname"
+    - "uname -a"
 write_echo:
-  - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"
+  command:
+    - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"

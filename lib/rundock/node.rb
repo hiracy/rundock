@@ -18,6 +18,10 @@ module Rundock
 
     def run
       Logger.debug("run name: #{@name}")
+      if @operations.blank?
+        Logger.warn("no operation running: #{@name}")
+        return
+      end
       @operations.each do |ope|
         Logger.debug("operation type: #{ope.class}")
         ope.run(@backend, ope.attributes)

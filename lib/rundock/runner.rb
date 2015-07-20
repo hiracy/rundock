@@ -7,7 +7,7 @@ module Rundock
 
     class << self
       def run(options)
-        Logger.info 'Starting Rundoc:'
+        Logger.debug 'Starting Rundoc:'
 
         runner = self.new(options)
         runner.build(options)
@@ -25,24 +25,28 @@ module Rundock
       @scenario.run
     end
 
+    def run_tasks
+      @scenario.run
+    end
+
     def build(options)
-      if options['scenario_yaml'] || options['hostgroup_yaml']
-        if options['scenario_yaml'] && !FileTest.exist?(options['scenario_yaml'])
-          raise ScenarioNotFoundError, "'#{options['scenario_yaml']}' scenario file is not found."
-        elsif options['hostgroup_yaml'] && !FileTest.exist?(options['hostgroup_yaml'])
-          raise ScenarioNotFoundError, "'#{options['hostgroup_yaml']}' hostgroup file is not found."
+      if options[:scenario] || options[:hostgroup]
+        if options[:scenario] && !FileTest.exist?(options[:scenario])
+          raise ScenarioNotFoundError, "'#{options[:scenario]}' scenario file is not found."
+        elsif options[:hostgroup] && !FileTest.exist?(options[:hostgroup])
+          raise ScenarioNotFoundError, "'#{options[:hostgroup]}' hostgroup file is not found."
         end
 
-        options['scenario_yaml'] = options['hostgroup_yaml'] if options['hostgroup_yaml']
+        options[:scenario] = options[:hostgroup] if options[:hostgroup]
 
         # parse scenario
-        if options['scenario_yaml'] =~ %r{^(http|https)://}
+        if options[:scenario] =~ %r{^(http|https)://}
           # read from http/https
-          open(options['scenario_yaml']) do |f|
+          open(options[:scenario]) do |f|
             @scenario = Rundock::Builder::ScenarioBuilder.new(options, f).build
           end
         else
-          File.open(options['scenario_yaml']) do |f|
+          File.open(options[:scenario]) do |f|
             @scenario = Rundock::Builder::ScenarioBuilder.new(options, f).build
           end
         end

@@ -6,15 +6,6 @@ run_commands = [
     'echo \'Hello Rundock.\' > /var/tmp/hello_rundock'
 ]
 
-run_scenarios = %w(
-  use_default_ssh_scenario
-  simple_echo_scenario
-)
-
-run_groups = %w(
-  simple_host_group
-)
-
 def execute(command, clean_env)
   puts "[EXECUTE:] #{command}"
 
@@ -42,8 +33,9 @@ def setup_docker(platform, timeout, interval)
   raise 'Docker Error.' unless found
 end
 
-def do_rundock_ssh(commands, platform, groups)
+def do_rundock_ssh(commands, platform)
   base_dir = "#{ENV['HOME']}/.rundock/#{platform}"
+  groups_files_pattern = ["#{base_dir}/groups/*.yml"]
 
   if platform == 'localhost'
     commands.each do |cmd|
@@ -54,30 +46,33 @@ def do_rundock_ssh(commands, platform, groups)
       execute('bundle exec exe/rundock' \
         " ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester" \
         " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true)
-      groups.each do |g|
+      Dir.glob(groups_files_pattern).each do |g|
         execute('bundle exec exe/rundock' \
-          " ssh -c \"#{cmd}\" -g #{base_dir}/scenarios/#{g}.yml -p 22222 -u tester" \
+          " ssh -c \"#{cmd}\" -g #{g} -p 22222 -u tester" \
           " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true)
       end
     end
   end
 end
 
-def do_rundock_scenarios(scenarios, platform)
+def do_rundock_scenarios(platform)
   if platform == 'localhost'
     base_dir = './spec/integration/platforms/localhost'
+    scenario_files_pattern = ['./spec/integration/platforms/localhost/scenarios/*.yml']
   else
     base_dir = "#{ENV['HOME']}/.rundock/#{platform}"
+    scenario_files_pattern = ["#{base_dir}/scenarios/*.yml"]
   end
 
-  scenarios.each do |scenario|
-    default_ssh_opt = ''
+  scenario_files_pattern.each do |scenario|
     if scenario =~ /use_default_ssh/ && platform != 'localhost'
       default_ssh_opt = " -d #{base_dir}/integration_default_ssh.yml"
+    else
+      default_ssh_opt = ''
     end
 
     execute('bundle exec exe/rundock' \
-       " do -s #{base_dir}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug", true)
+       " do #{scenario}#{default_ssh_opt} -l debug", true)
   end
 end
 
@@ -132,8 +127,8 @@ namespace :spec do
         desc "Run rundock for #{target}"
 
         task :rundock do
-          do_rundock_ssh(run_commands, target, run_groups)
-          do_rundock_scenarios(run_scenarios, target)
+          do_rundock_ssh(run_commands, target)
+          do_rundock_scenarios(target)
         end
 
         desc "Run serverspec tests for #{target}"
@@ -141,7 +136,7 @@ namespace :spec do
         RSpec::Core::RakeTask.new(:serverspec) do |t|
           ENV['TARGET_HOST'] = target
           t.ruby_opts = '-I ./spec/integration'
-          t.pattern = './spec/integration/recipes/*_spec.rb'
+          t.pattern = ['./spec/integration/recipes/*_spec.rb']
         end
       end
     end

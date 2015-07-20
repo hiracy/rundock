@@ -13,82 +13,45 @@ module Rundock
 
       def build
         # parse default ssh file
-        opts = @default_ssh_builder.build
-        opts.merge!(@options)
+        @options.merge!(@default_ssh_builder.build)
 
         # use host specified
-        return build_scenario_with_host(opts) if opts['host']
+        return build_scenario_with_cli if @options[:host]
 
         # use scenario file
-        build_scenario(opts)
+        build_scenario_with_file
+      end
+
+      def build_task(tasks, backend, node_attributes)
+        OperationBuilder.new(@options).build_task(tasks, backend, node_attributes)
       end
 
       private
 
-      def build_scenario_with_host(options)
-        raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless options['command']
-
-        scen = Scenario.new
-
-        options['host'].split(',').each do |host|
-          backend = BackendBuilder.new(options, host, nil).build
-          node = Node.new(host, backend)
-          node.add_operation(Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
-          scen << node
-        end
-
-        scen
+      def build_scenario_with_cli
+        raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless @options[:command]
+        ope = OperationBuilder.new(@options)
+        ope.build_cli
       end
 
-      def build_scenario(options)
-        if options['hostgroup_yaml'] && !options['command']
-          raise CommandArgNotFoundError, %("--command or -c" option is required if hostgroup specified.)
-        end
-
-        type = [:main, :node_info, :tasks]
-        scenario_data = {}
-
+      def build_scenario_with_file
         if @scenario_file
+
+          type = [:main, :node_info, :tasks]
+          scenario_data = {}
+
           YAML.load_documents(@scenario_file).each_with_index do |data, idx|
-            scenario_data[type[idx]] = data
-          end
-        end
-
-        node = nil
-        scen = Scenario.new
-
-        # use scenario file
-        scenario_data[:main].each do |n|
-          scen << node if node
-
-          n.each do |k, v|
-            if k == 'node'
-              backend = BackendBuilder.new(options, v, scenario_data[:node_info]).build
-              node = Node.new(v, backend)
-
-              if options['command']
-                node.add_operation(
-                  Rundock::OperationFactory.instance(:command).create(Array(options['command']), nil))
-              end
+            if idx == 0
+              scenario_data[type[idx]] = data
             else
-
-              if options['command'] && (k == 'command' || k == 'task')
-                Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
-                next
-              end
-
-              ope = build_operations(k, v, scenario_data[:tasks], options)
-              node.add_operation(ope) if node
+              scenario_data[type[idx]] = data.deep_symbolize_keys unless data.nil?
             end
           end
         end
 
-        scen << node if node
-        scen
-      end
-
-      def build_operations(ope_type, ope_content, tasks, options)
-        Rundock::OperationFactory.instance(ope_type.to_sym).create(Array(ope_content), tasks)
+        ope = OperationBuilder.new(@options)
+        ope.build_first(
+          scenario_data[:main], scenario_data[:node_info], scenario_data[:tasks])
       end
     end
   end
