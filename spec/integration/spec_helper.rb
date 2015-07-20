@@ -9,6 +9,7 @@ if ENV['TARGET_HOST'] != 'localhost'
   options = Net::SSH::Config.for(host, ["#{ENV['HOME']}/.ssh/config_rundock_spec_#{ENV['TARGET_HOST']}"])
 
   options[:user] ||= Etc.getlogin
+  options[:paranoid] = false
 
   set :host,        options[:host_name] || host
   set :ssh_options, options
