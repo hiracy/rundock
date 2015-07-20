@@ -47,11 +47,11 @@ module Rundock
     option :ssh_config, type: :string, aliases: ['-F']
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
-    option :run_anyway, type: :boolean
+    option :run_anyway, type: :boolean, default: false
     def ssh
       opts = {}
 
-      Runner.run(opts.merge(options))
+      Runner.run(opts.merge(options.deep_symbolize_keys))
     end
   end
 end

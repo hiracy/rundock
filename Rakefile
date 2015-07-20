@@ -76,8 +76,9 @@ def do_rundock_scenarios(scenarios, platform)
       default_ssh_opt = " -d #{base_dir}/integration_default_ssh.yml"
     end
 
-    execute('bundle exec exe/rundock' \
-       " do -s #{base_dir}/scenarios/#{scenario}.yml#{default_ssh_opt} -l debug", true)
+      execute('bundle exec exe/rundock' \
+         " do #{scenario}#{default_ssh_opt} -l debug", true)
+    end
   end
 end
 
