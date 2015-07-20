@@ -12,6 +12,28 @@ $ gem install rundock
 
 ## Usage
 
+Edit your hostgroup to "hostgroup.yml" like this sample.
+
+```
+# node section
+- node: 192.168.1.11
+- node: host-alias-01
+---
+# host information section
+host-alias-01:
+  host: 192.168.1.12
+  ssh_opts:
+    port: 2222
+    user: anyuser
+    keys: ["~/.ssh/id_rsa_anyuser"]
+```
+
+and execute rundock.
+
+    $ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command'
+
+or
+
 Edit your operation scenario to "[scenario.yml](https://github.com/hiracy/rundock/blob/master/scenario_sample.yml)" like this sample.
 
 ```
@@ -45,13 +67,18 @@ install_bundler:
     - "sudo gem install bundler --no-ri --no-rdoc"
 ```
 
-and do rundock.
+and execute rundock.
 
     $ rundock do /path/to/your-dir/scenario.yml
 
-You can also specify [ssh_options.yml](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html)(Net::SSH options) file contents that you specified "-d" option to the default ssh options.
+You can also specify [default_ssh_options.yml](https://github.com/hiracy/rundock/blob/master/default_ssh.yml) [(Net::SSH options)](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html) file contents that you specified "-d" option to the default ssh options.
 
-    $ rundock do /path/to/your-dir/scenario.yml -d /path/to/your-dir/ssh_options.yml
+```
+$ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
+```
+```
+$ rundock do -s /path/to/your-dir/scenario.yml -d /path/to/your-dir/default_ssh_options.yml
+```
 
 For more detail. You can see from `rundock -h` command.
 
