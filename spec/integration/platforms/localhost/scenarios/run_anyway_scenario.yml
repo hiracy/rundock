@@ -1,0 +1,14 @@
+- node: localhost
+  command:
+    - errexit: false
+    - "rm /noexistdir/noexistfile1"
+    - "rm /noexistdir/noexistfile2"
+  task:
+    - err_task
+---
+---
+err_task:
+  command:
+    - "uname -a"
+    - errexit: false
+    - "rm /noexistdir/noexistfile2"

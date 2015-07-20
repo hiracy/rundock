@@ -25,24 +25,28 @@ module Rundock
       @scenario.run
     end
 
+    def run_tasks
+      @scenario.run
+    end
+
     def build(options)
-      if options['scenario'] || options['hostgroup']
-        if options['scenario'] && !FileTest.exist?(options['scenario'])
-          raise ScenarioNotFoundError, "'#{options['scenario']}' scenario file is not found."
-        elsif options['hostgroup'] && !FileTest.exist?(options['hostgroup'])
-          raise ScenarioNotFoundError, "'#{options['hostgroup']}' hostgroup file is not found."
+      if options[:scenario] || options[:hostgroup]
+        if options[:scenario] && !FileTest.exist?(options[:scenario])
+          raise ScenarioNotFoundError, "'#{options[:scenario]}' scenario file is not found."
+        elsif options[:hostgroup] && !FileTest.exist?(options[:hostgroup])
+          raise ScenarioNotFoundError, "'#{options[:hostgroup]}' hostgroup file is not found."
         end
 
-        options['scenario'] = options['hostgroup'] if options['hostgroup']
+        options[:scenario] = options[:hostgroup] if options[:hostgroup]
 
         # parse scenario
-        if options['scenario'] =~ %r{^(http|https)://}
+        if options[:scenario] =~ %r{^(http|https)://}
           # read from http/https
-          open(options['scenario']) do |f|
+          open(options[:scenario]) do |f|
             @scenario = Rundock::Builder::ScenarioBuilder.new(options, f).build
           end
         else
-          File.open(options['scenario']) do |f|
+          File.open(options[:scenario]) do |f|
             @scenario = Rundock::Builder::ScenarioBuilder.new(options, f).build
           end
         end

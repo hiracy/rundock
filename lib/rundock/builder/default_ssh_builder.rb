@@ -12,8 +12,8 @@ module Rundock
       def build
         opts = {}
 
-        if @options['default_ssh_opts'] && FileTest.exist?(@options['default_ssh_opts'])
-          def_ssh_file = @options['default_ssh_opts']
+        if @options[:default_ssh_opts] && FileTest.exist?(@options[:default_ssh_opts])
+          def_ssh_file = @options[:default_ssh_opts]
         else
           def_ssh_file = PRESET_SSH_OPTIONS_DEFAULT_FILE_PATH
         end
@@ -21,7 +21,7 @@ module Rundock
         File.open(def_ssh_file) do |f|
           YAML.load_documents(f) do |y|
             y.each do |k, v|
-              opts["#{k}_ssh_default"] = v
+              opts["#{k}_ssh_default".to_sym] = v
             end
           end
         end

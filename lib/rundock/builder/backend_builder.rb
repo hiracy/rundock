@@ -15,12 +15,12 @@ module Rundock
         opts.merge!(@options)
 
         # update ssh options for node from node_info
-        opts.merge!(@node_info[@nodename]['ssh_opts'])
+        opts.merge!(@node_info[@nodename.to_sym][:ssh_opts])
         # delete trash ssh_options(node[host::ssh_options])
-        @node_info[@nodename].delete('ssh_opts')
+        @node_info[@nodename.to_sym].delete(:ssh_opts)
 
         # add any attributes for host from node_info
-        opts.merge!(@node_info[@nodename])
+        opts.merge!(@node_info[@nodename.to_sym])
         Backend.create(backend_type, opts)
       end
 
@@ -30,24 +30,24 @@ module Rundock
         opts = {}
 
         if !@node_info ||
-           !@node_info[@nodename]
-          @node_info = { @nodename => {} }
+           !@node_info[@nodename.to_sym]
+          @node_info = { @nodename.to_sym => {} }
         end
-        @node_info[@nodename]['ssh_opts'] = {} unless @node_info[@nodename]['ssh_opts']
+        @node_info[@nodename.to_sym][:ssh_opts] = {} unless @node_info[@nodename.to_sym][:ssh_opts]
         is_local = @nodename =~ /localhost|127\.0\.0\.1/
 
         # replace default ssh options if exists
-        @options.keys.select { |o| o =~ /(\w+)_ssh_default$/ }.each do |oo|
-          opt = oo.gsub(/_ssh_default/, '')
+        @options.keys.select { |o| o.to_s =~ /(\w+)_ssh_default$/ }.each do |oo|
+          opt = oo.to_s.gsub(/_ssh_default/, '').to_sym
           # no use default ssh options if local
           # (like docker or localhost with port access host should not use default ssh options)
-          @node_info[@nodename]['ssh_opts'][opt] = @options[oo] if !is_local && !@node_info[@nodename]['ssh_opts'][opt]
+          @node_info[@nodename.to_sym][:ssh_opts][opt] = @options[oo] if !is_local && !@node_info[@nodename.to_sym][:ssh_opts][opt]
         end
 
         # replace cli ssh options if exists
-        %w(user key port ssh_config ask_password sudo).each { |o| @node_info[@nodename]['ssh_opts'][o] = @options[o] if @options[o] }
+        %w(:user :key :port :ssh_config :ask_password :sudo).each { |o| @node_info[@nodename.to_sym][:ssh_opts][o] = @options[o] if @options[o] }
 
-        opts['host'] = @nodename
+        opts[:host] = @nodename
 
         opts
       end
@@ -56,9 +56,9 @@ module Rundock
         is_local = @nodename =~ /localhost|127\.0\.0\.1/
 
         if is_local &&
-           !@node_info[@nodename]['ssh_opts']['port'] &&
-           !@node_info[@nodename]['ssh_opts']['user'] &&
-           !@node_info[@nodename]['ssh_opts']['ssh_config']
+           !@node_info[@nodename.to_sym][:ssh_opts][:port] &&
+           !@node_info[@nodename.to_sym][:ssh_opts][:user] &&
+           !@node_info[@nodename.to_sym][:ssh_opts][:ssh_config]
           backend_type = :local
         else
           backend_type = :ssh

@@ -1,7 +1,15 @@
 module Rundock
-  class Scenario < Array
+  class Scenario
+    attr_accessor :nodes
+    attr_accessor :node_info
+    attr_accessor :tasks
+
+    def initialize
+      @nodes = []
+    end
+
     def run
-      self.each(&:run)
+      @nodes.each(&:run)
     end
   end
 end

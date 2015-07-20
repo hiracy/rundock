@@ -26,14 +26,13 @@ module Rundock
 
     desc 'do [SCENARIO] [options]', 'Run rundock from scenario file'
     option :sudo, type: :boolean, default: false
-    option :scenario, type: :string, aliases: ['-s'], default: DEFAULT_SCENARIO_FILE_PATH
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
-    option :run_anyway, type: :boolean
+    option :run_anyway, type: :boolean, default: false
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
       opts = { :scenario => scenario_file_path[0] }
 
-      Runner.run(opts.merge(options))
+      Runner.run(opts.merge(options.deep_symbolize_keys))
     end
 
     desc 'ssh [options]', 'Run rundock ssh with various options'

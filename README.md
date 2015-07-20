@@ -37,19 +37,21 @@ host-alias-01:
 ---
 # task information section
 update_gem:
-  - "sudo gem update --system"
-  - "sudo gem update"
+  command:
+    - "sudo gem update --system"
+    - "sudo gem update"
 install_bundler:
-  - "sudo gem install bundler --no-ri --no-rdoc"
+  command:
+    - "sudo gem install bundler --no-ri --no-rdoc"
 ```
 
 and do rundock.
 
-    $ rundock do -s /path/to/your-dir/scenario.yml
+    $ rundock do /path/to/your-dir/scenario.yml
 
 You can also specify [ssh_options.yml](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html)(Net::SSH options) file contents that you specified "-d" option to the default ssh options.
 
-    $ rundock do -s /path/to/your-dir/scenario.yml -d /path/to/your-dir/ssh_options.yml
+    $ rundock do /path/to/your-dir/scenario.yml -d /path/to/your-dir/ssh_options.yml
 
 For more detail. You can see from `rundock -h` command.
 

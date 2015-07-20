@@ -6,4 +6,5 @@
 ---
 ---
 write_echo:
-  - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"
+  command:
+    - "echo 'Hello Rundock from Scenario.' > /var/tmp/hello_rundock_from_scenario"
