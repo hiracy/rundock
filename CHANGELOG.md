@@ -1,3 +1,11 @@
+## v0.2.1
+
+Improvements
+
+- Support error-exit options.(like shellscript set -e/+e)
+- Change file path option name from '*_yaml' to '*'
+- Add a option that stdout can no-header
+
 ## v0.2.0
 
 Refactoring
