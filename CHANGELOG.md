@@ -1,3 +1,10 @@
+## v0.2.2
+
+Fix
+
+- Fix ssh options conflict bugs
+- Support docker 1.6.2 for Circle CI environtment
+
 ## v0.2.1
 
 Improvements
