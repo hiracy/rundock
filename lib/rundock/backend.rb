@@ -88,10 +88,10 @@ module Rundock
           ssh_opts = Net::SSH::Config.for(options[:host])
         end
 
-        ssh_opts.merge!(filter_net_ssh_options(options))
         ssh_opts[:host_name] = options[:host]
-        ssh_opts[:keys] = Array(options[:key]) if !ssh_opts[:keys] && options[:key]
+        ssh_opts[:keys] = Array(options[:key]) if options[:key]
         ssh_opts[:password] = parse_password_from_stdin if options[:ask_password]
+        ssh_opts.merge!(filter_net_ssh_options(options))
 
         Logger.debug(%(Net::SSH Options: "#{ssh_opts}"))
 

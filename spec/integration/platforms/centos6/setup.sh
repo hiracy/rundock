@@ -6,6 +6,7 @@ PROJECT_NAME=rundock_spec
 PLATFORM_NAME=centos6
 PLATFORM_DIR="${PROJECT_ROOT}/platforms/${PLATFORM_NAME}"
 DOCKER_IMAGE_NAME="${PROJECT_NAME}/${PLATFORM_NAME}"
+DOCKER_ADDRESS="172.17.42.1"
 DOCKER_CACHE_DIR="${HOME}/docker"
 DOCKER_CACHE_IMAGE_PATH="${DOCKER_CACHE_DIR}/${PLATFORM_NAME}.tar"
 DOCKER_SSH_PORT=22222
@@ -77,10 +78,10 @@ sudo docker build -t "${DOCKER_IMAGE_NAME}" ${PLATFORM_DIR}
 rm -f ${DOCKER_SSH_KEY_PUBLIC_REMOTE}
 mkdir -p ${DOCKER_CACHE_DIR}
 sudo docker save "${DOCKER_IMAGE_NAME}" > ${DOCKER_CACHE_IMAGE_PATH}
-sudo docker run -d --privileged -p ${DOCKER_SSH_PORT}:22 "${DOCKER_IMAGE_NAME}"
+sudo docker run -d --privileged -p ${DOCKER_ADDRESS}:${DOCKER_SSH_PORT}:22 "${DOCKER_IMAGE_NAME}"
 
 echo "Host ${PLATFORM_NAME}"                          >  $DOCKER_SSH_CONFIG
-echo "        HostName 127.0.0.1"                     >> $DOCKER_SSH_CONFIG
+echo "        HostName ${DOCKER_ADDRESS}"             >> $DOCKER_SSH_CONFIG
 echo "        User     ${DOCKER_SSH_USER}"            >> $DOCKER_SSH_CONFIG
 echo "        Port     ${DOCKER_SSH_PORT}"            >> $DOCKER_SSH_CONFIG
 echo "        IdentityFile ${DOCKER_SSH_KEY_PRIVATE}" >> $DOCKER_SSH_CONFIG

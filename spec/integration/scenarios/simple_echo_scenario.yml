@@ -14,13 +14,13 @@
     - write_echo
 ---
 anyhost-01:
-  host: 127.0.0.1
+  host: 172.17.42.1
   ssh_opts:
     port: 22222
     user: tester
     key: "<replaced_by_platforms>"
 anyhost-02:
-  host: "127.0.0.1"
+  host: "172.17.42.1"
   ssh_opts:
     port: 22222
     user: tester

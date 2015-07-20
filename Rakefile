@@ -44,7 +44,7 @@ def do_rundock_ssh(commands, platform)
   else
     commands.each do |cmd|
       execute('bundle exec exe/rundock' \
-        " ssh -c \"#{cmd}\" -h 127.0.0.1 -p 22222 -u tester" \
+        " ssh -c \"#{cmd}\" -h 172.17.42.1 -p 22222 -u tester" \
         " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true)
       Dir.glob(groups_files_pattern).each do |g|
         execute('bundle exec exe/rundock' \
