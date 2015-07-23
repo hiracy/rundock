@@ -25,10 +25,6 @@ module Rundock
       @scenario.run
     end
 
-    def run_tasks
-      @scenario.run
-    end
-
     def build(options)
       if options[:scenario] || options[:hostgroup]
         if options[:scenario] && !FileTest.exist?(options[:scenario])
