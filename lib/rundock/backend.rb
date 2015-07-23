@@ -3,6 +3,7 @@ require 'singleton'
 require 'specinfra/core'
 require 'io/console'
 require 'net/ssh'
+require 'net/ssh/proxy/command'
 
 Specinfra::Configuration.error_on_missing_backend_type = true
 
@@ -88,10 +89,12 @@ module Rundock
           ssh_opts = Net::SSH::Config.for(options[:host])
         end
 
+        # priority = node_attributes > cli options
         ssh_opts[:host_name] = options[:host]
         ssh_opts[:keys] = Array(options[:key]) if options[:key]
         ssh_opts[:password] = parse_password_from_stdin if options[:ask_password]
         ssh_opts.merge!(filter_net_ssh_options(options))
+        ssh_opts[:proxy] = Kernel.eval(options[:proxy]) if options[:proxy]
 
         Logger.debug(%(Net::SSH Options: "#{ssh_opts}"))
 
