@@ -52,5 +52,9 @@ module Rundock
 
       Runner.run(opts.merge(options.deep_symbolize_keys))
     end
+
+    def method_missing(command, *args)
+      help
+    end
   end
 end
