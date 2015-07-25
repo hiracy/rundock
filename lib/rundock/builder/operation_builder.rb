@@ -8,8 +8,8 @@ module Rundock
 
         node = nil
         scen = Scenario.new
-        node_attributes = { :task => {} }
-        tasks.each { |k, v| node_attributes[:task][k] = v } if tasks
+        node_attributes = { :task_info => {} }
+        tasks.each { |k, v| node_attributes[:task_info][k] = v } if tasks
         scen.node_info = node_info
         scen.tasks = tasks
 
@@ -81,6 +81,7 @@ module Rundock
       def build_operations(ope_type, ope_content, node_attributes, cli_options)
         node_attributes[:errexit] = !cli_options[:run_anyway] if cli_options
         node_attributes[:errexit] = true if cli_options.nil?
+        node_attributes[ope_type] = ope_content
         Rundock::OperationFactory.instance(ope_type).create(Array(ope_content), node_attributes)
       end
     end
