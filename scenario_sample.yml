@@ -45,12 +45,12 @@
     - "rm /tmp/safetyfile"
     - "ls -1 /tmp"
 ---
-- anyhost-01:
+anyhost-01:
   host: 192.168.1.11
   ssh_opts:
     port: 22
     user: anyuser
-- anyhost-02:
+anyhost-02:
   host: 192.168.1.12
 ---
 echo_platform:

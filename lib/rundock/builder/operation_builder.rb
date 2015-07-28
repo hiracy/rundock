@@ -8,8 +8,8 @@ module Rundock
 
         node = nil
         scen = Scenario.new
-        node_attributes = { :task => {} }
-        tasks.each { |k, v| node_attributes[:task][k] = v } if tasks
+        node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
+        tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
         scen.node_info = node_info
         scen.tasks = tasks
 
@@ -19,10 +19,10 @@ module Rundock
 
           n.deep_symbolize_keys.each do |k, v|
             if k == :node
+              node_attribute.finalize_node
               backend = BackendBuilder.new(@options, v, node_info).build
               node = Node.new(v, backend)
-              node_attributes[:nodename] = v
-
+              node_attribute.nodename = v
               if @options[:command]
                 node.add_operation(build_cli_command_operation(@options[:command], @options))
               end
@@ -34,7 +34,7 @@ module Rundock
 
               next unless node
 
-              ope = build_operations(k, Array(v), node_attributes, @options)
+              ope = build_operations(k, Array(v), node_attribute, @options)
               node.add_operation(ope)
             end
           end
@@ -44,12 +44,12 @@ module Rundock
         scen
       end
 
-      def build_task(tasks, backend, node_attributes)
-        node = Node.new(node_attributes[:nodename], backend)
+      def build_task(tasks, backend, node_attribute)
+        node = Node.new(node_attribute.nodename, backend)
         scen = Scenario.new
 
         tasks.each do |k, v|
-          ope = build_operations(k, Array(v), node_attributes, nil)
+          ope = build_operations(k, Array(v), node_attribute, nil)
           node.add_operation(ope)
         end
 
@@ -73,15 +73,16 @@ module Rundock
       private
 
       def build_cli_command_operation(command, cli_options)
-        node_attributes = {}
-        node_attributes[:errexit] = !cli_options[:run_anyway]
+        node_attribute = Rundock::Attribute::NodeAttribute.new
+        node_attribute.errexit = !cli_options[:run_anyway]
         Rundock::OperationFactory.instance(:command).create(Array(command), nil)
       end
 
       def build_operations(ope_type, ope_content, node_attributes, cli_options)
-        node_attributes[:errexit] = !cli_options[:run_anyway] if cli_options
-        node_attributes[:errexit] = true if cli_options.nil?
-        Rundock::OperationFactory.instance(ope_type).create(Array(ope_content), node_attributes)
+        node_attributes.errexit = !cli_options[:run_anyway] if cli_options
+        node_attributes.errexit = true if cli_options.nil?
+        node_attributes.define_attr(ope_type, ope_content)
+        Rundock::OperationFactory.instance(ope_type).create(Array(ope_content), node_attributes.list)
       end
     end
   end

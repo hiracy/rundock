@@ -1,3 +1,13 @@
+## v0.2.3
+
+Fix
+
+- Fix symbol host access if localhost
+
+Improvements
+
+- Support operation plugins for extension
+
 ## v0.2.2
 
 Fix

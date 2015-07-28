@@ -65,6 +65,10 @@ module Rundock
       def create_specinfra_backend
         raise NotImplementedError
       end
+
+      def method_missing(method, *args)
+        @backend.send(method, *args)
+      end
     end
 
     class Local < Base
