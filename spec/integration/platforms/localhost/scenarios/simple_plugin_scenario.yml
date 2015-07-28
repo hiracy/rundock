@@ -1,0 +1,10 @@
+- node: anyhost-01
+  task:
+    - write_echo
+---
+anyhost-01:
+  host: localhost
+---
+write_echo:
+  sample_operation:
+    - cmd: "echo 'Hello Rundock from SampleOperationPlugin Scenario.' > /var/tmp/hello_rundock_from_sample_operation_scenario"

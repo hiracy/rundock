@@ -1,0 +1,14 @@
+- node: anyhost-01
+  task:
+    - write_echo
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+write_echo:
+  sample_operation:
+    - cmd: "echo 'Hello Rundock from SampleOperationPlugin Scenario.' > /var/tmp/hello_rundock_from_sample_operation_scenario"
