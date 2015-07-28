@@ -41,7 +41,7 @@ module Rundock
         @options.keys.select { |o| o.to_s =~ /(\w+)_ssh_default$/ }.each do |oo|
           # no use default ssh options if local
           # set unless scenario file and cli options specified and not localhost
-          next if @nodename =~ /localhost|127\.0\.0\.1/
+          next if localhost?
           opt = oo.to_s.gsub(/_ssh_default/, '').to_sym
           if !@node_info[@nodename.to_sym][:ssh_opts][opt] && !@options[opt]
             @node_info[@nodename.to_sym][:ssh_opts][opt] = @options[oo]
@@ -56,7 +56,7 @@ module Rundock
       end
 
       def parse_backend_type
-        if @nodename =~ /localhost|127\.0\.0\.1/ &&
+        if localhost? &&
            !@node_info[@nodename.to_sym][:ssh_opts][:port] &&
            !@node_info[@nodename.to_sym][:ssh_opts][:user] &&
            !@node_info[@nodename.to_sym][:ssh_opts][:ssh_config]
@@ -66,6 +66,11 @@ module Rundock
         end
 
         backend_type
+      end
+
+      def localhost?
+        @nodename =~ /localhost|127\.0\.0\.1/ ||
+          @node_info[@nodename.to_sym][:host] =~ /localhost|127\.0\.0\.1/
       end
     end
   end
