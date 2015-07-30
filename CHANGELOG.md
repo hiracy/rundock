@@ -1,3 +1,9 @@
+## v0.2.4
+
+Fix
+
+- Fix plugin load path replacement
+
 ## v0.2.3
 
 Fix
