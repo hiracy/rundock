@@ -1,3 +1,9 @@
+## v0.2.5
+
+Improvements
+
+- Support host inventory
+
 ## v0.2.4
 
 Fix
