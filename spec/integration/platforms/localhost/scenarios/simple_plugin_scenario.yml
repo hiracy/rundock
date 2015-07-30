@@ -1,4 +1,6 @@
 - node: anyhost-01
+  host_inventory:
+    - memory/total
   task:
     - write_echo
 ---
