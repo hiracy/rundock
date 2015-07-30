@@ -66,6 +66,10 @@ module Rundock
         raise NotImplementedError
       end
 
+      def host_inventory
+        @backend.host_inventory
+      end
+
       def method_missing(method, *args)
         @backend.send(method, *args)
       end
