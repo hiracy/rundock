@@ -55,10 +55,17 @@ module Rundock
     end
 
     def load_plugins
+      # load from current lib dir(for development)
+      Dir.glob('./lib/rundock/plugin/**/*.rb').each do |f|
+        require f.gsub(/.rb$/, '')
+      end
+
+      # load from local project
       Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/plugin/**/*.rb").each do |f|
         require f.gsub(/.rb$/, '')
       end
 
+      # load from installed gems
       gems = []
       Gem::Specification.each do |gem|
         gems << gem.name
