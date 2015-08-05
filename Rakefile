@@ -1,6 +1,8 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 
+task :default => [:spec]
+
 run_commands = [
   'rm -f /var/tmp/hello_rundock;' \
     'echo \'Hello Rundock.\' > /var/tmp/hello_rundock'
