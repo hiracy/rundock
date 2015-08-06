@@ -1,3 +1,9 @@
+## v0.2.7
+
+Fix
+
+- Fix plugin was not found
+
 ## v0.2.5
 
 Improvements
