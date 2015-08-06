@@ -20,9 +20,13 @@ module Rundock
           n.deep_symbolize_keys.each do |k, v|
             if k == :node
               node_attribute.finalize_node
-              backend = BackendBuilder.new(@options, v, node_info).build
+              builder = BackendBuilder.new(@options, v, node_info)
+              backend = builder.build
+
               node = Node.new(v, backend)
               node_attribute.nodename = v
+              node_attribute.nodeinfo = builder.parsed_options
+
               if @options[:command]
                 node.add_operation(build_cli_command_operation(@options[:command], @options))
               end

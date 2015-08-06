@@ -1,3 +1,9 @@
+## v0.2.8
+
+Improvements
+
+- Support to use backend(etc: node ip-address) attributes for any operations
+
 ## v0.2.7
 
 Fix
