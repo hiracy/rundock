@@ -1,6 +1,8 @@
 module Rundock
   module Builder
     class BackendBuilder < Base
+      attr_accessor :parsed_options
+
       def initialize(options, nodename, node_info)
         super(options)
         @nodename = nodename
@@ -8,22 +10,22 @@ module Rundock
       end
 
       def build
-        opts = build_options
+        @parsed_options = build_options
 
         backend_type = parse_backend_type
 
-        opts.merge!(@options)
+        @parsed_options.merge!(@options)
 
         # update ssh options for node from node_info
-        opts.merge!(@node_info[@nodename.to_sym][:ssh_opts])
+        @parsed_options.merge!(@node_info[@nodename.to_sym][:ssh_opts])
 
         # delete trash ssh_options(node[host::ssh_options])
         @node_info[@nodename.to_sym].delete(:ssh_opts)
 
         # add any attributes for host from node_info
-        opts.merge!(@node_info[@nodename.to_sym])
+        @parsed_options.merge!(@node_info[@nodename.to_sym])
 
-        Backend.create(backend_type, opts)
+        Backend.create(backend_type, @parsed_options)
       end
 
       private
