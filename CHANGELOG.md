@@ -1,3 +1,13 @@
+## v0.2.9
+
+Improvements
+
+- Support dry-run
+
+Fix
+
+- Change stderr to strip
+
 ## v0.2.8
 
 Improvements

@@ -28,6 +28,7 @@ module Rundock
     option :sudo, type: :boolean, default: false
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     option :run_anyway, type: :boolean, default: false
+    option :dry_run, type: :boolean, aliases: ['-n']
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
       opts = { :scenario => scenario_file_path[0] }
@@ -47,6 +48,7 @@ module Rundock
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
     option :run_anyway, type: :boolean, default: false
+    option :dry_run, type: :boolean, aliases: ['-n']
     def ssh
       opts = {}
 

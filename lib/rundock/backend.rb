@@ -41,11 +41,13 @@ module Rundock
 
         Logger.debug(%(Start executing: "#{command}"))
 
+        return nil if options[:dry_run]
+
         result = @backend.run_command(command)
         exit_status = result.exit_status
 
         Logger.formatter.indent do
-          Logger.error("#{result.stderr}") unless result.stderr.blank?
+          Logger.error("#{result.stderr.strip}") unless result.stderr.strip.blank?
           Logger.info("#{result.stdout.strip}") unless result.stdout.strip.blank?
           Logger.debug("errexit: #{exec_options[:errexit]}")
           Logger.debug("exit status: #{exit_status}")
