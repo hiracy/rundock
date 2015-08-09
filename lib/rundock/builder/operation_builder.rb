@@ -73,9 +73,9 @@ module Rundock
       private
 
       def build_cli_command_operation(command, cli_options)
-        node_attribute = Rundock::Attribute::NodeAttribute.new
-        node_attribute.errexit = !cli_options[:run_anyway]
-        Rundock::OperationFactory.instance(:command).create(Array(command), nil)
+        node_attributes = Rundock::Attribute::NodeAttribute.new
+        node_attributes.errexit = !cli_options[:run_anyway]
+        Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
 
       def build_operations(ope_type, ope_content, node_attributes, cli_options)
