@@ -1,3 +1,14 @@
+## v0.2.10
+
+Improvements
+
+- Add running operation to other node infomation
+
+Fix
+
+- Fix command in task have been excuted though cli command option was specified
+- Fix unavail cli --run-anyway option if -g options specified
+
 ## v0.2.9
 
 Improvements

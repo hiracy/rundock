@@ -11,6 +11,7 @@ module Rundock
         node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
         tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
         scen.node_info = node_info
+        scen.node_info = {} unless node_info
         scen.tasks = tasks
 
         # use scenario file
@@ -25,27 +26,23 @@ module Rundock
 
               node = Node.new(v, backend)
               node_attribute.nodename = v
-              node_attribute.nodeinfo = builder.parsed_options
+              scen.node_info[v.to_sym] = node_attribute.nodeinfo = builder.parsed_options
 
               if @options[:command]
                 node.add_operation(build_cli_command_operation(@options[:command], @options))
               end
             else
-              if @options[:command] && (k == :command || k == :task)
-                Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
-                next
-              end
 
               next unless node
 
               ope = build_operations(k, Array(v), node_attribute, @options)
-              node.add_operation(ope)
+              node.add_operation(ope) if ope
             end
           end
         end
 
         scen.nodes.push(node) if node
-        scen
+        scen.complete
       end
 
       def build_task(tasks, backend, node_attribute)
@@ -54,7 +51,7 @@ module Rundock
 
         tasks.each do |k, v|
           ope = build_operations(k, Array(v), node_attribute, nil)
-          node.add_operation(ope)
+          node.add_operation(ope) if ope
         end
 
         scen.nodes.push(node) if node
@@ -77,12 +74,19 @@ module Rundock
       private
 
       def build_cli_command_operation(command, cli_options)
-        node_attribute = Rundock::Attribute::NodeAttribute.new
-        node_attribute.errexit = !cli_options[:run_anyway]
-        Rundock::OperationFactory.instance(:command).create(Array(command), nil)
+        node_attributes = Rundock::Attribute::NodeAttribute.new
+        node_attributes.errexit = !cli_options[:run_anyway]
+        Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
 
       def build_operations(ope_type, ope_content, node_attributes, cli_options)
+        if cli_options &&
+           cli_options[:command] &&
+           (ope_type == :command || ope_type == :task)
+          Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
+          return
+        end
+
         node_attributes.errexit = !cli_options[:run_anyway] if cli_options
         node_attributes.errexit = true if cli_options.nil?
         node_attributes.define_attr(ope_type, ope_content)
