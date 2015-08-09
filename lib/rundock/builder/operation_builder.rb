@@ -31,15 +31,11 @@ module Rundock
                 node.add_operation(build_cli_command_operation(@options[:command], @options))
               end
             else
-              if @options[:command] && (k == :command || k == :task)
-                Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
-                next
-              end
 
               next unless node
 
               ope = build_operations(k, Array(v), node_attribute, @options)
-              node.add_operation(ope)
+              node.add_operation(ope) if ope
             end
           end
         end
@@ -54,7 +50,7 @@ module Rundock
 
         tasks.each do |k, v|
           ope = build_operations(k, Array(v), node_attribute, nil)
-          node.add_operation(ope)
+          node.add_operation(ope) if ope
         end
 
         scen.nodes.push(node) if node
@@ -83,6 +79,13 @@ module Rundock
       end
 
       def build_operations(ope_type, ope_content, node_attributes, cli_options)
+        if cli_options &&
+           cli_options[:command] &&
+           (ope_type == :command || ope_type == :task)
+          Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
+          return
+        end
+
         node_attributes.errexit = !cli_options[:run_anyway] if cli_options
         node_attributes.errexit = true if cli_options.nil?
         node_attributes.define_attr(ope_type, ope_content)
