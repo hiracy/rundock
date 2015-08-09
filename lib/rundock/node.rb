@@ -9,11 +9,18 @@ module Rundock
     def initialize(name, backend)
       @name = name
       @backend = backend
+      @operations = []
     end
 
     def add_operation(ope)
       @operations = [] unless @operations
       @operations << ope
+    end
+
+    def complete(scenario)
+      @operations.each do |ope|
+        ope.attributes[:nodeinfo] = scenario.node_info
+      end
     end
 
     def run
