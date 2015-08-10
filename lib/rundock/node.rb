@@ -19,7 +19,7 @@ module Rundock
 
     def complete(scenario)
       @operations.each do |ope|
-        ope.attributes[:nodeinfo] = scenario.node_info
+        ope.attributes[:nodeinfo].merge!(scenario.node_info)
       end
     end
 
