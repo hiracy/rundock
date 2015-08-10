@@ -12,6 +12,7 @@ module Rundock
 
     def create(instruction, attributes)
       klass = "Rundock::Operation::#{@type.to_s.to_camel_case}"
+      Logger.debug("initialize #{klass} operation")
       raise OperationNotImplementedError unless Rundock::Operation::Base.subclasses.map(&:to_s).include?(klass)
 
       obj = nil

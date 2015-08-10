@@ -1,3 +1,9 @@
+## v0.2.11
+
+Fix
+
+- Fix attributes has lost original nodeinfo and others
+
 ## v0.2.10
 
 Improvements
