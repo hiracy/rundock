@@ -24,13 +24,13 @@ module Rundock
     end
 
     def run
-      Logger.debug("run name: #{@name}")
+      Logger.debug("run node: #{@name}")
       if @operations.blank?
         Logger.warn("no operation running: #{@name}")
         return
       end
       @operations.each do |ope|
-        Logger.debug("operation type: #{ope.class}")
+        Logger.debug("run operation: #{ope.class}")
         ope.run(@backend, ope.attributes)
       end
     end
