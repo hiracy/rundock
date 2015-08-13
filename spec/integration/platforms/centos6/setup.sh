@@ -23,14 +23,14 @@ RUNDOCK_SCENARIO_CACHE_DIR="${RUNDOCK_CACHE_DIR}/scenarios"
 RUNDOCK_GROUP_CACHE_DIR="${RUNDOCK_CACHE_DIR}/groups"
 
 if [ "${1}x" = "--cleanx" ];then
+  rm -f ${RUNDOCK_DEFAULT_SSH_YML}
+  rm -f ${RUNDOCK_SCENARIO_CACHE_DIR}/*.yml
+  rm -f ${RUNDOCK_GROUP_CACHE_DIR}/*.yml
   if sudo docker ps | grep "${DOCKER_IMAGE_NAME}" > /dev/null; then
-    rm -f "/var/tmp/hello_rundock*"
-    rm -f "${RUNDOCK_SCENARIO_CACHE_DIR}/*.yml"
-    rm -f "${RUNDOCK_GROUP_CACHE_DIR}/*.yml"
-    rm -f "${DOCKER_CACHE_IMAGE_PATH}"
-    rm -f "${DOCKER_SSH_KEY_PRIVATE}"
-    rm -f "${DOCKER_SSH_KEY_PUBLIC_LOCAL}"
-    rm -f "${DOCKER_SSH_CONFIG}"
+    rm -f ${DOCKER_CACHE_IMAGE_PATH}
+    rm -f ${DOCKER_SSH_KEY_PRIVATE}
+    rm -f ${DOCKER_SSH_KEY_PUBLIC_LOCAL}
+    rm -f ${DOCKER_SSH_CONFIG}
     rm -f ${DOCKER_SSH_KEY_PUBLIC_REMOTE}
     set +x
     sudo docker ps -q | xargs sudo docker rm -f
