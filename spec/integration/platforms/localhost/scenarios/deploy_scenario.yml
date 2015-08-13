@@ -1,0 +1,13 @@
+- node: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_scenario"
+    - "rm -fr /var/tmp/hello_rundock_from_deploy_src_dir_scenario"
+    - "rm -fr /var/tmp/hello_rundock_from_deploy_dst_dir_scenario"
+    - "echo 'Hello Rundock from deploy Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_scenario"
+    - "mkdir /var/tmp/hello_rundock_from_deploy_src_dir_scenario"
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_scenario
+    - src: /var/tmp/hello_rundock_from_deploy_src_dir_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_dir_scenario

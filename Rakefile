@@ -81,7 +81,7 @@ end
 desc 'Cleaning environments'
 
 task :clean do
-  execute('rm -f /var/tmp/hello_rundock*', false)
+  execute('rm -fr /var/tmp/hello_rundock*', false)
   Dir.glob('./spec/integration/platforms/*').each do |platform|
     next if platform =~ /localhost$/
     execute("#{platform}/setup.sh --clean", false)

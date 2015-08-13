@@ -1,0 +1,26 @@
+- node: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_scenario"
+    - "rm -fr /var/tmp/hello_rundock_from_deploy_src_dir_scenario"
+    - "echo 'Hello Rundock from deploy Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_scenario"
+    - "mkdir /var/tmp/hello_rundock_from_deploy_src_dir_scenario"
+- node: anyhost-01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_scenario"
+    - "rm -fr /var/tmp/hello_rundock_from_deploy_dst_dir_scenario"
+  task:
+    - deploy_task
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+deploy_task:
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_scenario
+    - src: /var/tmp/hello_rundock_from_deploy_src_dir_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_dir_scenario

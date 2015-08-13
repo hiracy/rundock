@@ -29,7 +29,7 @@ module Rundock
               scen.node_info[v.to_sym] = node_attribute.nodeinfo = builder.parsed_options
 
               if @options[:command]
-                node.add_operation(build_cli_command_operation(@options[:command], @options))
+                node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options))
               end
             else
 
@@ -64,7 +64,8 @@ module Rundock
         @options[:host].split(',').each do |host|
           backend = BackendBuilder.new(@options, host, nil).build
           node = Node.new(host, backend)
-          node.add_operation(build_cli_command_operation(@options[:command], @options))
+          node.add_operation(
+            build_cli_command_operation(@options[:command], Rundock::Attribute::NodeAttribute.new, @options))
           scen.nodes.push(node)
         end
 
@@ -73,8 +74,7 @@ module Rundock
 
       private
 
-      def build_cli_command_operation(command, cli_options)
-        node_attributes = Rundock::Attribute::NodeAttribute.new
+      def build_cli_command_operation(command, node_attributes, cli_options)
         node_attributes.errexit = !cli_options[:run_anyway]
         Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
