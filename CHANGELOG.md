@@ -1,3 +1,13 @@
+## v0.3.0
+
+Improvements
+
+- Support local to Remote deploy operation
+
+Fix
+
+- Fix rundock ssh with -g option was failed because not considered nodeinfo completion
+
 ## v0.2.11
 
 Fix
