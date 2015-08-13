@@ -32,6 +32,17 @@ module Rundock
         end
       end
 
+      def send_file(from, to)
+        system("test -d #{from}")
+        recursive = $?.to_i == 0
+
+        if !recursive
+          @backend.send_file(from, to)
+        else
+          @backend.send_directory(from, to)
+        end
+      end
+
       private
 
       def run_command(cmd, exec_options = {})
