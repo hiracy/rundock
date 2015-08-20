@@ -1,0 +1,15 @@
+- node: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_file_hook_one_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_file_hook_array_1_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_file_hook_array_2_scenario"
+  hook: file_one
+- node: anyhost-01
+  command:
+    - "echo aaa"
+  hook:
+    - file_array_1
+    - file_array_2
+---
+anyhost-01:
+  host: localhost

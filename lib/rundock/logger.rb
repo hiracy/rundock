@@ -4,15 +4,34 @@ require 'ansi/code'
 
 module Rundock
   module Logger
+    class LogEntity
+      attr_accessor :severity
+      attr_accessor :datetime
+      attr_accessor :progname
+      attr_accessor :msg
+      attr_accessor :indent_depth
+
+      def initialize(severity, datetime, progname, msg, indent_depth)
+        @severity = severity
+        @datetime = datetime
+        @progname = progname
+        @msg      = msg
+        @indent_depth = indent_depth
+      end
+    end
+
     class Formatter
       attr_accessor :colored
       attr_accessor :indent_depth
       attr_accessor :color
       attr_accessor :show_header
+      attr_accessor :onrec
+      attr_accessor :buffer
 
       def initialize(*args)
         super
         @indent_depth = 0
+        @buffer = []
       end
 
       def call(severity, datetime, progname, msg)
@@ -21,6 +40,8 @@ module Rundock
         else
           out = "%s\n" % [msg2str(msg)]
         end
+
+        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth)
 
         if colored
           colorize(out, severity)
@@ -50,6 +71,12 @@ module Rundock
         yield
       ensure
         @color = prev_color
+      end
+
+      def flush
+        ret = @buffer.dup
+        @buffer.clear
+        ret
       end
 
       private

@@ -1,0 +1,9 @@
+file_one:
+  hook_type: file
+  filepath: /var/tmp/hello_rundock_from_file_hook_one_scenario
+file_array_1:
+  hook_type: file
+  filepath: /var/tmp/hello_rundock_from_file_hook_array_1_scenario
+file_array_2:
+  hook_type: file
+  filepath: /var/tmp/hello_rundock_from_file_hook_array_2_scenario

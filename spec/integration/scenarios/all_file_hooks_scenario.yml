@@ -1,0 +1,12 @@
+- node: anyhost-01
+  command:
+    - "echo 'hookname:file_all_1 ' > /var/tmp/hello_rundock_from_file_hook_all_1_scenario"
+    - "echo 'hookname:file_all_2 ' > /var/tmp/hello_rundock_from_file_hook_all_2_scenario"
+  hook: all
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
