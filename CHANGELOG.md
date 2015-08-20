@@ -1,3 +1,13 @@
+## v0.4.0
+
+Improvements
+
+- Support node hooks
+
+Fix
+
+- Fix plugin lib search path bug
+
 ## v0.3.0
 
 Improvements
