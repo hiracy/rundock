@@ -5,11 +5,13 @@ module Rundock
     attr_reader :name
     attr_reader :operations
     attr_reader :backend
+    attr_accessor :hooks
 
     def initialize(name, backend)
       @name = name
       @backend = backend
       @operations = []
+      @hooks = []
     end
 
     def add_operation(ope)
@@ -24,15 +26,29 @@ module Rundock
     end
 
     def run
+      Logger.formatter.onrec = true
       Logger.debug("run node: #{@name}")
       if @operations.blank?
         Logger.warn("no operation running: #{@name}")
         return
       end
+
+      nodeinfo = nil
+
       @operations.each do |ope|
         Logger.debug("run operation: #{ope.class}")
+        nodeinfo = ope.attributes[:nodeinfo] if nodeinfo.nil?
         ope.run(@backend, ope.attributes)
       end
+
+      log_buffer = Logger.formatter.flush unless Logger.formatter.buffer.empty?
+
+      @hooks.each do |h|
+        Logger.debug("run hook: #{h.name}")
+        h.hook(log_buffer, nodeinfo)
+      end
+
+      Logger.formatter.onrec = false
     end
   end
 end

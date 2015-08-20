@@ -1,0 +1,7 @@
+#
+# Sample hook defines
+# (This sample will be able to output to the log file)
+#
+logging:
+  hook_type: file
+  filepath: /var/log/rundock.log

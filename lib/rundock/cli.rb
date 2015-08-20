@@ -6,6 +6,7 @@ module Rundock
     DEFAULT_SCENARIO_FILE_PATH = './scenario.yml'
     DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH = './default_ssh.yml'
     DEFAULT_HOSTGROUP_FILE_PATH = './hostgroup.yml'
+    DEFAULT_HOOKS_FILE_PATH = './hooks.yml'
 
     class_option :log_level, type: :string, aliases: ['-l'], default: 'info'
     class_option :color, type: :boolean, default: true
@@ -27,6 +28,7 @@ module Rundock
     desc 'do [SCENARIO] [options]', 'Run rundock from scenario file'
     option :sudo, type: :boolean, default: false
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :hooks, type: :string, aliases: ['-k'], default: DEFAULT_HOOKS_FILE_PATH
     option :run_anyway, type: :boolean, default: false
     option :dry_run, type: :boolean, aliases: ['-n']
     def do(*scenario_file_path)
@@ -39,6 +41,7 @@ module Rundock
     desc 'ssh [options]', 'Run rundock ssh with various options'
     option :command, type: :string, aliases: ['-c']
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
+    option :hooks, type: :string, aliases: ['-k'], default: DEFAULT_HOOKS_FILE_PATH
     option :host, type: :string, aliases: ['-h'], banner: 'You can specify comma separated hosts.[ex: host1,host2,..]'
     option :hostgroup, type: :string, aliases: ['-g']
     option :user, type: :string, aliases: ['-u']

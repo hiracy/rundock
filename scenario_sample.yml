@@ -34,6 +34,9 @@
   command:
     - "hostname"
     - "uname -a"
+  hook:
+    - mail
+    - file
 - node: anyhost-01
   task:
     - echo_platform
@@ -44,6 +47,7 @@
     - errexit: false
     - "rm /tmp/safetyfile"
     - "ls -1 /tmp"
+  hook: all
 ---
 anyhost-01:
   host: 192.168.1.11

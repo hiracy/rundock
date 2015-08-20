@@ -21,16 +21,19 @@ module Rundock
           n.deep_symbolize_keys.each do |k, v|
             if k == :node
               node_attribute.finalize_node
-              builder = BackendBuilder.new(@options, v, node_info)
-              backend = builder.build
+              backend_builder = BackendBuilder.new(@options, v, node_info)
+              backend = backend_builder.build
 
               node = Node.new(v, backend)
               node_attribute.nodename = v
-              scen.node_info[v.to_sym] = node_attribute.nodeinfo = builder.parsed_options
+              scen.node_info[v.to_sym] = node_attribute.nodeinfo = backend_builder.parsed_options
 
               if @options[:command]
                 node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options))
               end
+            elsif k == :hook
+              node_attribute.enable_hooks = Array(v)
+              node.hooks = HookBuilder.new(@options).build(Array(v)) if node
             else
 
               next unless node
@@ -47,6 +50,7 @@ module Rundock
 
       def build_task(tasks, backend, node_attribute)
         node = Node.new(node_attribute.nodename, backend)
+        node.hooks = HookBuilder.new(nil).build_from_attributes(node_attribute.nodeinfo)
         scen = Scenario.new
 
         tasks.each do |k, v|
@@ -64,6 +68,7 @@ module Rundock
         @options[:host].split(',').each do |host|
           backend = BackendBuilder.new(@options, host, nil).build
           node = Node.new(host, backend)
+          node.hooks = HookBuilder.new(@options).build(['all'])
           node.add_operation(
             build_cli_command_operation(@options[:command], Rundock::Attribute::NodeAttribute.new, @options))
           scen.nodes.push(node)
