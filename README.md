@@ -4,6 +4,12 @@ Simple and extensible server operation framework based on [specinfra](https://gi
 
 - [CHANGELOG](https://github.com/hiracy/rundock/blob/master/CHANGELOG.md)
 
+## Concept
+
+- Simple interface and configurations for orchestration various systems 
+- Push type task pipeline
+- Extensible and pluggable design
+
 ## Installation
 
 ```
