@@ -1,3 +1,9 @@
+## v0.4.1
+
+Update
+
+- Change continue with an empty operation for node hook
+
 ## v0.4.0
 
 Improvements
