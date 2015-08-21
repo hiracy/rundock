@@ -32,7 +32,7 @@ module Rundock
           YAML.load_documents(f) do |y|
             y.each do |k, v|
               raise HookStructureError if !v.is_a?(Hash) || !v.key?('hook_type')
-              next if !allow_all && enables.include?(k)
+              next if !allow_all && !enables.include?(k)
               hook = Rundock::HookFactory.instance(v['hook_type']).create(k, v.deep_symbolize_keys)
               hooks << hook
             end
