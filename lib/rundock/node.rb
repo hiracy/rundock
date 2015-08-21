@@ -28,10 +28,7 @@ module Rundock
     def run
       Logger.formatter.onrec = true
       Logger.debug("run node: #{@name}")
-      if @operations.blank?
-        Logger.warn("no operation running: #{@name}")
-        return
-      end
+      Logger.warn("no operation running: #{@name}") if @operations.blank?
 
       nodeinfo = nil
 
