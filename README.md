@@ -1,6 +1,6 @@
 # Rundock [![Gem Version](https://badge.fury.io/rb/rundock.svg)](http://badge.fury.io/rb/rundock) [![Circle CI](https://circleci.com/gh/hiracy/rundock.png?style=shield&circle-token=0d8a3836c5e285b7ecb6d076f2d51c5deca52d8b)](https://circleci.com/gh/hiracy/rundock)
 
-Simple and extensible server operation framework based on [specinfra](https://github.com/serverspec/specinfra).
+Simple and extensible server orchestration framework based on [specinfra](https://github.com/serverspec/specinfra).
 
 - [CHANGELOG](https://github.com/hiracy/rundock/blob/master/CHANGELOG.md)
 
