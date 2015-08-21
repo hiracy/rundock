@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['hiracy']
   spec.email         = ['leizhen@mbr.nifty.com']
 
-  spec.summary       = 'Simple and extensible server operation framework'
+  spec.summary       = 'Simple and extensible server orchestration framework'
   spec.homepage      = 'https://github.com/hiracy/rundock'
   spec.license       = 'MIT'
 
