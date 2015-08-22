@@ -19,12 +19,6 @@ module Rundock
       @operations << ope
     end
 
-    def complete(scenario)
-      @operations.each do |ope|
-        ope.attributes[:nodeinfo].merge!(scenario.node_info)
-      end
-    end
-
     def run
       Logger.formatter.onrec = true
       Logger.debug("run node: #{@name}")

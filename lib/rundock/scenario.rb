@@ -11,10 +11,5 @@ module Rundock
     def run
       @nodes.each(&:run)
     end
-
-    def complete
-      @nodes.each { |n| n.complete(self) }
-      self
-    end
   end
 end
