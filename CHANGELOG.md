@@ -1,3 +1,9 @@
+## v0.4.2
+
+Update
+
+- Omit get of other node information in operating node
+
 ## v0.4.1
 
 Update
