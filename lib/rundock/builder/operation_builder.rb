@@ -45,7 +45,7 @@ module Rundock
         end
 
         scen.nodes.push(node) if node
-        scen.complete
+        scen
       end
 
       def build_task(tasks, backend, node_attribute)
