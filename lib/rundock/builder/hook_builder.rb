@@ -8,6 +8,7 @@ module Rundock
 
       def build(enables)
         if enables.blank?
+          Logger.info('Empty hook is specified.')
           return []
         elsif @options[:hooks]
           if FileTest.exist?(@options[:hooks])
@@ -18,7 +19,6 @@ module Rundock
             hooks_file = DEFAULT_HOOKS_FILE_PATH
           end
         else
-          Logger.info('Empty hook is specified.')
           return []
         end
 
