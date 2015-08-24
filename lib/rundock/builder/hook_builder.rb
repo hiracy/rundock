@@ -8,7 +8,6 @@ module Rundock
 
       def build(enables)
         if enables.blank?
-          Logger.error('Empty hook is specified.')
           return []
         elsif @options[:hooks]
           if FileTest.exist?(@options[:hooks])
