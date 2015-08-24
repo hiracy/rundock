@@ -3,17 +3,23 @@ require 'yaml'
 module Rundock
   module Builder
     class HookBuilder < Base
+      DEFAULT_HOOKS_FILE_PATH = './hooks.yml'
       HookStructureError = Class.new(NotImplementedError)
 
       def build(enables)
         if enables.blank?
           Logger.error('Empty hook is specified.')
           return []
-        elsif @options[:hooks] && FileTest.exist?(@options[:hooks])
-          hooks_file = @options[:hooks]
-          Logger.info("hooks file is #{hooks_file}")
+        elsif @options[:hooks]
+          if FileTest.exist?(@options[:hooks])
+            hooks_file = @options[:hooks]
+            Logger.info("hooks file is #{hooks_file}")
+          else
+            Logger.warn("hooks file is not found. use #{DEFAULT_HOOKS_FILE_PATH}")
+            hooks_file = DEFAULT_HOOKS_FILE_PATH
+          end
         else
-          Logger.error('Empty hook detected. Please specifiy hook option.')
+          Logger.info('Empty hook is specified.')
           return []
         end
 
@@ -42,7 +48,7 @@ module Rundock
           end
         end
 
-        Logger.error('Empty hook detected. Please verify hooks file and scenario file.') if hooks.empty?
+        Logger.warn('Empty hook is detected. Please verity hooks file and scenario file.') if hooks.empty?
         hooks
       end
     end
