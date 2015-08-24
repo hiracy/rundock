@@ -42,7 +42,7 @@ module Rundock
           end
         end
 
-        Logger.error('Empty hook detected. Please verify hooks file and scenario file.')
+        Logger.error('Empty hook detected. Please verify hooks file and scenario file.') if hooks.empty?
         hooks
       end
     end
