@@ -24,11 +24,11 @@ module Rundock
       Logger.debug("run node: #{@name}")
       Logger.warn("no operation running: #{@name}") if @operations.blank?
 
-      nodeinfo = nil
+      node_attributes = []
 
       @operations.each do |ope|
         Logger.debug("run operation: #{ope.class}")
-        nodeinfo = ope.attributes[:nodeinfo] if nodeinfo.nil?
+        node_attributes << ope.attributes
         ope.run(@backend, ope.attributes)
       end
 
@@ -36,7 +36,7 @@ module Rundock
 
       @hooks.each do |h|
         Logger.debug("run hook: #{h.name}")
-        h.hook(log_buffer, nodeinfo)
+        h.hook(node_attributes, log_buffer)
       end
 
       Logger.formatter.onrec = false
