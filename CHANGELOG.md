@@ -1,3 +1,9 @@
+## v0.4.9
+
+Update
+
+- Change the hook callback to include the operation info
+
 ## v0.4.2
 
 Update
