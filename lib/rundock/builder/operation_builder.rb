@@ -38,7 +38,7 @@ module Rundock
 
               next unless node
 
-              ope = build_operations(k, Array(v), node_attribute, @options)
+              ope = build_operations(k, Array(v), node_attribute, @options, false)
               node.add_operation(ope) if ope
             end
           end
@@ -54,7 +54,7 @@ module Rundock
         scen = Scenario.new
 
         tasks.each do |k, v|
-          ope = build_operations(k, Array(v), node_attribute, nil)
+          ope = build_operations(k, Array(v), node_attribute, nil, true)
           node.add_operation(ope) if ope
         end
 
@@ -84,16 +84,26 @@ module Rundock
         Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
 
-      def build_operations(ope_type, ope_content, node_attributes, cli_options)
-        if cli_options &&
-           cli_options[:command] &&
+      def build_operations(ope_type, ope_content, node_attributes, cli_options, recursive)
+        cli_options = {} if cli_options.nil?
+
+        if cli_options[:command] &&
            (ope_type == :command || ope_type == :task)
           Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
           return
         end
 
-        node_attributes.errexit = !cli_options[:run_anyway] if cli_options
-        node_attributes.errexit = true if cli_options.nil?
+        unless recursive
+          # apply cli options
+          if !cli_options.key?(:run_anyway)
+            node_attributes.errexit = true
+          else
+            node_attributes.errexit = !cli_options[:run_anyway]
+          end
+          node_attributes.dry_run = (cli_options && cli_options[:dry_run]) ? true : false
+        end
+
+        # override by scenario
         node_attributes.define_attr(ope_type, ope_content)
         Rundock::OperationFactory.instance(ope_type).create(Array(ope_content), node_attributes.list)
       end
