@@ -80,7 +80,9 @@ module Rundock
       private
 
       def build_cli_command_operation(command, node_attributes, cli_options)
+        node_attributes.nodename = @options[:host]
         node_attributes.errexit = !cli_options[:run_anyway]
+        node_attributes.dry_run = cli_options[:dry_run] ? true : false
         Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
 
