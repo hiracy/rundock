@@ -1,3 +1,13 @@
+## v0.4.11
+
+Update
+
+- Add dry_run state attribute for node info
+
+Fix
+
+- Fix task execute can not carry over attributes
+
 ## v0.4.9
 
 Update
