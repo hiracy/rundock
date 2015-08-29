@@ -6,10 +6,12 @@ module Rundock
       attr_accessor :task_info
       attr_accessor :errexit
       attr_accessor :enable_hooks
+      attr_accessor :dry_run
 
       AVAIL_TAKE_OVERS = [
         :task_info,
-        :errexit
+        :errexit,
+        :dry_run
       ]
 
       def finalize_node
