@@ -1,3 +1,9 @@
+## v0.4.14
+
+Update
+
+- Add formatted logs function for plugins
+
 ## v0.4.13
 
 Update

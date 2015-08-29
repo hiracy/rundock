@@ -36,7 +36,7 @@ module Rundock
         file = ::File.open(@contents[:filepath], 'w')
         file.puts("[hookname:#{@name} node:#{operation_attributes[0][:nodename]}]")
         log_buffer.each do |log|
-          file.puts("[\%5s:] %s%s\n" % [log.severity, ' ' * 2 * log.indent_depth, log.msg])
+          file.puts("[\%5s:] %s%s\n" % [log.severity, ' ' * 2 * log.indent_depth, log.message])
         end
         file.close
       end
