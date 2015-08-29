@@ -8,15 +8,19 @@ module Rundock
       attr_accessor :severity
       attr_accessor :datetime
       attr_accessor :progname
-      attr_accessor :msg
+      attr_accessor :message
       attr_accessor :indent_depth
 
       def initialize(severity, datetime, progname, msg, indent_depth)
         @severity = severity
         @datetime = datetime
         @progname = progname
-        @msg      = msg
+        @message  = msg
         @indent_depth = indent_depth
+      end
+
+      def formatted_message
+        "[\%5s:] %s%s\n" % [@severity, ' ' * 2 * @indent_depth, @message]
       end
     end
 
