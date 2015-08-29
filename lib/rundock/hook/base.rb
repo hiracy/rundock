@@ -11,7 +11,7 @@ module Rundock
         @contents = contents
       end
 
-      def hook(node_attributes = [], log_buffer = [])
+      def hook(operation_attributes = [], log_buffer = [])
         raise HookNotImplementedError
       end
     end

@@ -32,9 +32,9 @@ module Rundock
     #     key:  ~/.ssh/id_rsa
     # ---
     class File < Base
-      def hook(node_attributes, log_buffer)
+      def hook(operation_attributes, log_buffer)
         file = ::File.open(@contents[:filepath], 'w')
-        file.puts("[hookname:#{@name} node:#{node_attributes[0][:nodename]}]")
+        file.puts("[hookname:#{@name} node:#{operation_attributes[0][:nodename]}]")
         log_buffer.each do |log|
           file.puts("[\%5s:] %s%s\n" % [log.severity, ' ' * 2 * log.indent_depth, log.msg])
         end
