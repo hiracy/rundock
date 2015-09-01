@@ -1,3 +1,10 @@
+## v0.4.15
+
+Update
+
+- Add datetime to log output
+- Support short header log mode
+
 ## v0.4.14
 
 Update
