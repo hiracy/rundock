@@ -11,16 +11,18 @@ module Rundock
       attr_accessor :message
       attr_accessor :indent_depth
 
-      def initialize(severity, datetime, progname, msg, indent_depth)
+      def initialize(severity, datetime, progname, msg, indent_depth, formatter)
         @severity = severity
         @datetime = datetime
         @progname = progname
         @message  = msg
         @indent_depth = indent_depth
+        @formatter = formatter
       end
 
       def formatted_message
-        "[\%5s:] %s%s\n" % [@severity, ' ' * 2 * @indent_depth, @message]
+        @message unless @formatter
+        @formatter.formatted_message(@severity, @datetime, @progname, @message)
       end
     end
 
@@ -29,6 +31,8 @@ module Rundock
       attr_accessor :indent_depth
       attr_accessor :color
       attr_accessor :show_header
+      attr_accessor :short_header
+      attr_accessor :date_header
       attr_accessor :onrec
       attr_accessor :buffer
 
@@ -39,13 +43,8 @@ module Rundock
       end
 
       def call(severity, datetime, progname, msg)
-        if @show_header
-          out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
-        else
-          out = "%s\n" % [msg2str(msg)]
-        end
-
-        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth)
+        out = formatted_message(severity, datetime, progname, msg)
+        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth, self)
 
         if colored
           colorize(out, severity)
@@ -81,6 +80,27 @@ module Rundock
         ret = @buffer.dup
         @buffer.clear
         ret
+      end
+
+      def formatted_message(severity, datetime, progname, msg)
+        if !@show_header
+          out = "%s\n" % [msg2str(msg)]
+        elsif !@date_header
+          out = "%5s: %s%s\n" % [
+            severity,
+            ' ' * 2 * indent_depth,
+            msg2str(msg)]
+        elsif @short_header
+          out = "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
+        else
+          out = "[%s] %5s: %s%s\n" % [
+            datetime.strftime('%Y-%m-%dT%H:%M:%S.%L'),
+            severity,
+            ' ' * 2 * indent_depth,
+            msg2str(msg)]
+        end
+
+        out
       end
 
       private

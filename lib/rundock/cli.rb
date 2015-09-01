@@ -10,6 +10,8 @@ module Rundock
     class_option :log_level, type: :string, aliases: ['-l'], default: 'info'
     class_option :color, type: :boolean, default: true
     class_option :header, type: :boolean, default: true
+    class_option :short_header, type: :boolean, default: false
+    class_option :date_header, type: :boolean, default: true
 
     def initialize(args, opts, config)
       super(args, opts, config)
@@ -17,6 +19,8 @@ module Rundock
       Rundock::Logger.level = ::Logger.const_get(options[:log_level].upcase)
       Rundock::Logger.formatter.colored = options[:color]
       Rundock::Logger.formatter.show_header = options[:header]
+      Rundock::Logger.formatter.short_header = options[:short_header]
+      Rundock::Logger.formatter.date_header = options[:date_header]
     end
 
     desc 'version', 'Print version'
