@@ -31,6 +31,7 @@ module Rundock
       attr_accessor :indent_depth
       attr_accessor :color
       attr_accessor :show_header
+      attr_accessor :short_header
       attr_accessor :onrec
       attr_accessor :buffer
 
@@ -81,7 +82,9 @@ module Rundock
       end
 
       def formatted_message(severity, datetime, progname, msg)
-        if @show_header
+        if @short_header
+          out = "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
+        elsif @show_header
           out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
         else
           out = "%s\n" % [msg2str(msg)]
