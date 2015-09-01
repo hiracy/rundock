@@ -32,6 +32,7 @@ module Rundock
       attr_accessor :color
       attr_accessor :show_header
       attr_accessor :short_header
+      attr_accessor :date_header
       attr_accessor :onrec
       attr_accessor :buffer
 
@@ -82,13 +83,24 @@ module Rundock
       end
 
       def formatted_message(severity, datetime, progname, msg)
-        if @short_header
-          out = "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
-        elsif @show_header
-          out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
-        else
+        if !@show_header
           out = "%s\n" % [msg2str(msg)]
+        elsif !@date_header
+          out = "%5s: %s%s\n" % [
+            severity,
+            ' ' * 2 * indent_depth,
+            msg2str(msg)]
+        elsif @short_header
+          out = "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
+        else
+          out = "[%s] %5s: %s%s\n" % [
+            datetime.strftime('%Y-%m-%dT%H:%M:%S.%L'),
+            severity,
+            ' ' * 2 * indent_depth,
+            msg2str(msg)]
         end
+
+        out
       end
 
       private
