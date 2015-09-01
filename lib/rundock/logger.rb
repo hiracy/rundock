@@ -11,16 +11,18 @@ module Rundock
       attr_accessor :message
       attr_accessor :indent_depth
 
-      def initialize(severity, datetime, progname, msg, indent_depth)
+      def initialize(severity, datetime, progname, msg, indent_depth, formatter)
         @severity = severity
         @datetime = datetime
         @progname = progname
         @message  = msg
         @indent_depth = indent_depth
+        @formatter = formatter
       end
 
       def formatted_message
-        "[\%5s:] %s%s\n" % [@severity, ' ' * 2 * @indent_depth, @message]
+        @message unless @formatter
+        @formatter.formatted_message(@severity, @datetime, @progname, @message)
       end
     end
 
@@ -39,13 +41,8 @@ module Rundock
       end
 
       def call(severity, datetime, progname, msg)
-        if @show_header
-          out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
-        else
-          out = "%s\n" % [msg2str(msg)]
-        end
-
-        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth)
+        out = formatted_message(severity, datetime, progname, msg)
+        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth, self)
 
         if colored
           colorize(out, severity)
@@ -81,6 +78,14 @@ module Rundock
         ret = @buffer.dup
         @buffer.clear
         ret
+      end
+
+      def formatted_message(severity, datetime, progname, msg)
+        if @show_header
+          out = "[\%5s:] %s%s\n" % [severity, ' ' * 2 * indent_depth, msg2str(msg)]
+        else
+          out = "%s\n" % [msg2str(msg)]
+        end
       end
 
       private
