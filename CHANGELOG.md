@@ -1,3 +1,9 @@
+## v0.4.16
+
+Update
+
+- Support hooks define in scenario file
+
 ## v0.4.15
 
 Update
