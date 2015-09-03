@@ -1,10 +1,13 @@
 - node: anyhost-01
   command:
     - "echo 'hookname:file_one ' > /var/tmp/hello_rundock_from_file_hook_one_scenario"
+    - "echo '[DEBUG:] dumy log' >> /var/tmp/hello_rundock_from_file_hook_one_scenario"
     - "echo 'anyhost-01' > /var/tmp/hello_rundock_from_file_hook_array_1_scenario"
     - "echo 'anyhost-01' > /var/tmp/hello_rundock_from_file_hook_array_2_scenario"
     - "echo 'hookname:file_array_1 ' >> /var/tmp/hello_rundock_from_file_hook_array_1_scenario"
     - "echo 'hookname:file_array_2 ' >> /var/tmp/hello_rundock_from_file_hook_array_2_scenario"
+    - "echo '[DEBUG:] dummy log' >> /var/tmp/hello_rundock_from_file_hook_array_1_scenario"
+    - "echo '[DEBUG:] dummy log' >> /var/tmp/hello_rundock_from_file_hook_array_2_scenario"
   hook:
     - file_one
     - file_array_1

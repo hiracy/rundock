@@ -20,7 +20,7 @@ module Rundock
     end
 
     def run
-      Logger.formatter.onrec = true
+      Logger.formatter.on_rec
       Logger.debug("run node: #{@name}")
       Logger.warn("no operation running: #{@name}") if @operations.blank?
 
@@ -39,7 +39,7 @@ module Rundock
         h.hook(node_attributes, log_buffer)
       end
 
-      Logger.formatter.onrec = false
+      Logger.formatter.off_rec
     end
   end
 end

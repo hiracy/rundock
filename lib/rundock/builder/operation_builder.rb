@@ -1,7 +1,7 @@
 module Rundock
   module Builder
     class OperationBuilder < Base
-      def build_first(scenario, node_info, tasks)
+      def build_first(scenario, node_info, tasks, hooks)
         if @options[:hostgroup] && !@options[:command]
           raise CommandArgNotFoundError, %("--command or -c" option is required if hostgroup specified.)
         end
@@ -32,8 +32,11 @@ module Rundock
                 node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options))
               end
             elsif k == :hook
-              node_attribute.enable_hooks = Array(v)
-              node.hooks = HookBuilder.new(@options).build(Array(v)) if node
+              hooks_builder = HookBuilder.new(@options)
+              if node
+                node.hooks = hooks_builder.build(Array(v), hooks)
+                node_attribute.hooks = hooks_builder.enable_hooks
+              end
             else
 
               next unless node
@@ -50,7 +53,6 @@ module Rundock
 
       def build_task(tasks, backend, node_attribute)
         node = Node.new(node_attribute.nodename, backend)
-        node.hooks = HookBuilder.new(nil).build_from_attributes(node_attribute.nodeinfo)
         scen = Scenario.new
 
         tasks.each do |k, v|
@@ -68,7 +70,7 @@ module Rundock
         @options[:host].split(',').each do |host|
           backend = BackendBuilder.new(@options, host, nil).build
           node = Node.new(host, backend)
-          node.hooks = HookBuilder.new(@options).build(['all'])
+          node.hooks = HookBuilder.new(@options).build(['all'], nil)
           node.add_operation(
             build_cli_command_operation(@options[:command], Rundock::Attribute::NodeAttribute.new, @options))
           scen.nodes.push(node)

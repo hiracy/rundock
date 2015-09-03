@@ -33,18 +33,19 @@ module Rundock
       attr_accessor :show_header
       attr_accessor :short_header
       attr_accessor :date_header
-      attr_accessor :onrec
       attr_accessor :buffer
 
       def initialize(*args)
         super
         @indent_depth = 0
         @buffer = []
+        @rec = false
+        @lock = false
       end
 
       def call(severity, datetime, progname, msg)
         out = formatted_message(severity, datetime, progname, msg)
-        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth, self)
+        @buffer << LogEntity.new(severity, datetime, progname, msg, indent_depth, self) if @rec
 
         if colored
           colorize(out, severity)
@@ -77,9 +78,26 @@ module Rundock
       end
 
       def flush
+        return nil if @lock
         ret = @buffer.dup
         @buffer.clear
         ret
+      end
+
+      def on_rec
+        @rec = true unless @lock
+      end
+
+      def off_rec
+        @rec = false unless @lock
+      end
+
+      def rec_lock
+        @lock = true
+      end
+
+      def rec_unlock
+        @lock = false
       end
 
       def formatted_message(severity, datetime, progname, msg)
