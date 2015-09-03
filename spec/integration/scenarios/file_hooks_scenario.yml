@@ -1,0 +1,24 @@
+- node: anyhost-01
+  command:
+    - "echo 'hookname:file_hook_one ' > /var/tmp/hello_rundock_from_file_hook_inner_one_scenario"
+    - "echo '[DEBUG:] dummy log' >> /var/tmp/hello_rundock_from_file_hook_inner_one_scenario"
+    - "echo 'hookname:file_hook_two ' > /var/tmp/hello_rundock_from_file_hook_inner_two_scenario"
+    - "echo '[DEBUG:] dummy log' >> /var/tmp/hello_rundock_from_file_hook_inner_two_scenario"
+  hook:
+    - file_hook_one
+    - file_hook_two
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+---
+file_hook_one:
+  hook_type: file
+  filepath: /var/tmp/hello_rundock_from_file_hook_inner_one_scenario
+file_hook_two:
+  hook_type: file
+  filepath: /var/tmp/hello_rundock_from_file_hook_inner_two_scenario

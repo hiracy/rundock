@@ -73,7 +73,7 @@ def do_rundock_scenarios(platform)
       default_ssh_opt = ''
     end
 
-    if scenario =~ %r{^*scenarios/(.*_hooks)_scenario.yml$}
+    if scenario =~ %r{^*scenarios/(.*_hooks_by_option)_scenario.yml$}
       hooks_opt = " -k ./spec/integration/hooks/#{Regexp.last_match(1)}.yml"
     else
       hooks_opt = ''
