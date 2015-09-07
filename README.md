@@ -90,7 +90,7 @@ For more detail. You can see from `rundock -h` command.
 
 ## Documentations
 
-Now on editing...
+- [Rundock Wiki](https://github.com/hiracy/rundock/wiki)
 
 ## Run tests
 
