@@ -83,7 +83,7 @@ You can also specify [default_ssh_options.yml](https://github.com/hiracy/rundock
 $ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
 ```
 ```
-$ rundock do -s /path/to/your-dir/scenario.yml -d /path/to/your-dir/default_ssh_options.yml
+$ rundock do /path/to/your-dir/scenario.yml -d /path/to/your-dir/default_ssh_options.yml
 ```
 
 For more detail. You can see from `rundock -h` command.
