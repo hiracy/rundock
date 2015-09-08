@@ -1,3 +1,9 @@
+## v0.5.0
+
+Update
+
+- Change scenario 'node' attribute to 'target'
+
 ## v0.4.16
 
 Update
