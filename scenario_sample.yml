@@ -43,8 +43,7 @@
     - "hostname"
     - "uname -a"
   hook:
-    - mail
-    - file
+    - logging
 - node: anyhost-01
   task:
     - echo_platform
