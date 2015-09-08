@@ -21,11 +21,19 @@
 # <hostname>:
 #   :
 # ---
-# ###  task information section  ###
+# ###  task section  ###
 # <taskname>:
 #   - "<actual command>"
 #   - :
 # <taskname>:
+#   :
+# ---
+# ###  hook section  ###
+# <hookname>:
+#   hook_type: <hook_type>
+#   <hook_attribute_key>: <hook_attribute_value>
+#     :
+# <hookname>:
 #   :
 # -------------------------------------------------------------------
 #
@@ -65,3 +73,7 @@ echo_users:
   command:
     - "whoami"
     - "w"
+---
+logging:
+  hook_type: file
+  filepath: /var/log/rundock.log
