@@ -1,6 +1,6 @@
 FROM centos:6
 
-RUN yum install -y yum install openssh openssh-server openssh-clients sudo
+RUN yum install -y yum install openssh openssh-server openssh-clients sudo passwd
 RUN useradd tester
 RUN echo "tester" | passwd --stdin tester
 RUN mkdir -p /home/tester/.ssh; chown tester /home/tester/.ssh; chmod 700 /home/tester/.ssh
