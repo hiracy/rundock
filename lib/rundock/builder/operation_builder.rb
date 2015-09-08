@@ -1,47 +1,52 @@
 module Rundock
   module Builder
     class OperationBuilder < Base
-      def build_first(scenario, node_info, tasks, hooks)
-        if @options[:hostgroup] && !@options[:command]
-          raise CommandArgNotFoundError, %("--command or -c" option is required if hostgroup specified.)
+      def build_first(scenario, targets, tasks, hooks)
+        if @options[:targetgroup] && !@options[:command]
+          raise CommandArgNotFoundError, %("--command or -c" option is required if targetgroup specified.)
         end
 
         node = nil
+        node_attribute = nil
         scen = Scenario.new
-        node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
-        tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
-        scen.node_info = node_info
-        scen.node_info = {} unless node_info
         scen.tasks = tasks
 
         # use scenario file
         scenario.each do |n|
           scen.nodes.push(node) if node
 
-          n.deep_symbolize_keys.each do |k, v|
-            if k == :node
-              node_attribute.finalize_node
-              backend_builder = BackendBuilder.new(@options, v, node_info)
-              backend = backend_builder.build
+          n.deep_symbolize_keys.each do |sk, sv|
+            if sk == :target
+              target_builder = TargetBuilder.new(@options)
+              target = target_builder.build(sv, targets)
 
-              node = Node.new(v, backend)
-              node_attribute.nodename = v
-              scen.node_info[v.to_sym] = node_attribute.nodeinfo = backend_builder.parsed_options
+              if target.is_a?(Node)
+                if node_attribute.nil?
+                  node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
+                else
+                  node_attribute.next
+                end
+
+                node_attribute.nodename = sv
+                node = target
+                tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
+                scen.node_info[sv.to_sym] = node_attribute.nodeinfo = target_builder.parsed_options
+              end
 
               if @options[:command]
                 node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options))
               end
-            elsif k == :hook
+            elsif sk == :hook
               hooks_builder = HookBuilder.new(@options)
               if node
-                node.hooks = hooks_builder.build(Array(v), hooks)
+                node.hooks = hooks_builder.build(Array(sv), hooks)
                 node_attribute.hooks = hooks_builder.enable_hooks
               end
             else
 
               next unless node
 
-              ope = build_operations(k, Array(v), node_attribute, @options, false)
+              ope = build_operations(sk, Array(sv), node_attribute, @options, false)
               node.add_operation(ope) if ope
             end
           end

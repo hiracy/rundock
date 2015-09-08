@@ -22,8 +22,8 @@ module Rundock
         build_scenario_with_file
       end
 
-      def build_task(tasks, backend, node_attributes)
-        OperationBuilder.new(@options).build_task(tasks, backend, node_attributes)
+      def build_task(tasks, backend, target_attributes)
+        OperationBuilder.new(@options).build_task(tasks, backend, target_attributes)
       end
 
       private
@@ -37,7 +37,7 @@ module Rundock
       def build_scenario_with_file
         if @scenario_file
 
-          type = [:main, :node_info, :tasks, :hooks]
+          type = [:main, :target_info, :tasks, :hooks]
           scenario_data = {}
 
           YAML.load_documents(@scenario_file).each_with_index do |data, idx|
@@ -52,7 +52,7 @@ module Rundock
         ope = OperationBuilder.new(@options)
         ope.build_first(
           scenario_data[:main],
-          scenario_data[:node_info],
+          scenario_data[:target_info],
           scenario_data[:tasks],
           scenario_data[:hooks])
       end

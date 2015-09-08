@@ -1,8 +1,8 @@
-- node: localhost
+- target: localhost
   command:
     - "rm -f /var/tmp/hello_rundock_from_file_hook_innner_one_scenario"
   hook: file_hook_one
-- node: anyhost-01
+- target: anyhost-01
   task:
     - remove_task
   hook:

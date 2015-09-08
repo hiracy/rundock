@@ -18,14 +18,14 @@ $ gem install rundock
 
 ## Usage
 
-Edit your hostgroup to "hostgroup.yml" like this sample.
+Edit your targetgroup to "targetgroup.yml" like this sample.
 
 ```
-# node section
-- node: 192.168.1.11
-- node: host-alias-01
+# target section
+- target: 192.168.1.11
+- target: host-alias-01
 ---
-# host information section
+# target information section
 host-alias-01:
   host: 192.168.1.12
   ssh_opts:
@@ -36,7 +36,7 @@ host-alias-01:
 
 and execute rundock.
 
-    $ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command'
+    $ rundock ssh -g /path/to/your-dir/targetgroup.yml -c 'your-gread-command'
 
 or
 
@@ -44,18 +44,18 @@ Edit your operation scenario to "[scenario.yml](https://github.com/hiracy/rundoc
 
 ```
 # scenario section
-- node: 192.168.1.11
+- target: 192.168.1.11
   command:
     - "sudo hostname new-host-01"
     - "sudo sed -i -e 's/HOSTNAME=old-host-01/HOSTNAME=new-host-01/g' /etc/sysconfig/network"
-- node: host-alias-01
+- target: host-alias-01
   command:
     - "sudo yum -y install ruby"
   task:
     - update_gem
     - install_bundler
 ---
-# host information section
+# target information section
 host-alias-01:
   host: 192.168.1.12
   ssh_opts:
@@ -80,7 +80,7 @@ and execute rundock.
 You can also specify [default_ssh_options.yml](https://github.com/hiracy/rundock/blob/master/default_ssh.yml) [(Net::SSH options)](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html) file contents that you specified "-d" option to the default ssh options.
 
 ```
-$ rundock ssh -g /path/to/your-dir/hostgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
+$ rundock ssh -g /path/to/your-dir/targetgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
 ```
 ```
 $ rundock do /path/to/your-dir/scenario.yml -d /path/to/your-dir/default_ssh_options.yml

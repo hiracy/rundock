@@ -1,9 +1,10 @@
-- node: localhost
+- target: localhost
   command:
     - "echo 'Should this message does not appear';cat /notexist"
-- node: anyhost-01
+- target: anyhost-01
 ---
 anyhost-01:
+  target_type: host
   host: 172.17.42.1
   ssh_opts:
     port: 22222

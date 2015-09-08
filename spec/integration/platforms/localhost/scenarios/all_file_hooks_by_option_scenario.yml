@@ -1,4 +1,4 @@
-- node: localhost
+- target: localhost
   command:
     - "rm -f /var/tmp/hello_rundock_from_file_hook_all_1_scenario"
     - "rm -f /var/tmp/hello_rundock_from_file_hook_all_2_scenario"

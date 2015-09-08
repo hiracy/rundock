@@ -1,4 +1,4 @@
-- node: anyhost-01
+- target: anyhost-01
   command:
     - "echo 'hookname:file_hook_one ' > /var/tmp/hello_rundock_from_file_hook_inner_one_scenario"
     - "echo '[DEBUG:] dummy log' >> /var/tmp/hello_rundock_from_file_hook_inner_one_scenario"
