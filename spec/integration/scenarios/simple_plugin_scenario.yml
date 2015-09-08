@@ -1,4 +1,4 @@
-- node: anyhost-01
+- target: anyhost-01
   task:
     - write_echo
 ---

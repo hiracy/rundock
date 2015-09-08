@@ -1,4 +1,4 @@
-- node: localhost
+- target: localhost
   command:
     - "hostname"
     - "uname -a"

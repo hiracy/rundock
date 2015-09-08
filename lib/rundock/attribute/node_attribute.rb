@@ -14,7 +14,7 @@ module Rundock
         :dry_run
       ]
 
-      def finalize_node
+      def next
         list.each do |k, _v|
           define_attr(k, nil) unless AVAIL_TAKE_OVERS.include?(k)
         end

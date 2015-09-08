@@ -8,7 +8,7 @@ module Rundock
 
     class << self
       def run(options)
-        Logger.debug 'Starting Rundoc:'
+        Logger.debug 'Starting Rundock:'
 
         runner = self.new(options)
         runner.load_plugins
@@ -28,14 +28,14 @@ module Rundock
     end
 
     def build(options)
-      if options[:scenario] || options[:hostgroup]
+      if options[:scenario] || options[:targetgroup]
         if options[:scenario] && !FileTest.exist?(options[:scenario])
           raise ScenarioNotFoundError, "'#{options[:scenario]}' scenario file is not found."
-        elsif options[:hostgroup] && !FileTest.exist?(options[:hostgroup])
-          raise ScenarioNotFoundError, "'#{options[:hostgroup]}' hostgroup file is not found."
+        elsif options[:targetgroup] && !FileTest.exist?(options[:targetgroup])
+          raise ScenarioNotFoundError, "'#{options[:targetgroup]}' targetgroup file is not found."
         end
 
-        options[:scenario] = options[:hostgroup] if options[:hostgroup]
+        options[:scenario] = options[:targetgroup] if options[:targetgroup]
 
         # parse scenario
         if options[:scenario] =~ %r{^(http|https)://}

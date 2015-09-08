@@ -1,4 +1,4 @@
-- node: localhost
+- target: localhost
   command:
     - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_scenario"
     - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_scenario"

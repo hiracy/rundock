@@ -6,6 +6,7 @@ module Rundock
 
     def initialize
       @nodes = []
+      @node_info = {}
     end
 
     def run

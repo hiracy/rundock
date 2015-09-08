@@ -1,10 +1,11 @@
-- node: anyhost-01
+- target: anyhost-01
   host_inventory:
     - memory/total
   task:
     - write_echo
 ---
 anyhost-01:
+  target_type: host
   host: localhost
 ---
 write_echo:

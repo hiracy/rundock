@@ -1,4 +1,4 @@
-- node: localhost
+- target: localhost
   command:
     - "rm -f /var/tmp/hello_rundock_from_scenario"
   task:
