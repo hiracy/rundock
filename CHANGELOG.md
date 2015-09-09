@@ -87,7 +87,7 @@ Fix
 
 Improvements
 
-- Add running operation to other node infomation
+- Add running operation to other node information
 
 Fix
 
