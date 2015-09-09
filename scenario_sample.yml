@@ -8,8 +8,9 @@
 #     <operation_content>
 #   <operation_name>:
 #     :
-#  <hook_name>:
-#    <hook_content>
+#  hook:
+#    - <hook_name>
+#     :
 # - target: <target_name>
 #   :
 # ---
