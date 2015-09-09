@@ -5,10 +5,11 @@
 # ###  scenario section  ###
 # - target: <target_name>
 #   <operation_name>:
-#     - <operation_detail>
-#     - :
+#     <operation_content>
 #   <operation_name>:
 #     :
+#  <hook_name>:
+#    <hook_content>
 # - target: <target_name>
 #   :
 # ---
