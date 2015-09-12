@@ -6,6 +6,7 @@ module Rundock
       attr_accessor :parsed_options
 
       def build(target_name, target_info)
+        # host type specified if target not found.
         if target_info.nil? ||
            !target_info.key?(target_name.to_sym) ||
            !target_info[target_name.to_sym].key?(:target_type) ||
