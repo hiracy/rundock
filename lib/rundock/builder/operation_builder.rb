@@ -21,20 +21,9 @@ module Rundock
               target = target_builder.build(sv, targets)
 
               if target.is_a?(Node)
-                if node_attribute.nil?
-                  node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
-                else
-                  node_attribute.next
-                end
-
-                node_attribute.nodename = sv
                 node = target
-                tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
-                scen.node_info[sv.to_sym] = node_attribute.nodeinfo = target_builder.parsed_options
-              end
-
-              if @options[:command]
-                node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options))
+                prepare_node(node_attribute, tasks, sv, scen, target_builder.parsed_options)
+                node.add_operation(build_cli_command_operation(@options[:command], node_attribute, @options)) if @options[:command]
               end
             elsif sk == :hook
               hooks_builder = HookBuilder.new(@options)
@@ -85,6 +74,18 @@ module Rundock
       end
 
       private
+
+      def prepare_node(node_attribute, tasks, nodename, scenario, parsed_options)
+        if node_attribute.nil?
+          node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
+        else
+          node_attribute.init_except_take_over_state
+        end
+    
+        node_attribute.nodename = nodename
+        tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
+        scenario.node_info[nodename.to_sym] = node_attribute.nodeinfo = parsed_options
+      end
 
       def build_cli_command_operation(command, node_attributes, cli_options)
         node_attributes.nodename = @options[:host]

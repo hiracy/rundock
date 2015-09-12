@@ -14,7 +14,7 @@ module Rundock
         :dry_run
       ]
 
-      def next
+      def init_except_take_over_state
         list.each do |k, _v|
           define_attr(k, nil) unless AVAIL_TAKE_OVERS.include?(k)
         end
