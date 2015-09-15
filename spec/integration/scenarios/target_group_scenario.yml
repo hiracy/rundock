@@ -1,0 +1,40 @@
+- target_group: target_group_01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_target_group_1_scenario"
+  task: write_echo_01
+- target_group: target_group_02
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_target_group_2_scenario"
+  task: write_echo_02
+---
+target_group_01:
+  target_type: group
+  targets:
+    - anyhost-01
+    - anyhost-02
+target_group_02:
+  target_type: group
+  targets:
+    - anyhost-01
+    - anyhost-02
+anyhost-01:
+  target_type: host
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+anyhost-02:
+  target_type: host
+  host: "172.17.42.1"
+  ssh_opts:
+    port: 22222
+    user: tester
+    keys: ["<replaced_by_platforms>"]
+---
+write_echo_01:
+  command:
+    - "echo 'Hello Rundock from target group 1 Scenario.' | tee /var/tmp/hello_rundock_from_target_group_1_scenario"
+write_echo_02:
+  command:
+    - "echo 'Hello Rundock from target group 2 Scenario.' | tee /var/tmp/hello_rundock_from_target_group_2_scenario"

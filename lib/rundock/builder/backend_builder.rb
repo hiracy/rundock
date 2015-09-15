@@ -19,9 +19,6 @@ module Rundock
         # update ssh options for node from node_info
         @parsed_options.merge!(@node_info[@nodename.to_sym][:ssh_opts])
 
-        # delete trash ssh_options(node[host::ssh_options])
-        @node_info[@nodename.to_sym].delete(:ssh_opts)
-
         # add any attributes for host from node_info
         @parsed_options.merge!(@node_info[@nodename.to_sym])
 
