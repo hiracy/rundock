@@ -1,3 +1,9 @@
+## v0.5.1
+
+Update
+
+- Support target group in scenario section
+
 ## v0.5.0
 
 Update
