@@ -1,3 +1,9 @@
+## v0.5.2
+
+Update
+
+- Support deploy ERB Template file
+
 ## v0.5.1
 
 Update
