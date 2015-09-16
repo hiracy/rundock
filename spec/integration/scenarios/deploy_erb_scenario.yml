@@ -1,0 +1,29 @@
+- target: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_erb_src_file_scenario"
+    - "echo 'Hello Rundock from deploy erb <%= erb_val_1 %> Scenario.' > /var/tmp/hello_rundock_from_deploy_erb_src_file_scenario"
+    - "echo '<%= erb_val_2 %>' >> /var/tmp/hello_rundock_from_deploy_erb_src_file_scenario"
+- target: anyhost-01
+  task:
+    - deploy_task
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+deploy_task:
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_erb_dst_file_scenario"
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_erb_src_file_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_erb_dst_file_scenario
+      erb: true
+      binding:
+        erb_val_1:
+          type: command
+          value: "echo 'runrunrundock'"
+        erb_val_2:
+          value: 'uname'

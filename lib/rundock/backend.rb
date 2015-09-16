@@ -43,6 +43,10 @@ module Rundock
         end
       end
 
+      def specinfra_run_command(command)
+        @backend.run_command(command)
+      end
+
       private
 
       def run_command(cmd, exec_options = {})
