@@ -4,7 +4,7 @@ module Rundock
   module Builder
     class HookBuilder < Base
       DEFAULT_HOOKS_FILE_PATH = './hooks.yml'
-      HookStructureError = Class.new(NotImplementedError)
+      HookStructureError = Class.new(StandardError)
 
       attr_accessor :enable_hooks
 
