@@ -16,7 +16,7 @@ module Rundock
             Logger.warn("tasks file is not found. use #{DEFAULT_TASKS_FILE_PATH}")
             tasks.merge!(YAML.load_file(DEFAULT_TASKS_FILE_PATH).deep_symbolize_keys)
           else
-            Logger.warn("Task path is not available. (#{DEFAULT_TASKS_FILE_PATH})")
+            Logger.warn("Task path is not available. (#{@options[:tasks]})")
           end
         else
           return scenario_tasks
