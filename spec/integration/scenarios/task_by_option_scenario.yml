@@ -1,0 +1,16 @@
+- target: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_task_by_option_scenario"
+- target: anyhost-01
+  command:
+    - "uname -a"
+  task:
+    - write_echo
+---
+anyhost-01:
+  target_type: host
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"

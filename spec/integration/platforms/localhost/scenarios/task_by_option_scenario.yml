@@ -1,0 +1,5 @@
+- target: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_task_by_option_scenario"
+  task:
+    - write_echo

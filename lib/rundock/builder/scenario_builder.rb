@@ -53,7 +53,7 @@ module Rundock
         ope.build_first(
           scenario_data[:main],
           scenario_data[:target_info],
-          scenario_data[:tasks],
+          TaskBuilder.new(@options).build(scenario_data[:tasks]),
           scenario_data[:hooks])
       end
     end

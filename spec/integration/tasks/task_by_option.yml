@@ -1,0 +1,3 @@
+write_echo:
+  command:
+    - "echo 'Hello Rundock from task by option Scenario.' > /var/tmp/hello_rundock_from_task_by_option_scenario"
