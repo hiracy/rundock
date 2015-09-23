@@ -1,3 +1,10 @@
+## v0.5.3
+
+Update
+
+- Support taskfile
+- Support targetfile
+
 ## v0.5.2
 
 Update
