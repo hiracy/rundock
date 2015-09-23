@@ -1,0 +1,10 @@
+- target: anyhost-01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_target_by_option_scenario"
+  task:
+    - write_echo
+---
+---
+write_echo:
+  command:
+    - "echo 'Hello Rundock from target by option Scenario.' > /var/tmp/hello_rundock_from_target_by_option_scenario"

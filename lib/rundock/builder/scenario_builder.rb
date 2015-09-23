@@ -52,8 +52,8 @@ module Rundock
         ope = OperationBuilder.new(@options)
         ope.build_first(
           scenario_data[:main],
-          scenario_data[:target_info],
-          scenario_data[:tasks],
+          @options[:command] ? scenario_data[:target_info] : TargetGroupBuilder.new(@options).build(scenario_data[:target_info]),
+          TaskBuilder.new(@options).build(scenario_data[:tasks]),
           scenario_data[:hooks])
       end
     end

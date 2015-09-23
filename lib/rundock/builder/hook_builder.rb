@@ -4,7 +4,7 @@ module Rundock
   module Builder
     class HookBuilder < Base
       DEFAULT_HOOKS_FILE_PATH = './hooks.yml'
-      HookStructureError = Class.new(NotImplementedError)
+      HookStructureError = Class.new(StandardError)
 
       attr_accessor :enable_hooks
 
@@ -21,9 +21,12 @@ module Rundock
           if FileTest.exist?(@options[:hooks])
             hooks_file = @options[:hooks]
             Logger.info("hooks file is #{hooks_file}")
-          else
+          elsif FileTest.exist?(DEFAULT_HOOKS_FILE_PATH)
             Logger.warn("hooks file is not found. use #{DEFAULT_HOOKS_FILE_PATH}")
             hooks_file = DEFAULT_HOOKS_FILE_PATH
+          else
+            Logger.warn("Hook path is not available. (#{@options[:hooks]})")
+            return []
           end
         elsif hook_attributes.nil?
           Logger.warn("Hook source is not found. (enables:#{enables.join(',')})") unless enables.empty?

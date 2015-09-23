@@ -73,14 +73,17 @@ def do_rundock_scenarios(platform)
       default_ssh_opt = ''
     end
 
-    if scenario =~ %r{^*scenarios/(.*_hooks_by_option)_scenario.yml$}
-      hooks_opt = " -k ./spec/integration/hooks/#{Regexp.last_match(1)}.yml"
-    else
-      hooks_opt = ''
+    options = ''
+    if scenario =~ %r{^*scenarios/(.*hooks_by_option)_scenario.yml$}
+      options = " -k ./spec/integration/hooks/#{Regexp.last_match(1)}.yml"
+    elsif scenario =~ %r{^*scenarios/(.*task_by_option)_scenario.yml$}
+      options = " -t ./spec/integration/tasks/#{Regexp.last_match(1)}.yml"
+    elsif scenario =~ %r{^*scenarios/(.*target_by_option)_scenario.yml$}
+      options = " -g #{base_dir}/targets/#{Regexp.last_match(1)}.yml"
     end
 
     execute('bundle exec exe/rundock' \
-       " do #{scenario}#{default_ssh_opt}#{hooks_opt} -l debug", true)
+       " do #{scenario}#{default_ssh_opt}#{options} -l debug", true)
   end
 end
 

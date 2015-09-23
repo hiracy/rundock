@@ -17,15 +17,18 @@ DOCKER_SSH_KEY_PUBLIC_REMOTE="${PLATFORM_DIR}/authorized_keys"
 DOCKER_SSH_CONFIG="${HOME}/.ssh/config_${PROJECT_NAME}_${PLATFORM_NAME}"
 RUNDOCK_SCENARIO_DIR="${PROJECT_ROOT}/scenarios"
 RUNDOCK_GROUP_DIR="${PROJECT_ROOT}/groups"
+RUNDOCK_TARGET_DIR="${PROJECT_ROOT}/targets"
 RUNDOCK_CACHE_DIR="${HOME}/.rundock/${PLATFORM_NAME}"
 RUNDOCK_DEFAULT_SSH_YML="${RUNDOCK_CACHE_DIR}/integration_default_ssh.yml"
 RUNDOCK_SCENARIO_CACHE_DIR="${RUNDOCK_CACHE_DIR}/scenarios"
 RUNDOCK_GROUP_CACHE_DIR="${RUNDOCK_CACHE_DIR}/groups"
+RUNDOCK_TARGET_CACHE_DIR="${RUNDOCK_CACHE_DIR}/targets"
 
 if [ "${1}x" = "--cleanx" ];then
   rm -f ${RUNDOCK_DEFAULT_SSH_YML}
   rm -f ${RUNDOCK_SCENARIO_CACHE_DIR}/*.yml
   rm -f ${RUNDOCK_GROUP_CACHE_DIR}/*.yml
+  rm -f ${RUNDOCK_TARGET_CACHE_DIR}/*.yml
   if sudo docker ps | grep "${DOCKER_IMAGE_NAME}" > /dev/null; then
     rm -f ${DOCKER_CACHE_IMAGE_PATH}
     rm -f ${DOCKER_SSH_KEY_PRIVATE}
@@ -41,6 +44,7 @@ fi
 
 mkdir -p "${RUNDOCK_SCENARIO_CACHE_DIR}"
 mkdir -p "${RUNDOCK_GROUP_CACHE_DIR}"
+mkdir -p "${RUNDOCK_TARGET_CACHE_DIR}"
 
 if [ ! -f ${RUNDOCK_DEFAULT_SSH_YML} ]; then
 (
@@ -55,10 +59,13 @@ fi
 
 cp ${RUNDOCK_SCENARIO_DIR}/* ${RUNDOCK_SCENARIO_CACHE_DIR}
 cp ${RUNDOCK_GROUP_DIR}/* ${RUNDOCK_GROUP_CACHE_DIR}
+cp ${RUNDOCK_TARGET_DIR}/* ${RUNDOCK_TARGET_CACHE_DIR}
 
 find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" | \
   xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
 find ${RUNDOCK_GROUP_CACHE_DIR} -type f -name "*_group.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
+find ${RUNDOCK_TARGET_CACHE_DIR} -type f -name "*.yml" | \
   xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
 
 sudo docker ps | grep "${DOCKER_IMAGE_NAME}" && { echo "docker image is already standing."; exit 0; }

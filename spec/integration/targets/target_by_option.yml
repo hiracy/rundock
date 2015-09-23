@@ -1,0 +1,8 @@
+anyhost-01:
+  target_type: host
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+
