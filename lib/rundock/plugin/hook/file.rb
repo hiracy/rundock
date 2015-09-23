@@ -1,4 +1,4 @@
-require 'rundock/operation/base'
+require 'rundock/hook/base'
 
 module Rundock
   module Hook
