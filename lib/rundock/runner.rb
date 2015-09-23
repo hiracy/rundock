@@ -31,11 +31,11 @@ module Rundock
       if options[:scenario] || options[:targetgroup]
         if options[:scenario] && !FileTest.exist?(options[:scenario])
           raise ScenarioNotFoundError, "'#{options[:scenario]}' scenario file is not found."
-        elsif options[:targetgroup] && !FileTest.exist?(options[:targetgroup])
+        elsif options[:command] && options[:targetgroup] && !FileTest.exist?(options[:targetgroup])
           raise ScenarioNotFoundError, "'#{options[:targetgroup]}' targetgroup file is not found."
         end
 
-        options[:scenario] = options[:targetgroup] if options[:targetgroup]
+        options[:scenario] = options[:targetgroup] if options[:command] && options[:targetgroup]
 
         # parse scenario
         if options[:scenario] =~ %r{^(http|https)://}

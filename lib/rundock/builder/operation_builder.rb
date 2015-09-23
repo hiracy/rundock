@@ -2,10 +2,6 @@ module Rundock
   module Builder
     class OperationBuilder < Base
       def build_first(scenario, targets, tasks, hooks)
-        if @options[:targetgroup] && !@options[:command]
-          raise CommandArgNotFoundError, %("--command or -c" option is required if targetgroup specified.)
-        end
-
         parsing_node_attribute = nil
         scen = Scenario.new
         scen.tasks = tasks
