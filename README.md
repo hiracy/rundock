@@ -79,14 +79,38 @@ and execute rundock.
 
 You can also specify [default_ssh_options.yml](https://github.com/hiracy/rundock/blob/master/default_ssh.yml) [(Net::SSH options)](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html) file contents that you specified "-d" option to the default ssh options.
 
+- use adhoc ssh
+
 ```
 $ rundock ssh -g /path/to/your-dir/targetgroup.yml -c 'your-gread-command' -d /path/to/your-dir/default_ssh_options.yml
 ```
+
+- use scenario file
+
 ```
 $ rundock do /path/to/your-dir/scenario.yml -d /path/to/your-dir/default_ssh_options.yml
 ```
 
-For more detail. You can see from `rundock -h` command.
+You can see from `rundock -h` command.
+
+```
+Commands:
+  rundock do [SCENARIO] [options]  # Run rundock from scenario file
+  rundock help [COMMAND]           # Describe available commands or one specific command
+  rundock ssh [options]            # Run rundock ssh with various options
+  rundock version                  # Print version
+
+Options:
+  -l, [--log-level=LOG_LEVEL]
+                                             # Default: info
+      [--color], [--no-color]
+                                             # Default: true
+      [--header], [--no-header]
+                                             # Default: true
+      [--short-header], [--no-short-header]
+      [--date-header], [--no-date-header]
+                                             # Default: true
+```
 
 ## Documentations
 
