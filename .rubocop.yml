@@ -48,5 +48,8 @@ Style/HashSyntax:
 Style/FormatString:
   EnforcedStyle: percent
 
+Style/RegexpLiteral:
+  Enabled: false
+
 Lint/UnusedMethodArgument:
   Enabled: false
