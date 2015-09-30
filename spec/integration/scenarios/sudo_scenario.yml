@@ -1,0 +1,20 @@
+- target: anyhost-01
+  command:
+    - "sudo rm -f /var/tmp/hello_rundock_from_sudo_scenario"
+    - "sudo rm -f /var/tmp/hello_rundock_from_no_sudo_scenario"
+  task:
+    - sudo_touch
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+sudo_touch:
+  command:
+    - sudo: true
+    - "sudo touch /var/tmp/hello_rundock_from_sudo_scenario"
+    - sudo: false
+    - "touch /var/tmp/hello_rundock_from_no_sudo_scenario"

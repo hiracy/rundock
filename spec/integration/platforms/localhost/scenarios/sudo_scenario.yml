@@ -1,0 +1,8 @@
+- target: localhost
+  command:
+    - "sudo rm -f /var/tmp/hello_rundock_from_sudo_scenario"
+    - "sudo rm -f /var/tmp/hello_rundock_from_no_sudo_scenario"
+    - sudo: true
+    - "sudo touch /var/tmp/hello_rundock_from_sudo_scenario"
+    - sudo: false
+    - "touch /var/tmp/hello_rundock_from_no_sudo_scenario"

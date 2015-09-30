@@ -1,0 +1,18 @@
+- target: anyhost-01
+  command:
+    - "mkdir -p /var/tmp/cwd_scenario_test"
+    - "rm -f /var/tmp/hello_rundock_from_cwd_scenario"
+  task:
+    - pwd_echo
+---
+anyhost-01:
+  host: 172.17.42.1
+  ssh_opts:
+    port: 22222
+    user: tester
+    key: "<replaced_by_platforms>"
+---
+pwd_echo:
+  command:
+    - cwd: /var/tmp/cwd_scenario_test
+    - "echo `pwd` > /var/tmp/hello_rundock_from_cwd_scenario"
