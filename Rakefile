@@ -8,7 +8,7 @@ run_commands = [
     'echo \'Hello Rundock.\' > /var/tmp/hello_rundock'
 ]
 
-def execute(command, clean_env)
+def execute(command, clean_env, errexit)
   puts "[EXECUTE:] #{command}"
 
   if clean_env
@@ -18,11 +18,11 @@ def execute(command, clean_env)
   else
     system command
   end
-  raise 'Execute Error.' unless $?.to_i == 0
+  raise 'Execute Error.' if $?.to_i != 0 && errexit
 end
 
 def setup_docker(platform, timeout, interval)
-  execute("./spec/integration/platforms/#{platform}/setup.sh &", false)
+  execute("./spec/integration/platforms/#{platform}/setup.sh &", false, true)
   found = false
   (timeout / interval).times do
     system 'sudo docker ps | grep rundock'
@@ -41,17 +41,17 @@ def do_rundock_ssh(commands, platform)
 
   if platform == 'localhost'
     commands.each do |cmd|
-      execute("bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug", true)
+      execute("bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug", true, true)
     end
   else
     commands.each do |cmd|
       execute('bundle exec exe/rundock' \
         " ssh -c \"#{cmd}\" -h 172.17.42.1 -p 22222 -u tester" \
-        " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true)
+        " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true, true)
       Dir.glob(groups_files_pattern).each do |g|
         execute('bundle exec exe/rundock' \
           " ssh -c \"#{cmd}\" -g #{g} -p 22222 -u tester" \
-          " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true)
+          " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true, true)
       end
     end
   end
@@ -83,23 +83,23 @@ def do_rundock_scenarios(platform)
     end
 
     execute('bundle exec exe/rundock' \
-       " do #{scenario}#{default_ssh_opt}#{options} -l debug", true)
+       " do #{scenario}#{default_ssh_opt}#{options} -l debug", true, true)
   end
 end
 
 desc 'Cleaning environments'
 
 task :clean do
-  execute('rm -fr /var/tmp/hello_rundock*', false)
+  execute('rm -fr /var/tmp/hello_rundock*', false, false)
   Dir.glob('./spec/integration/platforms/*').each do |platform|
     next if platform =~ /localhost$/
-    execute("#{platform}/setup.sh --clean", false)
+    execute("#{platform}/setup.sh --clean", false, true)
   end
 end
 
 desc 'execute rubocop'
 task :rubocop do
-  execute('rubocop', false)
+  execute('rubocop', false, true)
 end
 
 desc 'Run all tests.'

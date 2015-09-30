@@ -51,6 +51,7 @@ module Rundock
 
       def run_command(cmd, exec_options = {})
         command = cmd.strip
+        command = "sudo #{command.gsub(/^sudo +/, '')}" if exec_options[:sudo]
         command = "cd #{Shellwords.escape(exec_options[:cwd])} && #{command}" if exec_options[:cwd]
         command = "sudo -H -u #{Shellwords.escape(user)} -- /bin/sh -c #{command}" if exec_options[:user]
 
@@ -62,6 +63,8 @@ module Rundock
         exit_status = result.exit_status
 
         Logger.formatter.indent do
+          Logger.debug("cwd: #{exec_options[:cwd]}") if exec_options[:cwd]
+          Logger.debug("sudo: #{exec_options[:sudo]}") if exec_options[:sudo]
           Logger.error("#{result.stderr.strip}") unless result.stderr.strip.blank?
           Logger.info("#{result.stdout.strip}") unless result.stdout.strip.blank?
           Logger.debug("errexit: #{exec_options[:errexit]}")

@@ -1,0 +1,6 @@
+- target: localhost
+  command:
+    - "mkdir -p /var/tmp/cwd_scenario_test"
+    - "rm -f /var/tmp/hello_rundock_from_cwd_scenario"
+    - cwd: /var/tmp/cwd_scenario_test
+    - "echo `pwd` > /var/tmp/hello_rundock_from_cwd_scenario"

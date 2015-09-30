@@ -5,12 +5,16 @@ module Rundock
       attr_accessor :nodeinfo
       attr_accessor :task_info
       attr_accessor :errexit
+      attr_accessor :cwd
+      attr_accessor :sudo
       attr_accessor :dry_run
       attr_accessor :hooks
 
       AVAIL_TAKE_OVERS = [
         :task_info,
         :errexit,
+        :cwd,
+        :sudo,
         :dry_run
       ]
 
