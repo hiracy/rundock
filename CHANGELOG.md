@@ -1,3 +1,10 @@
+## v0.5.4
+
+Update
+
+ - Support change directory
+ - Support sudo in scenario
+
 ## v0.5.3
 
 Update
