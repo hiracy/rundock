@@ -1,6 +1,6 @@
 class Hash
   def depth
-    1 + (values.map { |v| v.is_a?(Hash) ? v.depth : 1 }.max)
+    1 + values.map { |v| v.is_a?(Hash) ? v.depth : 1 }.max
   end
 
   def deep_symbolize_keys

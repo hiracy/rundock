@@ -29,11 +29,13 @@ module Rundock
 
     def build(options)
       if options[:scenario] || options[:targetgroup]
-        if options[:scenario] && !FileTest.exist?(options[:scenario])
-          raise ScenarioNotFoundError, "'#{options[:scenario]}' scenario file is not found."
-        elsif options[:command] && options[:targetgroup] && !FileTest.exist?(options[:targetgroup])
-          raise ScenarioNotFoundError, "'#{options[:targetgroup]}' targetgroup file is not found."
-        end
+        raise ScenarioNotFoundError,
+              "'#{options[:scenario]}' scenario file is not found." if options[:scenario] &&
+                                                                       !FileTest.exist?(options[:scenario])
+        raise ScenarioNotFoundError,
+              "'#{options[:targetgroup]}' targetgroup file is not found." if options[:command] &&
+                                                                             options[:targetgroup] &&
+                                                                             !FileTest.exist?(options[:targetgroup])
 
         options[:scenario] = options[:targetgroup] if options[:command] && options[:targetgroup]
 

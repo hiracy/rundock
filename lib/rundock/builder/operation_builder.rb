@@ -116,11 +116,11 @@ module Rundock
 
         unless recursive
           # apply cli options
-          if !cli_options.key?(:run_anyway)
-            node_attributes.errexit = true
-          else
-            node_attributes.errexit = !cli_options[:run_anyway]
-          end
+          node_attributes.errexit = if !cli_options.key?(:run_anyway)
+                                      true
+                                    else
+                                      !cli_options[:run_anyway]
+                                    end
           node_attributes.dry_run = (cli_options && cli_options[:dry_run]) ? true : false
         end
 

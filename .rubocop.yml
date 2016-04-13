@@ -51,5 +51,11 @@ Style/FormatString:
 Style/RegexpLiteral:
   Enabled: false
 
+Style/Alias:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
 Lint/UnusedMethodArgument:
   Enabled: false

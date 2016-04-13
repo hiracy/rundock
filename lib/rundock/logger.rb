@@ -101,22 +101,22 @@ module Rundock
       end
 
       def formatted_message(severity, datetime, progname, msg)
-        if !@show_header
-          out = "%s\n" % [msg2str(msg)]
-        elsif !@date_header
-          out = "%5s: %s%s\n" % [
-            severity,
-            ' ' * 2 * indent_depth,
-            msg2str(msg)]
-        elsif @short_header
-          out = "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
-        else
-          out = "[%s] %5s: %s%s\n" % [
-            datetime.strftime('%Y-%m-%dT%H:%M:%S.%L'),
-            severity,
-            ' ' * 2 * indent_depth,
-            msg2str(msg)]
-        end
+        out = if !@show_header
+                "%s\n" % [msg2str(msg)]
+              elsif !@date_header
+                "%5s: %s%s\n" % [
+                  severity,
+                  ' ' * 2 * indent_depth,
+                  msg2str(msg)]
+              elsif @short_header
+                "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
+              else
+                "[%s] %5s: %s%s\n" % [
+                  datetime.strftime('%Y-%m-%dT%H:%M:%S.%L'),
+                  severity,
+                  ' ' * 2 * indent_depth,
+                  msg2str(msg)]
+              end
 
         out
       end
@@ -135,10 +135,10 @@ module Rundock
       end
 
       def colorize(msg, severity)
-        if @color
-          col = @color
-        else
-          col = case severity
+        col = if @color
+                @color
+              else
+                case severity
                 when 'INFO'
                   :clear
                 when 'WARN'
@@ -148,7 +148,7 @@ module Rundock
                 else
                   :clear
                 end
-        end
+              end
 
         ANSI.public_send(col) { msg }
       end
