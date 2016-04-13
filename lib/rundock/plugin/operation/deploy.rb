@@ -51,11 +51,11 @@ module Rundock
 
           is_erb = opt.key?(:erb) && opt[:erb]
 
-          if opt.key?(:trim_mode)
-            trim_mode = opt[:trim_mode]
-          else
-            trim_mode = DEFAULT_TRIM_MODE
-          end
+          trim_mode = if opt.key?(:trim_mode)
+                        opt[:trim_mode]
+                      else
+                        DEFAULT_TRIM_MODE
+                      end
 
           erb_options = ''
           erb_options = " erb: true trim_mode: #{trim_mode}" if is_erb
@@ -63,11 +63,11 @@ module Rundock
           Logger.info("deploy localhost: #{opt[:src]} remote:#{attributes[:nodeinfo][:host]}:#{opt[:dst]}#{erb_options}")
           Logger.debug("deploy erb binding: #{opt[:binding]}") if is_erb
 
-          if is_erb
-            val_binding = extract_map(backend, opt[:binding])
-          else
-            val_binding = {}
-          end
+          val_binding = if is_erb
+                          extract_map(backend, opt[:binding])
+                        else
+                          {}
+                        end
 
           if is_erb
             erb_content = conv_erb(opt[:src], trim_mode, val_binding)

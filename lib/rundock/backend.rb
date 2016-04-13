@@ -65,8 +65,8 @@ module Rundock
         Logger.formatter.indent do
           Logger.debug("cwd: #{exec_options[:cwd]}") if exec_options[:cwd]
           Logger.debug("sudo: #{exec_options[:sudo]}") if exec_options[:sudo]
-          Logger.error("#{result.stderr.strip}") unless result.stderr.strip.blank?
-          Logger.info("#{result.stdout.strip}") unless result.stdout.strip.blank?
+          Logger.error(result.stderr.strip) unless result.stderr.strip.blank?
+          Logger.info(result.stdout.strip) unless result.stdout.strip.blank?
           Logger.debug("errexit: #{exec_options[:errexit]}")
           Logger.debug("exit status: #{exit_status}")
         end
@@ -111,11 +111,11 @@ module Rundock
       private
 
       def parse(options)
-        if options[:ssh_config] && FileTest.exists?(options[:ssh_config])
-          ssh_opts = Net::SSH::Config.for(options[:host], [options[:ssh_config]])
-        else
-          ssh_opts = Net::SSH::Config.for(options[:host])
-        end
+        ssh_opts = if options[:ssh_config] && FileTest.exists?(options[:ssh_config])
+                     Net::SSH::Config.for(options[:host], [options[:ssh_config]])
+                   else
+                     Net::SSH::Config.for(options[:host])
+                   end
 
         # priority = node_attributes > cli options
         ssh_opts[:host_name] = options[:host]

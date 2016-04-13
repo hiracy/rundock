@@ -25,7 +25,7 @@ module Rundock
 
     desc 'version', 'Print version'
     def version
-      puts "#{Rundock::VERSION}"
+      puts Rundock::VERSION.to_s
     end
 
     desc 'do [SCENARIO] [options]', 'Run rundock from scenario file'

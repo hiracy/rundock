@@ -17,11 +17,11 @@ module Rundock
 
       obj = nil
       klass.split('::').map do |k|
-        if obj.nil?
-          obj = Kernel.const_get(k)
-        else
-          obj = obj.const_get(k)
-        end
+        obj = if obj.nil?
+                Kernel.const_get(k)
+              else
+                obj = obj.const_get(k)
+              end
       end
 
       hook = obj.new(name, attributes)

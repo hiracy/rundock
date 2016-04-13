@@ -55,14 +55,14 @@ module Rundock
       end
 
       def parse_backend_type
-        if localhost? &&
-           !@node_info[@nodename.to_sym][:ssh_opts][:port] &&
-           !@node_info[@nodename.to_sym][:ssh_opts][:user] &&
-           !@node_info[@nodename.to_sym][:ssh_opts][:ssh_config]
-          backend_type = :local
-        else
-          backend_type = :ssh
-        end
+        backend_type = if localhost? &&
+                          !@node_info[@nodename.to_sym][:ssh_opts][:port] &&
+                          !@node_info[@nodename.to_sym][:ssh_opts][:user] &&
+                          !@node_info[@nodename.to_sym][:ssh_opts][:ssh_config]
+                         :local
+                       else
+                         :ssh
+                       end
 
         backend_type
       end

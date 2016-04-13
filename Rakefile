@@ -67,11 +67,11 @@ def do_rundock_scenarios(platform)
   end
 
   Dir.glob(scenario_files_pattern).each do |scenario|
-    if scenario =~ /use_default_ssh/ && platform != 'localhost'
-      default_ssh_opt = " -d #{base_dir}/integration_default_ssh.yml"
-    else
-      default_ssh_opt = ''
-    end
+    default_ssh_opt = if scenario =~ /use_default_ssh/ && platform != 'localhost'
+                        " -d #{base_dir}/integration_default_ssh.yml"
+                      else
+                        ''
+                      end
 
     options = ''
     if scenario =~ %r{^*scenarios/(.*hooks_by_option)_scenario.yml$}
