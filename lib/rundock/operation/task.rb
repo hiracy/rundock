@@ -9,7 +9,8 @@ module Rundock
           end
 
           scenario = Rundock::Builder::ScenarioBuilder.new(nil, nil).build_task(
-            attributes[:task_info][i.to_sym], backend, Rundock::Attribute::NodeAttribute.new(attributes))
+            attributes[:task_info][i.to_sym], backend, Rundock::Attribute::NodeAttribute.new(attributes)
+          )
 
           Logger.info("start task: #{i}")
 

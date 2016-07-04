@@ -54,7 +54,8 @@ module Rundock
           scenario_data[:main],
           @options[:command] ? scenario_data[:target_info] : TargetGroupBuilder.new(@options).build(scenario_data[:target_info]),
           TaskBuilder.new(@options).build(scenario_data[:tasks]),
-          scenario_data[:hooks])
+          scenario_data[:hooks]
+        )
       end
     end
   end

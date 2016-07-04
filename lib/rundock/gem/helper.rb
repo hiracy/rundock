@@ -5,7 +5,7 @@ module Rundock
   module Gem
     class Helper < Bundler::GemHelper
       def install
-        desc "Run rundock with default configuration"
+        desc 'Run rundock with default configuration'
         task :rundock => 'rundock:do'
 
         namespace :rundock do
@@ -22,5 +22,3 @@ module Rundock
     end
   end
 end
-
-

@@ -75,7 +75,12 @@ module Rundock
           node = Node.new(host, backend)
           node.hooks = HookBuilder.new(@options).build(['all'], nil)
           node.add_operation(
-            build_cli_command_operation(@options[:command], Rundock::Attribute::NodeAttribute.new, @options))
+            build_cli_command_operation(
+              @options[:command],
+              Rundock::Attribute::NodeAttribute.new,
+              @options
+            )
+          )
           scen.nodes.push(node)
         end
 
