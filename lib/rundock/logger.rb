@@ -107,7 +107,8 @@ module Rundock
                 "%5s: %s%s\n" % [
                   severity,
                   ' ' * 2 * indent_depth,
-                  msg2str(msg)]
+                  msg2str(msg)
+                ]
               elsif @short_header
                 "%s: %s%s\n" % [severity[0, 1], ' ' * 2 * indent_depth, msg2str(msg)]
               else
@@ -115,7 +116,8 @@ module Rundock
                   datetime.strftime('%Y-%m-%dT%H:%M:%S.%L'),
                   severity,
                   ' ' * 2 * indent_depth,
-                  msg2str(msg)]
+                  msg2str(msg)
+                ]
               end
 
         out
@@ -166,8 +168,6 @@ module Rundock
           logger.formatter = Formatter.new
         end
       end
-
-      private
 
       def respond_to_missing?(method, include_private = false)
         logger.respond_to?(method)
