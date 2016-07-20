@@ -1,3 +1,10 @@
+## v1.0.0
+
+Update
+
+ - Support rake tasks
+ - Fix ssh config host alias did not work
+
 ## v0.5.4
 
 Update
