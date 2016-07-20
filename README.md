@@ -32,6 +32,7 @@ host-alias-01:
     port: 2222
     user: anyuser
     keys: ["~/.ssh/id_rsa_anyuser"]
+    ssh_config: "/home/anyuser/custom_config"
 ```
 
 and execute rundock.

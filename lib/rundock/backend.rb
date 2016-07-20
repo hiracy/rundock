@@ -117,8 +117,8 @@ module Rundock
                      Net::SSH::Config.for(options[:host])
                    end
 
-        # priority = node_attributes > cli options
-        ssh_opts[:host_name] = options[:host]
+        # priority = (cli options > scenario target information section > ssh config)
+        ssh_opts[:host_name] = options[:host] unless ssh_opts[:host_name]
         ssh_opts[:keys] = Array(options[:key]) if options[:key]
         ssh_opts[:password] = parse_password_from_stdin if options[:ask_password]
         ssh_opts.merge!(filter_net_ssh_options(options))
