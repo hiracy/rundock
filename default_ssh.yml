@@ -6,3 +6,4 @@
 #:user: "youre_name"
 #:keys: ["/path/to/private_key"]
 #:passphrase: "yourpassphrase"
+#:ssh_config: "/path/to/ssh/config"
