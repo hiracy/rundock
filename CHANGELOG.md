@@ -1,3 +1,10 @@
+## v1.0.2
+
+Update
+
+ - Support task with arguments
+ - Update specify private ssh setting unless current ssh setting
+
 ## v1.0.0
 
 Update
