@@ -1,0 +1,12 @@
+- target: localhost
+  command:
+    - "rm -rf /var/tmp/hello_rundock_from_task_with_args_scenario"
+  task:
+    - write_echo task_with_args two
+---
+---
+write_echo:
+  command:
+    - mkdir /var/tmp/hello_rundock_from_$1_scenario
+    - echo 'Hello Rundock from task with args Scenario. $@ $#' > /var/tmp/hello_rundock_from_$1_scenario/hello_rundock_from_$1_scenario
+    - cp /var/tmp/hello_rundock_from_$1_scenario/hello_rundock_from_$1_scenario /var/tmp/hello_rundock_from_$1_scenario_$2
