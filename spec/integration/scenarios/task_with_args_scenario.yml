@@ -1,7 +1,6 @@
-- target: localhost
+- target: anyhost-01
   command:
     - "rm -rf /var/tmp/hello_rundock_from_task_with_args_scenario"
-- target: anyhost-01
   task:
     - write_echo task_with_args two
 ---
