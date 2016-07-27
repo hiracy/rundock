@@ -19,7 +19,7 @@ module Rundock
     class HostInventory < Base
       def run(backend, attributes)
         attributes[:host_inventory].each do |hi|
-          Logger.info(to_inventory(backend, hi))
+          logging(to_inventory(backend, hi), 'info')
         end
       end
 

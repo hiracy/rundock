@@ -60,7 +60,7 @@ module Rundock
           erb_options = ''
           erb_options = " erb: true trim_mode: #{trim_mode}" if is_erb
 
-          Logger.info("deploy localhost: #{opt[:src]} remote:#{attributes[:nodeinfo][:host]}:#{opt[:dst]}#{erb_options}")
+          logging("deploy localhost: #{opt[:src]} remote:#{attributes[:nodeinfo][:host]}:#{opt[:dst]}#{erb_options}", 'info')
           Logger.debug("deploy erb binding: #{opt[:binding]}") if is_erb
 
           val_binding = if is_erb
