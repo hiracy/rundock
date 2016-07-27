@@ -15,8 +15,7 @@ module Rundock
             attributes[:task_info][task_name.to_sym], backend, Rundock::Attribute::NodeAttribute.new(attributes)
           )
 
-          Logger.info("start task: #{task_name}")
-
+          logging(i, 'info')
           Logger.formatter.rec_lock
 
           scenario.run

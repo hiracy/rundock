@@ -8,7 +8,7 @@ module Rundock
             next
           end
 
-          Logger.info("start command: #{i}")
+          logging(i, 'info')
 
           backend.run_commands(
             assign_args(i, attributes[:task_args]), attributes

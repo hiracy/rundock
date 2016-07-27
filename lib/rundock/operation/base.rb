@@ -15,6 +15,12 @@ module Rundock
       def run(backend, attributes = {})
         raise OperationNotImplementedError
       end
+
+      def logging(message, severity)
+        h_host = @attributes[:nodename].just(' ', 15)
+        h_ope = "start #{self.class.to_s.split('::').last.downcase}:"
+        Logger.send(severity.to_sym, "#{h_host} #{h_ope} #{message}")
+      end
     end
   end
 end

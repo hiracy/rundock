@@ -35,7 +35,7 @@ module Rundock
           end
         end
 
-        Logger.info("do #{cmd}#{args_line}")
+        logging("do #{cmd}#{args_line}", 'info')
         result = backend.run_command("#{cmd}#{args_line}")
         Logger.info(result.stdout)
       end
