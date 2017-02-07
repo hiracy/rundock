@@ -9,11 +9,11 @@
     - file_hook_two
 ---
 anyhost-01:
-  host: 172.17.0.1
+  host: <replaced_by_platforms_host>
   ssh_opts:
-    port: 22222
+    port: <replaced_by_platforms_port>
     user: tester
-    key: "<replaced_by_platforms>"
+    key: "<replaced_by_platforms_key>"
 ---
 ---
 file_hook_one:
