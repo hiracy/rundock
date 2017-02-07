@@ -17,6 +17,9 @@ Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 50
 
+Metrics/BlockLength:
+  Max: 50
+
 Metrics/AbcSize:
   Enabled: true
   Max: 100
@@ -55,6 +58,12 @@ Style/Alias:
   Enabled: false
 
 Style/MutableConstant:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/MethodMissing:
   Enabled: false
 
 Lint/UnusedMethodArgument:

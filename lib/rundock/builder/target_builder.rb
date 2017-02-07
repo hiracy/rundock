@@ -16,11 +16,11 @@ module Rundock
           backend_builder = BackendBuilder.new(@options, target_name, target_info)
           backend = backend_builder.build
           @parsed_node_options = { target_name.to_sym => backend_builder.parsed_options }
-
-          return Node.new(target_name, backend)
         else
           raise TargetNoSupportError
         end
+
+        Node.new(target_name, backend)
       end
 
       def build_group(target_group_name, target_info)

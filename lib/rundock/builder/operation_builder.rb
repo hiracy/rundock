@@ -126,7 +126,7 @@ module Rundock
                                     else
                                       !cli_options[:run_anyway]
                                     end
-          node_attributes.dry_run = (cli_options && cli_options[:dry_run]) ? true : false
+          node_attributes.dry_run = cli_options && cli_options[:dry_run]
         end
 
         # override by scenario
