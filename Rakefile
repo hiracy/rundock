@@ -44,13 +44,16 @@ def do_rundock_ssh(commands, platform)
       execute("bundle exec exe/rundock ssh -c \"#{cmd}\" -h localhost -l debug", true, true)
     end
   else
+    host = `cat #{ENV['HOME']}/.ssh/config_rundock_spec_#{platform} | grep 'HostName ' | awk '{print $2}' | tr -d '\n'`
+    port = `cat #{ENV['HOME']}/.ssh/config_rundock_spec_#{platform} | grep 'Port ' | awk '{print $2}' | tr -d '\n'`
+
     commands.each do |cmd|
       execute('bundle exec exe/rundock' \
-        " ssh -c \"#{cmd}\" -h 172.17.42.1 -p 22222 -u tester" \
+        " ssh -c \"#{cmd}\" -h #{host} -p #{port} -u tester" \
         " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true, true)
       Dir.glob(groups_files_pattern).each do |g|
         execute('bundle exec exe/rundock' \
-          " ssh -c \"#{cmd}\" -g #{g} -p 22222 -u tester" \
+          " ssh -c \"#{cmd}\" -g #{g} -p #{port} -u tester" \
           " -i #{ENV['HOME']}/.ssh/id_rsa_rundock_spec_#{platform}_tmp -l debug", true, true)
       end
     end

@@ -6,10 +6,10 @@ PROJECT_NAME=rundock_spec
 PLATFORM_NAME=centos6
 PLATFORM_DIR="${PROJECT_ROOT}/platforms/${PLATFORM_NAME}"
 DOCKER_IMAGE_NAME="${PROJECT_NAME}/${PLATFORM_NAME}"
-DOCKER_ADDRESS="172.17.42.1"
+DOCKER_BRIDGE_ADDRESS=`ip addr show | grep "global docker0" | awk '{print $2}' | cut -d'/' -f1`
+DOCKER_BRIDGE_SSH_PORT=22222
 DOCKER_CACHE_DIR="${HOME}/docker"
 DOCKER_CACHE_IMAGE_PATH="${DOCKER_CACHE_DIR}/${PLATFORM_NAME}.tar"
-DOCKER_SSH_PORT=22222
 DOCKER_SSH_USER=tester
 DOCKER_SSH_KEY_PRIVATE="${HOME}/.ssh/id_rsa_${PROJECT_NAME}_${PLATFORM_NAME}_tmp"
 DOCKER_SSH_KEY_PUBLIC_LOCAL="${HOME}/.ssh/id_rsa_${PROJECT_NAME}_${PLATFORM_NAME}_tmp.pub"
@@ -49,7 +49,7 @@ mkdir -p "${RUNDOCK_TARGET_CACHE_DIR}"
 if [ ! -f ${RUNDOCK_DEFAULT_SSH_YML} ]; then
 (
 cat << EOP
-:port: ${DOCKER_SSH_PORT}
+:port: ${DOCKER_BRIDGE_SSH_PORT}
 :paranoid: false
 :user: "${DOCKER_SSH_USER}"
 :keys: ["${DOCKER_SSH_KEY_PRIVATE}"]
@@ -62,11 +62,23 @@ cp ${RUNDOCK_GROUP_DIR}/* ${RUNDOCK_GROUP_CACHE_DIR}
 cp ${RUNDOCK_TARGET_DIR}/* ${RUNDOCK_TARGET_CACHE_DIR}
 
 find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" | \
-  xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
+  xargs sed -i -e "s#<replaced_by_platforms_key>#${DOCKER_SSH_KEY_PRIVATE}#g"
 find ${RUNDOCK_GROUP_CACHE_DIR} -type f -name "*_group.yml" | \
-  xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
+  xargs sed -i -e "s#<replaced_by_platforms_key>#${DOCKER_SSH_KEY_PRIVATE}#g"
 find ${RUNDOCK_TARGET_CACHE_DIR} -type f -name "*.yml" | \
-  xargs sed -i -e "s#<replaced_by_platforms>#${DOCKER_SSH_KEY_PRIVATE}#g"
+  xargs sed -i -e "s#<replaced_by_platforms_key>#${DOCKER_SSH_KEY_PRIVATE}#g"
+find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_host>#${DOCKER_BRIDGE_ADDRESS}#g"
+find ${RUNDOCK_GROUP_CACHE_DIR} -type f -name "*_group.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_host>#${DOCKER_BRIDGE_ADDRESS}#g"
+find ${RUNDOCK_TARGET_CACHE_DIR} -type f -name "*.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_host>#${DOCKER_BRIDGE_ADDRESS}#g"
+find ${RUNDOCK_SCENARIO_CACHE_DIR} -type f -name "*_scenario.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_port>#${DOCKER_BRIDGE_SSH_PORT}#g"
+find ${RUNDOCK_GROUP_CACHE_DIR} -type f -name "*_group.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_port>#${DOCKER_BRIDGE_SSH_PORT}#g"
+find ${RUNDOCK_TARGET_CACHE_DIR} -type f -name "*.yml" | \
+  xargs sed -i -e "s#<replaced_by_platforms_port>#${DOCKER_BRIDGE_SSH_PORT}#g"
 
 sudo docker ps | grep "${DOCKER_IMAGE_NAME}" && { echo "docker image is already standing."; exit 0; }
 
@@ -85,11 +97,11 @@ sudo docker build -t "${DOCKER_IMAGE_NAME}" ${PLATFORM_DIR}
 rm -f ${DOCKER_SSH_KEY_PUBLIC_REMOTE}
 mkdir -p ${DOCKER_CACHE_DIR}
 sudo docker save "${DOCKER_IMAGE_NAME}" > ${DOCKER_CACHE_IMAGE_PATH}
-sudo docker run -d --privileged -p ${DOCKER_ADDRESS}:${DOCKER_SSH_PORT}:22 "${DOCKER_IMAGE_NAME}"
+sudo docker run -d --privileged -p ${DOCKER_BRIDGE_ADDRESS}:${DOCKER_BRIDGE_SSH_PORT}:22 "${DOCKER_IMAGE_NAME}"
 
 echo "Host ${PLATFORM_NAME}"                          >  $DOCKER_SSH_CONFIG
-echo "        HostName ${DOCKER_ADDRESS}"             >> $DOCKER_SSH_CONFIG
+echo "        HostName ${DOCKER_BRIDGE_ADDRESS}"      >> $DOCKER_SSH_CONFIG
 echo "        User     ${DOCKER_SSH_USER}"            >> $DOCKER_SSH_CONFIG
-echo "        Port     ${DOCKER_SSH_PORT}"            >> $DOCKER_SSH_CONFIG
+echo "        Port     ${DOCKER_BRIDGE_SSH_PORT}"     >> $DOCKER_SSH_CONFIG
 echo "        IdentityFile ${DOCKER_SSH_KEY_PRIVATE}" >> $DOCKER_SSH_CONFIG
 echo "        StrictHostKeyChecking no"               >> $DOCKER_SSH_CONFIG

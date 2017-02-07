@@ -57,7 +57,7 @@ module Rundock
 
         Logger.debug(%(Start executing: "#{command}"))
 
-        return nil if options[:dry_run]
+        return nil if exec_options[:dry_run]
 
         result = @backend.run_command(command)
         exit_status = result.exit_status

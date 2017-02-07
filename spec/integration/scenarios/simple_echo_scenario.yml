@@ -15,18 +15,18 @@
 ---
 anyhost-01:
   target_type: host
-  host: 172.17.42.1
+  host: <replaced_by_platforms_host>
   ssh_opts:
-    port: 22222
+    port: <replaced_by_platforms_port>
     user: tester
-    key: "<replaced_by_platforms>"
+    key: "<replaced_by_platforms_key>"
 anyhost-02:
   target_type: host
-  host: "172.17.42.1"
+  host: "<replaced_by_platforms_host>"
   ssh_opts:
-    port: 22222
+    port: <replaced_by_platforms_port>
     user: tester
-    keys: ["<replaced_by_platforms>"]
+    keys: ["<replaced_by_platforms_key>"]
 ---
 echo_platform:
   command:
