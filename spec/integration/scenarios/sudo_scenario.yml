@@ -6,7 +6,7 @@
     - sudo_touch
 ---
 anyhost-01:
-  host: 172.17.42.1
+  host: 172.17.0.1
   ssh_opts:
     port: 22222
     user: tester
