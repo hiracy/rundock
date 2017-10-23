@@ -48,7 +48,7 @@ module Rundock
         end
 
         # replace cli ssh options if exists
-        %w(:user :key :port :ssh_config :ask_password :sudo).each { |o| @node_info[@nodename.to_sym][:ssh_opts][o] = @options[o] if @options[o] }
+        %i[user key port ssh_config ask_password sudo].each { |o| @node_info[@nodename.to_sym][:ssh_opts][o] = @options[o] if @options[o] }
 
         opts[:host] = @nodename
         opts
@@ -62,6 +62,7 @@ module Rundock
                          :local
                        else
                          :ssh
+
                        end
 
         backend_type

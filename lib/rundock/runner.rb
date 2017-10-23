@@ -4,7 +4,7 @@ require 'open-uri'
 module Rundock
   class Runner
     ScenarioNotFoundError = Class.new(StandardError)
-    RUNDOCK_PLUGINS = %w(operation hook)
+    RUNDOCK_PLUGINS = %w[operation hook]
 
     class << self
       def run(options)
@@ -61,7 +61,7 @@ module Rundock
       end
 
       # load from local project
-      Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/plugin/**/*.rb").each do |f|
+      Dir.glob("#{__dir__}/plugin/**/*.rb").each do |f|
         require f.gsub(/.rb$/, '')
       end
 

@@ -10,16 +10,16 @@ module Rundock
       attr_accessor :dry_run
       attr_accessor :hooks
 
-      AVAIL_TAKE_OVERS = [
-        :task_info,
-        :errexit,
-        :cwd,
-        :sudo,
-        :dry_run
+      AVAIL_TAKE_OVERS = %i[
+        task_info
+        errexit
+        cwd
+        sudo
+        dry_run
       ]
 
       def init_except_take_over_state
-        list.each do |k, _v|
+        list.each_key do |k|
           define_attr(k, nil) unless AVAIL_TAKE_OVERS.include?(k)
         end
       end

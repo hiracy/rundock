@@ -95,7 +95,7 @@ module Rundock
           ERB.new(srcfile, nil, trim_mode).tap do |erb|
             erb.filename = src
           end.result(OpenStruct.new(mapping).instance_eval { binding })
-        rescue => ex
+        rescue StandardError => ex
           Logger.error("ERB Error: #{ex.message}")
         end
       end

@@ -37,7 +37,7 @@ module Rundock
       def build_scenario_with_file
         if @scenario_file
 
-          type = [:main, :target_info, :tasks, :hooks]
+          type = %i[main target_info tasks hooks]
           scenario_data = {}
 
           YAML.load_documents(@scenario_file).each_with_index do |data, idx|
