@@ -15,4 +15,5 @@ dependencies:
 
 test:
   override:
-    - rvm $RUBY_VERSIONS --verbose do bundle exec rake spec
+    - rvm $RUBY_VERSIONS --verbose do bundle exec rake spec:
+        parallel: true
