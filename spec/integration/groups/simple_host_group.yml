@@ -1,7 +1,6 @@
-- target: localhost
+- target: anyhost-01
   command:
     - "echo 'Should this message does not appear';cat /notexist"
-- target: anyhost-01
 ---
 anyhost-01:
   target_type: host

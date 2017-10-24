@@ -126,9 +126,9 @@ namespace :spec do
         desc "Run rundock and serverspec tests for #{target}"
 
         if target != 'localhost'
-          task :all => [:docker, :rundock, :serverspec]
+          task :all => %i[docker rundock serverspec]
         else
-          task :all => [:rundock, :serverspec]
+          task :all => %i[rundock serverspec]
         end
 
         unless target == 'localhost'

@@ -1,13 +1,19 @@
 machine:
+  environment:
+    RUBY_VERSIONS: 2.1.10,2.4.1
   services:
     - docker
-  ruby:
-    version: 2.1.1
 
 dependencies:
   cache_directories:
     - "~/docker"
+  override:
+    - rvm get head
+    - rvm install $RUBY_VERSIONS
+    - rvm $RUBY_VERSIONS --verbose do gem install bundler
+    - rvm $RUBY_VERSIONS --verbose do bundle install
 
 test:
   override:
-    - bundle exec rake spec
+    - rvm $RUBY_VERSIONS --verbose do bundle exec rake spec:
+        parallel: true

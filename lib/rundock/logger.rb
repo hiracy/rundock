@@ -69,7 +69,7 @@ module Rundock
         @indent_depth -= 1 if @indent_depth > 0
       end
 
-      def color(code)
+      def new_color(code)
         prev_color = @color
         @color = code
         yield

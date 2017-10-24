@@ -15,7 +15,7 @@ module Rundock
     end
 
     def add_operation(ope)
-      @operations = [] unless @operations
+      @operations ||= []
       @operations << ope
     end
 
