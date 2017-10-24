@@ -1,5 +1,7 @@
 FROM centos:6
 
+RUN rm -f /var/run/yum.pid
+RUN yum clean all
 RUN yum install -y yum install openssh openssh-server openssh-clients sudo passwd
 RUN useradd tester
 RUN echo "tester" | passwd --stdin tester
