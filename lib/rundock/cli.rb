@@ -64,6 +64,15 @@ module Rundock
       Runner.run(opts.merge(options.deep_symbolize_keys))
     end
 
+    desc 'configure [options]', 'Configure rundock options'
+    option :ssh, type: :boolean, default: true
+    option :ssh_config_path, type: :string, aliases: ['-s'], default: "#{Dir.home}/default_ssh.yml"
+    def configure
+      opts = {}
+
+      Configure.start(opts.merge(options.deep_symbolize_keys))
+    end
+
     def method_missing(command, *args)
       help
     end

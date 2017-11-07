@@ -24,6 +24,7 @@ require 'rundock/builder/hook_builder'
 require 'rundock/builder/operation_builder'
 require 'rundock/builder/scenario_builder'
 require 'rundock/runner'
+require 'rundock/configure'
 require 'rundock/cli'
 
 module Rundock
