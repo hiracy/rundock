@@ -1,3 +1,10 @@
+## v1.1.0
+
+Update
+
+ - Support ssh configure
+ - Support task with environment variables
+
 ## v1.0.2
 
 Update
