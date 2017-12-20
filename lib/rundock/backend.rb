@@ -71,9 +71,7 @@ module Rundock
           Logger.debug("exit status: #{exit_status}")
         end
 
-        if exec_options[:errexit] && exit_status != 0
-          raise CommandResultStatusError
-        end
+        raise CommandResultStatusError if exec_options[:errexit] && exit_status != 0
 
         result
       end
