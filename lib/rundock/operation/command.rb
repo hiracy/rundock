@@ -22,7 +22,8 @@ module Rundock
         return cmd unless args
         cmd.gsub(/\$#/, args.length.to_s)
            .gsub(/\$@/, args.join(' '))
-           .gsub(/\$[1-9]*/) { |arg_n| args[arg_n.chars[1..-1].join.to_i - 1] }
+           .gsub(/\$[1-9]/) { |arg_n| args[arg_n.chars[1..-1].join.to_i - 1] }
+           .gsub(/(\$\{)(\w+)(\})/) { ENV[Regexp.last_match(2)] }
       end
     end
   end

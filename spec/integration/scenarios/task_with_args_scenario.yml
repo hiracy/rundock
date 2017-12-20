@@ -17,3 +17,4 @@ write_echo:
     - mkdir /var/tmp/hello_rundock_from_$1_scenario
     - echo 'Hello Rundock from task with args Scenario. $@ $#' > /var/tmp/hello_rundock_from_$1_scenario/hello_rundock_from_$1_scenario
     - cp /var/tmp/hello_rundock_from_$1_scenario/hello_rundock_from_$1_scenario /var/tmp/hello_rundock_from_$1_scenario_$2
+    - cp /var/tmp/hello_rundock_from_$1_scenario/hello_rundock_from_$1_scenario /var/tmp/hello_rundock_from_${USER}_scenario
