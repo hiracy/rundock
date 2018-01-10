@@ -70,18 +70,22 @@ module Rundock
                         end
 
           if is_erb
-            erb_content = conv_erb(opt[:src], trim_mode, val_binding)
+            erb_content = conv_erb(assign_args(opt[:src], attributes[:task_args]),
+                                   trim_mode,
+                                   val_binding)
 
             tempfile = Tempfile.new('', Dir.tmpdir)
             begin
               tempfile.write(erb_content)
               tempfile.rewind
-              backend.send_file(tempfile.path, opt[:dst])
+              backend.send_file(tempfile.path,
+                                assign_args(opt[:dst], attributes[:task_args]))
             ensure
               tempfile.close
             end
           else
-            backend.send_file(opt[:src], opt[:dst])
+            backend.send_file(assign_args(opt[:src], attributes[:task_args]),
+                              assign_args(opt[:dst], attributes[:task_args]))
           end
         end
       end
@@ -104,6 +108,8 @@ module Rundock
         map = {}
         binding.each do |k, v|
           map[k] = backend.specinfra_run_command(v[:value]).stdout.strip if v.key?(:value)
+
+          # write types other than the command here
         end
 
         map

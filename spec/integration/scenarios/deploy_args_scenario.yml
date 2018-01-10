@@ -1,0 +1,21 @@
+- target: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
+    - "echo 'Hello Rundock from deploy args Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
+- target: anyhost-01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_arg_2_scenario"
+  task:
+    - deploy_task  arg_1 arg_2
+---
+anyhost-01:
+  host: <replaced_by_platforms_host>
+  ssh_opts:
+    port: <replaced_by_platforms_port>
+    user: tester
+    key: "<replaced_by_platforms_key>"
+---
+deploy_task:
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_$1_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_$2_scenario
