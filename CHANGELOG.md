@@ -1,3 +1,9 @@
+## v1.1.1
+
+Update
+
+ - Support task arguments to deploy operation
+
 ## v1.1.0
 
 Update
