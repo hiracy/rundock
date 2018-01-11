@@ -1,0 +1,24 @@
+- target: localhost
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_c_d_a_b_scenario"
+    - "echo 'Hello Rundock from deploy recursive Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_c_d_a_b_scenario"
+- target: anyhost-01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_a_b_c_d_scenario"
+  task:
+    - deploy_task_1 a b
+---
+anyhost-01:
+  host: <replaced_by_platforms_host>
+  ssh_opts:
+    port: <replaced_by_platforms_port>
+    user: tester
+    key: "<replaced_by_platforms_key>"
+---
+deploy_task_1:
+  task:
+    deploy_task_2 c d $1 $2
+deploy_task_2:
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_$1_$2_$3_$4_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_$3_$4_$1_$2_scenario
