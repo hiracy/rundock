@@ -3,9 +3,16 @@ module Rundock
     class Task < Base
       def run(backend, attributes = {})
         @instruction.each do |i|
+          previous_args = attributes[:task_args]
           task_set = i.split(' ')
           task_name = task_set.first
-          attributes[:task_args] = task_set.slice(1..-1) if task_set.length > 1
+
+          if task_set.length > 1
+            attributes[:task_args] = task_set.slice(1..-1).map do |arg|
+              assign_args(arg, previous_args)
+            end
+          end
+
           unless attributes[:task_info].key?(task_name.to_sym)
             Logger.warn("task not found and ignored: #{task_name}")
             next
