@@ -1,3 +1,9 @@
+## v1.1.2
+
+Update
+
+ - Support deploy arguments to deploy operation
+
 ## v1.1.1
 
 Update
