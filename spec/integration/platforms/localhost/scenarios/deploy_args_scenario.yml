@@ -3,11 +3,24 @@
     - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
     - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_arg_2_scenario"
     - "echo 'Hello Rundock from deploy args Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_arg_binding_scenario"
+    - "echo 'Hello Rundock from deploy args <%= arg_1 %> Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario"
   task:
-    - deploy_file arg_1 arg_2
+    - deploy_file         arg_1 arg_2
+    - deploy_file_binding arg_1 runrunrundock
 ---
 ---
 deploy_file:
   deploy:
     - src: /var/tmp/hello_rundock_from_deploy_src_file_$1_scenario
       dst: /var/tmp/hello_rundock_from_deploy_dst_file_$2_scenario
+deploy_file_binding:
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_arg_binding_scenario
+      erb: true
+      binding:
+        $1:
+          type: string
+          value: $2

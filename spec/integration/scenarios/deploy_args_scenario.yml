@@ -2,11 +2,15 @@
   command:
     - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
     - "echo 'Hello Rundock from deploy args Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_arg_1_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario"
+    - "echo 'Hello Rundock from deploy args <%= arg_1 %> Scenario.' > /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario"
 - target: anyhost-01
   command:
     - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_arg_2_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_deploy_dst_file_arg_binding_scenario"
   task:
-    - deploy_task  arg_1 arg_2
+    - deploy_task         arg_1 arg_2
+    - deploy_task_binding arg_1 runrunrundock
 ---
 anyhost-01:
   host: <replaced_by_platforms_host>
@@ -19,3 +23,12 @@ deploy_task:
   deploy:
     - src: /var/tmp/hello_rundock_from_deploy_src_file_$1_scenario
       dst: /var/tmp/hello_rundock_from_deploy_dst_file_$2_scenario
+deploy_task_binding:
+  deploy:
+    - src: /var/tmp/hello_rundock_from_deploy_src_file_arg_binding_scenario
+      dst: /var/tmp/hello_rundock_from_deploy_dst_file_arg_binding_scenario
+      erb: true
+      binding:
+        $1:
+          type: string
+          value: $2

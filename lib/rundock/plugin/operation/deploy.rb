@@ -64,7 +64,7 @@ module Rundock
           Logger.debug("deploy erb binding: #{opt[:binding]}") if is_erb
 
           val_binding = if is_erb
-                          extract_map(backend, opt[:binding])
+                          extract_map(backend, opt[:binding], attributes[:task_args])
                         else
                           {}
                         end
@@ -104,20 +104,23 @@ module Rundock
         end
       end
 
-      def extract_map(backend, binding)
+      def extract_map(backend, binding, args)
         map = {}
         binding.each do |k, v|
           next unless v.key?(:value)
+          bind_key  = assign_args(k.to_s, args)
+          bind_type = assign_args(v[:type].to_s, args)
+          bind_value = assign_args(v[:value].to_s, args)
 
           # write types other than the command here
-          map[k] = case v[:type].to_s
-                   when 'command'
-                     backend.specinfra_run_command(v[:value]).stdout.strip
-                   when 'string'
-                     v[:value]
-                   else
-                     v[:value]
-                   end
+          map[bind_key] = case bind_type
+                          when 'command'
+                            backend.specinfra_run_command(bind_value).stdout.strip
+                          when 'string'
+                            bind_value
+                          else
+                            bind_value
+                          end
         end
 
         map
