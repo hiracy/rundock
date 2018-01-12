@@ -1,8 +1,9 @@
-## v1.1.3
+## v1.1.4
 
 Update
 
  - Support simple string replace to deploy erb operation
+ - Support binding argument to deploy erb operation
 
 ## v1.1.2
 
