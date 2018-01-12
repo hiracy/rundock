@@ -1,3 +1,9 @@
+## v1.1.3
+
+Update
+
+ - Support simple string replace to deploy erb operation
+
 ## v1.1.2
 
 Update
