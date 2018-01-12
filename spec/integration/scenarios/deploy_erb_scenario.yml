@@ -24,6 +24,6 @@ deploy_task:
       binding:
         erb_val_1:
           type: command
-          value: "echo 'runrunrundock'"
+          value: "uname"
         erb_val_2:
-          value: 'uname'
+          value: 'dondondonruck'
