@@ -107,9 +107,17 @@ module Rundock
       def extract_map(backend, binding)
         map = {}
         binding.each do |k, v|
-          map[k] = backend.specinfra_run_command(v[:value]).stdout.strip if v.key?(:value)
+          next unless v.key?(:value)
 
           # write types other than the command here
+          map[k] = case v[:type].to_s
+                   when 'command'
+                     backend.specinfra_run_command(v[:value]).stdout.strip
+                   when 'string'
+                     v[:value]
+                   else
+                     v[:value]
+                   end
         end
 
         map
