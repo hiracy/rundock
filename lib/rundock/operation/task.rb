@@ -3,13 +3,12 @@ module Rundock
     class Task < Base
       def run(backend, attributes = {})
         @instruction.each do |i|
-          previous_args = attributes[:task_args]
           task_set = i.split(' ')
           task_name = task_set.first
 
           if task_set.length > 1
             attributes[:task_args] = task_set.slice(1..-1).map do |arg|
-              assign_args(arg, previous_args)
+              assign_args(arg, attributes[:parrent_task_args])
             end
           end
 
