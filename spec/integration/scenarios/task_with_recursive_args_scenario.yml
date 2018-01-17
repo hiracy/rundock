@@ -1,0 +1,21 @@
+- target: anyhost-01
+  command:
+    - "rm -f /var/tmp/hello_rundock_from_task_with_recursive_a_b_1_2_scenario"
+    - "rm -f /var/tmp/hello_rundock_from_task_with_recursive_1_2_c_d_scenario"
+  task:
+    - task_1 1 2
+---
+anyhost-01:
+  host: <replaced_by_platforms_host>
+  ssh_opts:
+    port: <replaced_by_platforms_port>
+    user: tester
+    key: "<replaced_by_platforms_key>"
+---
+task_1:
+  task:
+    - task_2 a  b  $1 $2
+    - task_2 $1 $2 c  d
+task_2:
+  command:
+    - "echo 'Hello Rundock from task with recursive Scenario.' > /var/tmp/hello_rundock_from_task_with_recursive_$1_$2_$3_$4_scenario"

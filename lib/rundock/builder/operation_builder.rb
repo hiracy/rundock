@@ -58,6 +58,8 @@ module Rundock
         node = Node.new(node_attribute.nodename, backend)
         scen = Scenario.new
 
+        node_attribute.define_attr(:parrent_task_args, node_attribute.task_args) if node_attribute.respond_to?(:task_args)
+
         tasks.each do |k, v|
           ope = build_operations(k, Array(v), node_attribute, nil, true)
           node.add_operation(ope) if ope
