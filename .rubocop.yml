@@ -72,5 +72,8 @@ Style/MethodMissing:
 Style/FormatStringToken:
   Enabled: false
 
+Security/Open:
+  Enabled: false
+
 Lint/UnusedMethodArgument:
   Enabled: false
