@@ -6,7 +6,11 @@ module Rundock
       DEFAULT_TASKS_FILE_PATH = './tasks.yml'
 
       def build(scenario_tasks)
-        tasks = {} unless scenario_tasks
+        tasks = if scenario_tasks.nil?
+                     {}
+                   else
+                     scenario_tasks
+                   end
 
         return scenario_tasks unless @options[:tasks]
         if FileTest.exist?(@options[:tasks])
