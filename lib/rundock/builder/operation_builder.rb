@@ -72,7 +72,9 @@ module Rundock
       def build_cli
         scen = Scenario.new
 
-        @options[:host].split(',').each do |host|
+        hosts = @options[:host].split(',')
+        hosts.each do |host|
+          @options[:host] = host
           backend = BackendBuilder.new(@options, host, nil).build
           node = Node.new(host, backend)
           node.hooks = HookBuilder.new(@options).build(['all'], nil)
