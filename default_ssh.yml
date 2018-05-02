@@ -2,7 +2,7 @@
 # Default ssh options are here.
 #
 :port: 22
-:paranoid: false
+:verify_host_key: false
 #:user: "youre_name"
 #:keys: ["/path/to/private_key"]
 #:passphrase: "yourpassphrase"
