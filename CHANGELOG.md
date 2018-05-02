@@ -1,3 +1,15 @@
+## v1.1.6
+
+Fix
+
+- Fix error if merging scenario task and external task
+- Fix rundock ssh of comma separated host arguments
+
+Update
+
+- Support multi external task file
+- Support filtered tasks
+
 ## v1.1.5
 
 Update
