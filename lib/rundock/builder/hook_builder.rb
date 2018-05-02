@@ -29,7 +29,7 @@ module Rundock
             return []
           end
         elsif hook_attributes.nil?
-          Logger.warn("Hook source is not found. (enables:#{enables.join(',')})") unless enables.empty?
+          Logger.info("Hook source is not found. (enables:#{enables.join(',')})") unless enables.empty?
           return []
         end
 
