@@ -34,7 +34,7 @@ module Rundock
     option :targetgroup, type: :string, aliases: ['-g']
     option :tasks, type: :string, aliases: ['-t']
     option :hooks, type: :string, aliases: ['-k']
-    option :run_anyway, type: :boolean, default: false
+    option :run_anyway, type: :boolean, aliases: ['-r'], default: false
     option :dry_run, type: :boolean, aliases: ['-n']
     def do(*scenario_file_path)
       scenario_file_path = [DEFAULT_SCENARIO_FILE_PATH] if scenario_file_path.empty?
@@ -56,7 +56,7 @@ module Rundock
     option :ssh_config, type: :string, aliases: ['-F']
     option :ask_password, type: :boolean, default: false
     option :sudo, type: :boolean, default: false
-    option :run_anyway, type: :boolean, default: false
+    option :run_anyway, type: :boolean, aliases: ['-r'], default: false
     option :dry_run, type: :boolean, aliases: ['-n']
     def ssh
       opts = {}
