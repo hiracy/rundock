@@ -61,14 +61,10 @@ module Rundock
 
         begin
           result = @backend.run_command(command)
-        rescue => e
+        rescue StandardError => e
           Logger.error(e.to_s)
-
-          if exec_options[:errexit]
-            raise CommandResultStatusError
-          else
-            return nil
-          end
+          raise CommandResultStatusError if exec_options[:errexit]
+          return nil
         end
 
         exit_status = result.exit_status
