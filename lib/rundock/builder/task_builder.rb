@@ -7,10 +7,10 @@ module Rundock
 
       def build(scenario_tasks)
         tasks = if scenario_tasks.nil?
-                     {}
-                   else
-                     scenario_tasks
-                   end
+                  {}
+                else
+                  scenario_tasks
+                end
         return scenario_tasks unless @options[:tasks]
         return tasks if @options[:tasks].nil?
 
