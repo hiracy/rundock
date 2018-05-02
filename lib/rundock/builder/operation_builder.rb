@@ -111,6 +111,8 @@ module Rundock
         node_attributes.nodename = @options[:host] unless node_attributes.nodename
         node_attributes.errexit = !cli_options[:run_anyway]
         node_attributes.dry_run = cli_options[:dry_run] ? true : false
+        node_attributes.filtered_tasks = cli_options[:filtered_tasks] &&
+                                         cli_options[:filtered_tasks].split(',')
         Rundock::OperationFactory.instance(:command).create(Array(command), node_attributes.list)
       end
 
@@ -130,7 +132,9 @@ module Rundock
                                     else
                                       !cli_options[:run_anyway]
                                     end
-          node_attributes.dry_run = cli_options && cli_options[:dry_run]
+          node_attributes.dry_run = cli_options[:dry_run]
+          node_attributes.filtered_tasks = cli_options[:filtered_tasks] &&
+                                           cli_options[:filtered_tasks].split(',')
         end
 
         # override by scenario

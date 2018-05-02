@@ -4,6 +4,7 @@ module Rundock
       attr_accessor :nodename
       attr_accessor :nodeinfo
       attr_accessor :task_info
+      attr_accessor :filtered_tasks
       attr_accessor :errexit
       attr_accessor :cwd
       attr_accessor :sudo

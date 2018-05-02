@@ -17,6 +17,8 @@ module Rundock
             next
           end
 
+          next if !attributes[:filtered_tasks].nil? && !attributes[:filtered_tasks].include?(task_name)
+
           scenario = Rundock::Builder::ScenarioBuilder.new(nil, nil).build_task(
             attributes[:task_info][task_name.to_sym], backend, Rundock::Attribute::NodeAttribute.new(attributes)
           )
