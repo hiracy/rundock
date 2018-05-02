@@ -59,7 +59,18 @@ module Rundock
 
         return nil if exec_options[:dry_run]
 
-        result = @backend.run_command(command)
+        begin
+          result = @backend.run_command(command)
+        rescue => e
+          Logger.error(e.to_s)
+
+          if exec_options[:errexit]
+            raise CommandResultStatusError
+          else
+            return nil
+          end
+        end
+
         exit_status = result.exit_status
 
         Logger.formatter.indent do
