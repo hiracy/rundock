@@ -32,8 +32,8 @@ module Rundock
     option :sudo, type: :boolean, default: false
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
     option :targetgroup, type: :string, aliases: ['-g']
-    option :tasks, type: :string, aliases: ['-t']
-    option :filtered_tasks, type: :string, aliases: ['-T'], banner: 'You can specify comma separated tasks.[ex: task1,taks2,..]'
+    option :tasks, type: :string, aliases: ['-t'], banner: 'You can specify comma separated task file paths.[ex: task_file1,task_file2,..]'
+    option :filtered_tasks, type: :string, aliases: ['-T'], banner: 'You can specify comma separated tasks.[ex: task1,task2,..]'
     option :hooks, type: :string, aliases: ['-k']
     option :run_anyway, type: :boolean, aliases: ['-r'], default: false
     option :dry_run, type: :boolean, aliases: ['-n']
@@ -47,8 +47,8 @@ module Rundock
     desc 'ssh [options]', 'Run rundock ssh with various options'
     option :command, type: :string, aliases: ['-c']
     option :default_ssh_opts, type: :string, aliases: ['-d'], default: DEFAULT_SSH_OPTIONS_DEFAULT_FILE_PATH
-    option :tasks, type: :string, aliases: ['-t']
-    option :filtered_tasks, type: :string, aliases: ['-T'], banner: 'You can specify comma separated tasks.[ex: task1,taks2,..]'
+    option :tasks, type: :string, aliases: ['-t'], banner: 'You can specify comma separated task file paths.[ex: task_file1,task_file2,..]'
+    option :filtered_tasks, type: :string, aliases: ['-T'], banner: 'You can specify comma separated tasks.[ex: task1,task2,..]'
     option :hooks, type: :string, aliases: ['-k']
     option :host, type: :string, aliases: ['-h'], banner: 'You can specify comma separated hosts.[ex: host1,host2,..]'
     option :targetgroup, type: :string, aliases: ['-g']

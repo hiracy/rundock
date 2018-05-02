@@ -11,16 +11,23 @@ module Rundock
                    else
                      scenario_tasks
                    end
-
         return scenario_tasks unless @options[:tasks]
-        if FileTest.exist?(@options[:tasks])
-          tasks.merge!(YAML.load_file(@options[:tasks]).deep_symbolize_keys)
-          Logger.info("merged tasks file #{@options[:tasks]}")
-        elsif FileTest.exist?(DEFAULT_TASKS_FILE_PATH)
-          Logger.warn("tasks file is not found. use #{DEFAULT_TASKS_FILE_PATH}")
-          tasks.merge!(YAML.load_file(DEFAULT_TASKS_FILE_PATH).deep_symbolize_keys)
-        else
-          Logger.warn("Task path is not available. (#{@options[:tasks]})")
+        return tasks if @options[:tasks].nil?
+
+        task_files = @options[:tasks].split(',')
+
+        task_files.each do |tk|
+          tk.gsub!(/~/, Dir.home)
+
+          if FileTest.exist?(tk)
+            tasks.merge!(YAML.load_file(tk).deep_symbolize_keys)
+            Logger.info("merged tasks file #{tk}")
+          elsif FileTest.exist?(DEFAULT_TASKS_FILE_PATH)
+            Logger.warn("tasks file is not found. use #{DEFAULT_TASKS_FILE_PATH}")
+            tasks.merge!(YAML.load_file(DEFAULT_TASKS_FILE_PATH).deep_symbolize_keys)
+          else
+            Logger.warn("Task path is not available. (#{tk})")
+          end
         end
 
         tasks
