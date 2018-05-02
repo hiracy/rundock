@@ -29,6 +29,7 @@ module Rundock
       @operations.each do |ope|
         Logger.debug("run operation: #{ope.class}")
         node_attributes << ope.attributes
+        ope.attributes[:nodename] = @name
         ope.run(@backend, ope.attributes)
       end
 
