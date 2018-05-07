@@ -83,6 +83,8 @@ def do_rundock_scenarios(platform)
       options = " -t ./spec/integration/tasks/#{Regexp.last_match(1)}.yml"
     elsif scenario =~ %r{^*scenarios/(.*target_by_option)_scenario.yml$}
       options = " -g #{base_dir}/targets/#{Regexp.last_match(1)}.yml"
+    elsif scenario =~ %r{^*scenarios/(.*task_with_filtering)_scenario.yml$}
+      options = ' -T do_task_1,do_task_2'
     end
 
     execute('bundle exec exe/rundock' \
