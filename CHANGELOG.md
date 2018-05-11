@@ -1,3 +1,9 @@
+## v1.1.7
+
+Update
+
+- Support multi external task file
+
 ## v1.1.6
 
 Fix
