@@ -1,0 +1,23 @@
+- target: localhost
+  command:
+    - "rm -rf /var/tmp/hello_rundock_from_task_with_filtering"
+  task:
+    - do_task_1
+    - do_not_task_1
+    - do_task_2
+    - do_not_task_2
+---
+---
+do_task_1:
+  command:
+    - mkdir /var/tmp/hello_rundock_from_task_with_filtering
+    - echo 'Hello Rundock from task with filtering do task 1.' > /var/tmp/hello_rundock_from_task_with_filtering/do_task_1
+do_not_task_1:
+  command:
+    - echo 'Hello Rundock from task with filtering do not task 1.' > /var/tmp/hello_rundock_from_task_with_filtering/do_not_task_1
+do_task_2:
+  command:
+    - echo 'Hello Rundock from task with filtering do task 2.' > /var/tmp/hello_rundock_from_task_with_filtering/do_task_2
+do_not_task_2:
+  command:
+    - echo 'Hello Rundock from task with filtering do not task 2.' > /var/tmp/hello_rundock_from_task_with_filtering/do_not_task_2
