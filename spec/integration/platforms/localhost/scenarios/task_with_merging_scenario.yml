@@ -1,0 +1,12 @@
+- target: localhost
+  command:
+    - "rm -rf /var/tmp/hello_rundock_from_task_with_merging"
+  task:
+    - do_task_1
+    - do_task_2
+---
+---
+do_task_1:
+  command:
+    - mkdir /var/tmp/hello_rundock_from_task_with_merging
+    - echo 'Hello Rundock from task with merging do task 1.' > /var/tmp/hello_rundock_from_task_with_merging/do_task_1

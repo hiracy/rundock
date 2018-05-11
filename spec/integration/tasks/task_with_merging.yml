@@ -1,0 +1,3 @@
+do_task_2:
+  command:
+    - echo 'Hello Rundock from task with merging do task 2.' > /var/tmp/hello_rundock_from_task_with_merging/do_task_2
