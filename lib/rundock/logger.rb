@@ -33,6 +33,7 @@ module Rundock
       attr_accessor :show_header
       attr_accessor :short_header
       attr_accessor :date_header
+      attr_accessor :suppress_logging
       attr_accessor :buffer
 
       def initialize(*args)
@@ -100,8 +101,13 @@ module Rundock
         @lock = false
       end
 
+      def simple_output(msg)
+        puts msg2str(msg)
+      end
+
       def formatted_message(severity, datetime, progname, msg)
-        out = if !@show_header
+        out = if @suppress_logging
+              elsif !@show_header
                 "%s\n" % [msg2str(msg)]
               elsif !@date_header
                 "%5s: %s%s\n" % [

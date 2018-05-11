@@ -12,6 +12,7 @@ module Rundock
     class_option :header, type: :boolean, default: true
     class_option :short_header, type: :boolean, default: false
     class_option :date_header, type: :boolean, default: true
+    class_option :suppress_logging, type: :boolean, default: false
 
     def initialize(args, opts, config)
       super(args, opts, config)
@@ -21,6 +22,7 @@ module Rundock
       Rundock::Logger.formatter.show_header = options[:header]
       Rundock::Logger.formatter.short_header = options[:short_header]
       Rundock::Logger.formatter.date_header = options[:date_header]
+      Rundock::Logger.formatter.suppress_logging = options[:suppress_logging]
     end
 
     desc 'version', 'Print version'

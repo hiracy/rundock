@@ -78,6 +78,8 @@ module Rundock
           Logger.debug("exit status: #{exit_status}")
         end
 
+        Logger.formatter.simple_output(result.stdout.strip) if Logger.formatter.suppress_logging && !result.stdout.strip.blank?
+
         raise CommandResultStatusError if exec_options[:errexit] && exit_status != 0
 
         result
