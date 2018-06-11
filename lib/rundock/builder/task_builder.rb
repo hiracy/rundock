@@ -3,8 +3,6 @@ require 'yaml'
 module Rundock
   module Builder
     class TaskBuilder < Base
-      DEFAULT_TASKS_FILE_PATH = './tasks.yml'
-
       def build(scenario_tasks)
         tasks = if scenario_tasks.nil?
                   {}
