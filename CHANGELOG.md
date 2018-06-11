@@ -1,3 +1,9 @@
+## v1.2.0
+
+Update
+
+- Support target plugins
+
 ## v1.1.7
 
 Update
