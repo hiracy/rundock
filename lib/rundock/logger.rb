@@ -143,19 +143,16 @@ module Rundock
       end
 
       def colorize(msg, severity)
-        col = if @color
-                @color
+        col = @color ||
+              case severity
+              when 'INFO'
+                :clear
+              when 'WARN'
+                :yellow
+              when 'ERROR'
+                :red
               else
-                case severity
-                when 'INFO'
-                  :clear
-                when 'WARN'
-                  :yellow
-                when 'ERROR'
-                  :red
-                else
-                  :clear
-                end
+                :clear
               end
 
         ANSI.public_send(col) { msg }
