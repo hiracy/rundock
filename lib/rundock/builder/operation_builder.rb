@@ -2,7 +2,7 @@ module Rundock
   module Builder
     class OperationBuilder < Base
       def build_first(scenario, targets, tasks, hooks)
-        parsing_node_attribute = nil
+        parsing_node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
         scen = Scenario.new
         scen.tasks = tasks
 
@@ -12,21 +12,12 @@ module Rundock
           hook_contents = []
 
           sn.deep_symbolize_keys.each do |sk, sv|
-            if sk == :target
+            if %i[target target_group].include?(sk)
               target_builder = TargetBuilder.new(@options)
-              target = target_builder.build(sv, targets)
-
-              if target.is_a?(Node)
-                nodes = Array(target)
-                parsing_node_attribute = build_node_attribute(scen, sv, parsing_node_attribute, tasks, target_builder.parsed_node_options[sv.to_sym])
-                operations = Array(build_cli_command_operation(@options[:command], parsing_node_attribute, @options)) if @options[:command]
-              end
-            elsif sk == :target_group
-              target_builder = TargetBuilder.new(@options)
-              nodes = target_builder.build_group(sv, targets)
+              nodes, target_options = target_builder.build(sv, targets)
               nodes.each do |n|
                 if n.is_a?(Node)
-                  parsing_node_attribute = build_node_attribute(scen, n.name, parsing_node_attribute, tasks, target_builder.parsed_node_options[n.name.to_sym])
+                  parsing_node_attribute = build_node_attribute(scen, n.name, parsing_node_attribute, tasks, target_options[n.name.to_sym])
                   operations = Array(build_cli_command_operation(@options[:command], parsing_node_attribute, @options)) if @options[:command]
                 end
               end
@@ -94,14 +85,10 @@ module Rundock
       private
 
       def build_node_attribute(scenario, nodename, node_attribute, tasks, parsed_options)
-        if node_attribute.nil?
-          node_attribute = Rundock::Attribute::NodeAttribute.new(task_info: {})
-        else
-          node_attribute.init_except_take_over_state
-        end
-
+        node_attribute.init_except_take_over_state
         node_attribute.nodename = nodename
         tasks.each { |k, v| node_attribute.task_info[k] = v } if tasks
+
         scenario.node_info[nodename.to_sym] = node_attribute.nodeinfo = parsed_options
 
         node_attribute

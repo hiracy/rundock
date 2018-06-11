@@ -4,7 +4,7 @@ require 'open-uri'
 module Rundock
   class Runner
     ScenarioNotFoundError = Class.new(StandardError)
-    RUNDOCK_PLUGINS = %w[operation hook]
+    RUNDOCK_PLUGINS = %w[operation hook target]
 
     class << self
       def run(options)
