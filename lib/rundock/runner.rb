@@ -76,6 +76,7 @@ module Rundock
         RUNDOCK_PLUGINS.each do |plugin|
           next if g !~ /^(rundock-plugin-#{plugin})-/
           next if Gem::Specification.find_by_name(g).nil?
+
           Logger.debug("Loading rundock plugin: #{g}")
           libdir = "#{Gem::Specification.find_by_name(g).full_gem_path}/lib/#{Regexp.last_match(1).tr('-', '/')}"
           Dir.glob("#{libdir}/*.rb").each do |f|

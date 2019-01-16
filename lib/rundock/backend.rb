@@ -64,6 +64,7 @@ module Rundock
         rescue StandardError => e
           Logger.error(e.to_s)
           raise CommandResultStatusError if exec_options[:errexit]
+
           return nil
         end
 

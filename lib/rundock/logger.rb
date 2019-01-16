@@ -80,6 +80,7 @@ module Rundock
 
       def flush
         return nil if @lock
+
         ret = @buffer.dup
         @buffer.clear
         ret

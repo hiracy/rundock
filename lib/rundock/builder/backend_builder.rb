@@ -41,6 +41,7 @@ module Rundock
           # no use default ssh options if local
           # set unless scenario file and cli options specified and not localhost
           next if localhost?
+
           opt = oo.to_s.gsub(/_ssh_default/, '').to_sym
           @node_info[@nodename.to_sym][:ssh_opts][opt] = @options[oo] if !@node_info[@nodename.to_sym][:ssh_opts][opt] && !@options[opt]
         end

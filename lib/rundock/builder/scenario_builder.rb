@@ -30,6 +30,7 @@ module Rundock
 
       def build_scenario_with_cli
         raise CommandArgNotFoundError, %("--command or -c" option is not specified.) unless @options[:command]
+
         ope = OperationBuilder.new(@options)
         ope.build_cli
       end

@@ -107,7 +107,7 @@ module Rundock
         cli_options = {} if cli_options.nil?
 
         if cli_options[:command] &&
-           (ope_type == :command || ope_type == :task)
+           %i[command task].include?(ope_type)
           Logger.debug(%("--command or -c" option is specified and ignore scenario file.))
           return
         end
