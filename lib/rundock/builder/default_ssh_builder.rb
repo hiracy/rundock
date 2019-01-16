@@ -24,7 +24,7 @@ module Rundock
                        end
 
         File.open(def_ssh_file) do |f|
-          YAML.load_documents(f) do |y|
+          YAML.load_stream(f) do |y|
             y.each do |k, v|
               opts["#{k}_ssh_default".to_sym] = v
             end

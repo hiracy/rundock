@@ -40,7 +40,7 @@ module Rundock
           type = %i[main target_info tasks hooks]
           scenario_data = {}
 
-          YAML.load_documents(@scenario_file).each_with_index do |data, idx|
+          YAML.load_stream(@scenario_file).each_with_index do |data, idx|
             if idx == 0
               scenario_data[type[idx]] = data
             else
