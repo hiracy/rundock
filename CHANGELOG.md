@@ -1,3 +1,10 @@
+## v1.2.1
+
+Update
+
+- Update support ruby version(2.4.1,2.6.0)
+- Support circleci 2.0
+
 ## v1.2.0
 
 Update
