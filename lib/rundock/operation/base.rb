@@ -24,6 +24,7 @@ module Rundock
 
       def assign_args(src, args)
         return src unless args
+
         src.gsub(/\$#/, args.length.to_s)
            .gsub(/\$@/, args.join(' '))
            .gsub(/\$[1-9]/) { |arg_n| args[arg_n.chars[1..-1].join.to_i - 1] }

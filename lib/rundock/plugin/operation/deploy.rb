@@ -108,6 +108,7 @@ module Rundock
         map = {}
         binding.each do |k, v|
           next unless v.key?(:value)
+
           bind_key  = assign_args(k.to_s, args)
           bind_type = assign_args(v[:type].to_s, args)
           bind_value = assign_args(v[:value].to_s, args)

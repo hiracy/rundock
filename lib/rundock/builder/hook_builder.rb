@@ -60,6 +60,7 @@ module Rundock
         attributes.each do |k, v|
           raise HookStructureError unless v.is_a?(Hash)
           next if !allow_all && !enables.include?(k.to_s)
+
           @enable_hooks[k] = v
           hooks << Rundock::HookFactory.instance(v[:hook_type]).create(k.to_s, v)
         end
